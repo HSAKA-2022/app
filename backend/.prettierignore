@@ -1,0 +1,11 @@
+dist/
+node_modules/
+
+.yarn/
+.next/
+build/
+.pnp.cjs
+storybook-static
+src/__generated__/
+.pnp.loader.mjs
+**/*.hbs
