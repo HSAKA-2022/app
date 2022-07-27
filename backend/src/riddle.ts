@@ -3,7 +3,8 @@ import {
     finishRiddle,
     getRiddleState,
     saveRiddleState,
-    startRiddle
+    startRiddle,
+    updateLastSeen,
 } from "./db"
 import Router from "@koa/router"
 import { log } from "./log"
@@ -12,6 +13,8 @@ export type StateWrapper<State> = {
     _id?: string
     user: string
     isActive: boolean
+    lastUpdated: Date
+    lastSeen: Date
     state: State
 }
 export type RiddleState<DB_STATE> = {
@@ -29,19 +32,23 @@ export type PiAction<PARAM, DB_STATE> = (
 ) => Promise<Array<StateWrapper<DB_STATE>>>
 
 export function riddle<DB_STATE, API_STATE>({
-                                                riddleId,
-                                                start,
-                                                solved,
-                                                getter,
-                                                phoneActions,
-                                                piActions,
-                                                tick,
-                                                tickRateInMs
-                                            }: {
+    riddleId,
+    start,
+    solved,
+    getter,
+    phoneActions,
+    piActions,
+    tick,
+    tickRateInMs,
+}: {
     riddleId: string
-    start: (existingState: Array<StateWrapper<DB_STATE>>) => Promise<DB_STATE | undefined>
+    start: (
+        existingState: Array<StateWrapper<DB_STATE>>
+    ) => Promise<DB_STATE | undefined>
     solved: (state: Array<StateWrapper<DB_STATE>>) => boolean
-    tick?: (state: Array<StateWrapper<DB_STATE>>) => Array<StateWrapper<DB_STATE>>
+    tick?: (
+        state: Array<StateWrapper<DB_STATE>>
+    ) => Promise<Array<StateWrapper<DB_STATE>>>
     tickRateInMs?: number
     getter: (state: RiddleState<DB_STATE>) => API_STATE
     phoneActions: Record<string, PhoneAction<unknown, DB_STATE>>
@@ -53,15 +60,17 @@ export function riddle<DB_STATE, API_STATE>({
     function getApiState(state: RiddleState<DB_STATE>): API_STATE {
         return {
             ...getter(state),
-            solved: solved([...state.others, state.active].filter((it) => it != undefined))
+            solved: solved(
+                [...state.others, state.active].filter((it) => it != undefined)
+            ),
         }
     }
 
     router.get(`/${riddleId}`, async (ctx) => {
         const state = await getRiddleState<DB_STATE>(riddleId)
 
-        const active = state.find(s => s.user == ctx.user)
-        const others = state.filter(s => s.user != ctx.user)
+        const active = state.find((s) => s.user == ctx.user)
+        const others = state.filter((s) => s.user != ctx.user)
 
         const isSolved = solved(state)
 
@@ -74,21 +83,27 @@ export function riddle<DB_STATE, API_STATE>({
             }, 60 * 1000)
         }
 
+        await updateLastSeen(riddleId, ctx.user)
+
         ctx.body = getApiState({ active, others })
     })
 
     for (const [actionName, action] of Object.entries(phoneActions)) {
         router.post(`/${riddleId}/${actionName}`, async (ctx) => {
-            logger.debug(`[Phone action] ${actionName} ${JSON.stringify(ctx.request.body)}`)
+            logger.debug(
+                `[Phone action] ${actionName} ${JSON.stringify(
+                    ctx.request.body
+                )}`
+            )
             const state = await getRiddleState<DB_STATE>(riddleId)
             const param = ctx.request.body
 
-            const active = state.find(s => s.user == ctx.user)
+            const active = state.find((s) => s.user == ctx.user)
             if (active == undefined) {
                 ctx.status = 409
                 return
             }
-            const others = state.filter(s => s.user != ctx.user)
+            const others = state.filter((s) => s.user != ctx.user)
 
             const newState = await action({ active, others }, param)
 
@@ -98,8 +113,8 @@ export function riddle<DB_STATE, API_STATE>({
             }
 
             const stateAfter = await getRiddleState<DB_STATE>(riddleId)
-            const newActive = stateAfter.find(s => s.user == ctx.user)
-            const newOthers = stateAfter.filter(s => s.user != ctx.user)
+            const newActive = stateAfter.find((s) => s.user == ctx.user)
+            const newOthers = stateAfter.filter((s) => s.user != ctx.user)
             ctx.body = getApiState({ active: newActive, others: newOthers })
         })
     }
@@ -141,9 +156,9 @@ export function riddle<DB_STATE, API_STATE>({
 
         const existing = await getRiddleState<DB_STATE>(riddleId)
 
-        if (existing.some(it => it.user === ctx.user)) {
-            const active = existing.find(s => s.user == ctx.user)
-            const others = existing.filter(s => s.user != ctx.user)
+        if (existing.some((it) => it.user === ctx.user)) {
+            const active = existing.find((s) => s.user == ctx.user)
+            const others = existing.filter((s) => s.user != ctx.user)
             ctx.body = getApiState({ active, others })
             return
         }
@@ -159,7 +174,9 @@ export function riddle<DB_STATE, API_STATE>({
         const wrapped = {
             user: ctx.user,
             isActive: true,
-            state
+            lastUpdated: new Date(),
+            lastSeen: new Date(),
+            state,
         }
         await startRiddle(riddleId, wrapped)
         ctx.body = getApiState({ active: wrapped, others: existing })
@@ -169,9 +186,11 @@ export function riddle<DB_STATE, API_STATE>({
     if (tick) {
         setInterval(async () => {
             const state = await getRiddleState<DB_STATE>(riddleId)
-            const newState = tick(state)
+            const newState = await tick(state)
             for (const player of newState) {
-                await saveRiddleState(riddleId, player)
+                await saveRiddleState(riddleId, player, {
+                    noUpdateLastSeen: true,
+                })
             }
         }, tickRateInMs ?? 1000)
     }

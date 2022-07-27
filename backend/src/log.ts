@@ -1,9 +1,9 @@
 export type LoggingFunction = (message: string) => void
 
 export type Logger = {
-    debug: LoggingFunction,
-    info: LoggingFunction,
-    error: LoggingFunction,
+    debug: LoggingFunction
+    info: LoggingFunction
+    error: LoggingFunction
 }
 
 function time() {
@@ -20,6 +20,7 @@ export function log(scope: string): Logger {
             }
         },
         info: (message) => console.log(`[${time()}][${scope}][INFO]${message}`),
-        error: (message) => console.error(`[${time()}][${scope}][ERROR]${message}`)
+        error: (message) =>
+            console.error(`[${time()}][${scope}][ERROR]${message}`),
     }
 }

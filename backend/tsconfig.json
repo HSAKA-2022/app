@@ -1,8 +1,8 @@
 {
-  "compilerOptions": {
-    "esModuleInterop": true,
-    "module": "commonjs",
-    "target": "esnext",
-    "moduleResolution": "node",
-  }
+    "compilerOptions": {
+        "esModuleInterop": true,
+        "module": "commonjs",
+        "target": "esnext",
+        "moduleResolution": "node"
+    }
 }
