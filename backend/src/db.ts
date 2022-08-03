@@ -1,6 +1,6 @@
 import { Db, MongoClient } from "mongodb"
-import { StateWrapper } from "./riddle"
 import { v4 as uuid } from "uuid"
+import { StateWrapper } from "./riddle"
 
 export let db: Db
 
@@ -27,7 +27,6 @@ function now() {
 export async function updateLastSeen(riddleId: string, userId: string) {
     await db
         .collection<StateWrapper<unknown>>(riddleId)
-        // @ts-ignore
         .updateOne(
             { user: userId, isActive: true },
             { $set: { lastSeen: now() } }
@@ -40,13 +39,13 @@ export async function saveRiddleState<State>(
     options?: { noUpdateLastSeen?: boolean }
 ): Promise<void> {
     const collection = db.collection<StateWrapper<State>>(riddleId)
-    //@ts-ignore
+    // @ts-ignore $set's type seem off
     await collection.updateOne({ _id: state._id }, { $set: { ...state } })
 
     if (!options?.noUpdateLastSeen) {
-        //@ts-ignore
         await collection.updateOne(
             { _id: state._id },
+            // @ts-ignore $set's type seem off
             { $set: { lastSeen: now(), lastUpdated: now() } }
         )
     }
@@ -57,7 +56,7 @@ export async function finishRiddle(
     _id: string
 ): Promise<void> {
     await db
-        .collection<StateWrapper<any>>(riddleId)
+        .collection<StateWrapper<unknown>>(riddleId)
         .updateOne({ _id }, { $set: { isActive: false } })
 }
 

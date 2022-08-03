@@ -1,3 +1,4 @@
+import Router from "@koa/router"
 import { Middleware } from "koa"
 import {
     finishRiddle,
@@ -6,7 +7,6 @@ import {
     startRiddle,
     updateLastSeen,
 } from "./db"
-import Router from "@koa/router"
 import { log } from "./log"
 
 export type StateWrapper<State> = {

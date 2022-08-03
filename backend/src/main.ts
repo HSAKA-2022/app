@@ -1,9 +1,9 @@
 import * as fs from "fs"
 import Router from "@koa/router"
 import Koa, { Next } from "koa"
+import bodyParser from "koa-bodyparser"
 import { initDb } from "./db"
 import { log } from "./log"
-import bodyParser from "koa-bodyparser"
 
 const PORT = 5000
 async function getAllRiddleFiles(): Promise<Array<string>> {
@@ -60,4 +60,5 @@ async function main() {
     app.listen(PORT)
 }
 
+// eslint-disable-next-line no-console
 main().catch(console.error)

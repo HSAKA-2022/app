@@ -3,8 +3,7 @@ import { riddle } from "../riddle"
 // TODO
 // How to properly finish riddle
 
-type RGB = "r" | "g" | "b"
-const available = ["r", "g", "b"] as Array<RGB>
+const available = ["r", "g", "b"]
 
 /**
  * Example riddle
@@ -19,11 +18,8 @@ const available = ["r", "g", "b"] as Array<RGB>
  * If a player is inactive for one minute (no state refresh, no action taken), they are kicked from the game. (This is to show how this can be done firstmost)
  *
  */
-const riddleId = "rgb"
-export default riddle<
-    { guess: number; rgb: RGB; goal: number },
-    { isRunning: boolean; rgb?: RGB; guess?: number; joined: boolean }
->({
+const riddleId = "rgb2"
+export default riddle({
     riddleId,
     start: async (existing) => {
         // If we have an existing running game, don't start for the new player
@@ -58,7 +54,7 @@ export default riddle<
         )
     },
     phoneActions: {
-        setValue: async (state, value: { guess: number }) => {
+        setValue: async (state, value) => {
             state.active.state.guess = value.guess
 
             return state
