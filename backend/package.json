@@ -5,7 +5,7 @@
     "scripts": {
         "lint": "eslint --cache --max-warnings=0 . && prettier -c .",
         "lint:fix": "eslint --cache --fix --max-warnings=0 . && prettier --write .",
-        "test": "tsc --noEmit",
+        "test": "ava",
         "start:direct": "node --loader ts-node/esm ./src/main.ts",
         "start": "nodemon"
     },
@@ -22,7 +22,10 @@
         "uuid": "^8.3.2"
     },
     "devDependencies": {
-        "@types/koa": "^2.13.5"
+        "@ava/typescript": "^3.0.1",
+        "@types/koa": "^2.13.5",
+        "ava": "^4.3.1",
+        "supertest": "^6.2.4"
     },
     "nodemonConfig": {
         "ext": "js,ts",
@@ -30,5 +33,19 @@
             "src"
         ],
         "exec": "npm run start:direct"
+    },
+    "ava": {
+        "files": [
+            "src/**/*.test.ts",
+            "src/**/*.test.tsx"
+        ],
+        "extensions": {
+            "ts": "module",
+            "tsx": "module"
+        },
+        "nodeArguments": [
+            "--loader=ts-node/esm"
+        ],
+        "timeout": "2m"
     }
 }
