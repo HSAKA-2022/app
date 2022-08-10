@@ -11,6 +11,10 @@ export async function initDb() {
     db = await client.db("hsaka2022")
 }
 
+/**
+ * Fetches all riddle state for the riddle from the db
+ * @param riddleId
+ */
 export async function getRiddleState<State>(
     riddleId: string
 ): Promise<Array<StateWrapper<State>>> {
@@ -20,10 +24,15 @@ export async function getRiddleState<State>(
         .toArray()
 }
 
-function now() {
+export function now() {
     return new Date()
 }
 
+/**
+ * Updates the last seen of a state
+ * @param riddleId
+ * @param userId
+ */
 export async function updateLastSeen(riddleId: string, userId: string) {
     await db
         .collection<StateWrapper<unknown>>(riddleId)
@@ -33,6 +42,12 @@ export async function updateLastSeen(riddleId: string, userId: string) {
         )
 }
 
+/**
+ * Updates a riddle state on the db
+ * @param riddleId
+ * @param state
+ * @param options - Options for the update, `noUpdateLastSeen`: true does not update last seen
+ */
 export async function saveRiddleState<State>(
     riddleId: string,
     state: StateWrapper<State>,
@@ -51,16 +66,26 @@ export async function saveRiddleState<State>(
     }
 }
 
-export async function finishRiddle(
+/**
+ * finishes up a riddle by setting isActive to false
+ * @param riddleId
+ * @param dbId The db id of the state to finish
+ */
+export async function finishRiddleOnDb(
     riddleId: string,
-    _id: string
+    dbId: string
 ): Promise<void> {
     await db
         .collection<StateWrapper<unknown>>(riddleId)
-        .updateOne({ _id }, { $set: { isActive: false } })
+        .updateOne({ _id: dbId }, { $set: { isActive: false } })
 }
 
-export async function startRiddle<State>(
+/**
+ * Starts a riddle on the DB
+ * @param riddleId
+ * @param state the Wrapped state to save
+ */
+export async function startRiddleOnDb<State>(
     riddleId: string,
     state: StateWrapper<State>
 ): Promise<void> {
