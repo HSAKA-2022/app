@@ -20,11 +20,12 @@ export type StateWrapper<State> = {
 export type RiddleState<DB_STATE> = {
     active: StateWrapper<DB_STATE>
     others: Array<StateWrapper<DB_STATE>>
+    all: Array<StateWrapper<DB_STATE>>
 }
 export type PhoneAction<PARAM, DB_STATE> = (
     state: RiddleState<DB_STATE>,
     param: PARAM
-) => Promise<RiddleState<DB_STATE>>
+) => Promise<RiddleState<DB_STATE> | undefined>
 
 export type PiAction<PARAM, DB_STATE> = (
     state: Array<StateWrapper<DB_STATE>>,
@@ -85,7 +86,7 @@ export function riddle<DB_STATE, API_STATE>({
 
         await updateLastSeen(riddleId, ctx.user)
 
-        ctx.body = getApiState({ active, others })
+        ctx.body = getApiState({ active, others, all: state })
     })
 
     for (const [actionName, action] of Object.entries(phoneActions)) {
@@ -100,22 +101,33 @@ export function riddle<DB_STATE, API_STATE>({
 
             const active = state.find((s) => s.user == ctx.user)
             if (active == undefined) {
+                logger.debug("[Phone action] No active state")
                 ctx.status = 409
                 return
             }
             const others = state.filter((s) => s.user != ctx.user)
 
-            const newState = await action({ active, others }, param)
+            logger.debug("Executing action")
+            const newState = await action({ active, others, all: state }, param)
 
-            await saveRiddleState(riddleId, newState.active)
-            for (const other of newState.others) {
-                await saveRiddleState(riddleId, other)
+            if (newState != undefined) {
+                logger.debug("saving new state")
+                await saveRiddleState(riddleId, newState.active)
+                await Promise.all(
+                    newState.others.map((it) => saveRiddleState(riddleId, it))
+                )
+                logger.debug("done saving")
             }
-
+            logger.debug("returning state")
             const stateAfter = await getRiddleState<DB_STATE>(riddleId)
             const newActive = stateAfter.find((s) => s.user == ctx.user)
             const newOthers = stateAfter.filter((s) => s.user != ctx.user)
-            ctx.body = getApiState({ active: newActive, others: newOthers })
+            ctx.body = getApiState({
+                active: newActive,
+                others: newOthers,
+                all: stateAfter,
+            })
+            logger.debug("[action] done")
         })
     }
 
@@ -134,9 +146,9 @@ export function riddle<DB_STATE, API_STATE>({
 
             const newState = await action(state, param)
 
-            for (const player of newState) {
-                await saveRiddleState(riddleId, player)
-            }
+            await Promise.all(
+                newState.map((it) => saveRiddleState(riddleId, it))
+            )
 
             ctx.body = newState
         })
@@ -149,9 +161,9 @@ export function riddle<DB_STATE, API_STATE>({
 
         const isSolved = solved(checkExisting)
         if (isSolved) {
-            for (const player of checkExisting) {
-                await finishRiddle(riddleId, player._id)
-            }
+            await Promise.all(
+                checkExisting.map((it) => finishRiddle(riddleId, it._id))
+            )
         }
 
         const existing = await getRiddleState<DB_STATE>(riddleId)
@@ -159,7 +171,7 @@ export function riddle<DB_STATE, API_STATE>({
         if (existing.some((it) => it.user === ctx.user)) {
             const active = existing.find((s) => s.user == ctx.user)
             const others = existing.filter((s) => s.user != ctx.user)
-            ctx.body = getApiState({ active, others })
+            ctx.body = getApiState({ active, others, all: existing })
             return
         }
 
@@ -179,7 +191,11 @@ export function riddle<DB_STATE, API_STATE>({
             state,
         }
         await startRiddle(riddleId, wrapped)
-        ctx.body = getApiState({ active: wrapped, others: existing })
+        ctx.body = getApiState({
+            active: wrapped,
+            others: existing,
+            all: [wrapped, ...existing],
+        })
     })
 
     // Call tick every tickRateInMs
@@ -187,11 +203,13 @@ export function riddle<DB_STATE, API_STATE>({
         setInterval(async () => {
             const state = await getRiddleState<DB_STATE>(riddleId)
             const newState = await tick(state)
-            for (const player of newState) {
-                await saveRiddleState(riddleId, player, {
-                    noUpdateLastSeen: true,
-                })
-            }
+            const promises = newState.map(
+                async (player) =>
+                    await saveRiddleState(riddleId, player, {
+                        noUpdateLastSeen: true,
+                    })
+            )
+            await Promise.all(promises)
         }, tickRateInMs ?? 1000)
     }
 
