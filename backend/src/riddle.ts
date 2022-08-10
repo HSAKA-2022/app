@@ -1,10 +1,11 @@
 import Router from "@koa/router"
 import { Middleware } from "koa"
 import {
-    finishRiddle,
+    finishRiddleOnDb,
     getRiddleState,
+    now,
     saveRiddleState,
-    startRiddle,
+    startRiddleOnDb,
     updateLastSeen,
 } from "./db"
 import { log } from "./log"
@@ -56,7 +57,7 @@ export function riddle<DB_STATE, API_STATE>({
     piActions: Record<string, PiAction<unknown, DB_STATE>>
 }): Middleware {
     const logger = log(riddleId)
-    const router = new Router()
+    const router = new Router().prefix(`/${riddleId}`)
 
     function getApiState(state: RiddleState<DB_STATE>): API_STATE {
         return {
@@ -67,11 +68,11 @@ export function riddle<DB_STATE, API_STATE>({
         }
     }
 
-    router.get(`/${riddleId}`, async (ctx) => {
+    router.get(`/`, async (ctx) => {
         const state = await getRiddleState<DB_STATE>(riddleId)
 
-        const active = state.find((s) => s.user == ctx.user)
-        const others = state.filter((s) => s.user != ctx.user)
+        const active = state.find((s) => s.user === ctx.user)
+        const others = state.filter((s) => s !== active)
 
         const isSolved = solved(state)
 
@@ -79,7 +80,7 @@ export function riddle<DB_STATE, API_STATE>({
             logger.info(`${ctx.user} solved the riddle`)
             setTimeout(async () => {
                 state.forEach((it) => {
-                    finishRiddle(riddleId, it._id)
+                    finishRiddleOnDb(riddleId, it._id)
                 })
             }, 60 * 1000)
         }
@@ -90,7 +91,7 @@ export function riddle<DB_STATE, API_STATE>({
     })
 
     for (const [actionName, action] of Object.entries(phoneActions)) {
-        router.post(`/${riddleId}/${actionName}`, async (ctx) => {
+        router.post(`/${actionName}`, async (ctx) => {
             logger.debug(
                 `[Phone action] ${actionName} ${JSON.stringify(
                     ctx.request.body
@@ -132,14 +133,14 @@ export function riddle<DB_STATE, API_STATE>({
     }
 
     /** PI methods  */
-    router.get(`/${riddleId}/raw-state`, async (ctx) => {
+    router.get(`/raw-state`, async (ctx) => {
         const state = await getRiddleState<DB_STATE>(riddleId)
 
         ctx.body = state
     })
 
     for (const [actionName, action] of Object.entries(piActions)) {
-        router.post(`/${riddleId}/${actionName}`, async (ctx) => {
+        router.post(`/${actionName}`, async (ctx) => {
             logger.debug(`[PI action] ${actionName}`)
             const state = await getRiddleState<DB_STATE>(riddleId)
             const param = ctx.request.body
@@ -155,14 +156,14 @@ export function riddle<DB_STATE, API_STATE>({
     }
 
     /** start **/
-    router.post(`/${riddleId}/start`, async (ctx) => {
+    router.post(`/start`, async (ctx) => {
         logger.debug(`[Start]`)
         const checkExisting = await getRiddleState<DB_STATE>(riddleId)
 
         const isSolved = solved(checkExisting)
         if (isSolved) {
             await Promise.all(
-                checkExisting.map((it) => finishRiddle(riddleId, it._id))
+                checkExisting.map((it) => finishRiddleOnDb(riddleId, it._id))
             )
         }
 
@@ -179,6 +180,7 @@ export function riddle<DB_STATE, API_STATE>({
 
         if (!state) {
             ctx.status = 409
+            ctx.body = { error: true, message: "Riddle is already started" }
             return
         }
 
@@ -186,11 +188,11 @@ export function riddle<DB_STATE, API_STATE>({
         const wrapped = {
             user: ctx.user,
             isActive: true,
-            lastUpdated: new Date(),
-            lastSeen: new Date(),
+            lastUpdated: now(),
+            lastSeen: now(),
             state,
         }
-        await startRiddle(riddleId, wrapped)
+        await startRiddleOnDb(riddleId, wrapped)
         ctx.body = getApiState({
             active: wrapped,
             others: existing,

@@ -1,6 +1,6 @@
 import * as fs from "fs"
 import Router from "@koa/router"
-import Koa, { Next } from "koa"
+import Koa, { Middleware, Next } from "koa"
 import bodyParser from "koa-bodyparser"
 import { log } from "./log"
 
@@ -25,7 +25,7 @@ export async function mountAllRiddles(app: Koa) {
     for (const file of riddleFiles) {
         logger.info("[SYSTEM] loading riddle: " + file)
         const module = await loadModule<{ default: Router }>(
-            `${process.cwd()}/src/riddles/${file}`
+            `${__dirname}/riddles/${file}`
         )
         if (typeof module.default !== "function") {
             logger.error(
@@ -37,7 +37,7 @@ export async function mountAllRiddles(app: Koa) {
     }
 }
 
-export async function checkAuth(ctx: Koa.Context, next: Next) {
+export const checkAuth: Middleware = async (ctx: Koa.Context, next: Next) => {
     const user = ctx.request.headers.authorization
     if (user == undefined || !user.startsWith("User ")) {
         ctx.status = 401
