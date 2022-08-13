@@ -1,0 +1,8 @@
+frontend/node_modules
+frontend/*.log*
+frontend/.nuxt
+frontend/.nitro
+frontend/.cache
+frontend/.output
+frontend/.env
+frontend/dist
