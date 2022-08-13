@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 ### VisualStudioCode template
 .vscode/*
 !.vscode/settings.json
@@ -203,3 +204,12 @@ dist
 .idea
 
 node_modules/
+
+frontend/node_modules
+frontend/*.log*
+frontend/.nuxt
+frontend/.nitro
+frontend/.cache
+frontend/.output
+frontend/.env
+frontend/dist
