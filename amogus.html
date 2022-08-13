@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>HSAKA Todos</title>
+
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/3.2.33/vue.global.min.js"></script>
+        <link
+            rel="stylesheet"
+            href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.9.3/css/bulma.min.css"
+        />
+
+        <style>
+            html,
+            body {
+                width: 100%;
+                min-height: 100vh;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                margin: 0;
+                padding: 0;
+            }
+
+            #app {
+                width: 400px;
+                max-width: calc(100vw - 4rem);
+            }
+
+            .todos li label {
+                width: 100%;
+            }
+
+            .todos li:hover {
+                border-radius: 6px;
+                background-color: #eee;
+            }
+
+            h1 {
+                font-size: 2rem;
+            }
+            h2 {
+                font-size: 1.7rem;
+            }
+
+            h3 {
+                font-size: 1.5rem;
+            }
+
+            h4 {
+                font-size: 1.3rem;
+            }
+        </style>
+    </head>
+    <body>
+        <div id="app">
+            <div v-if="!loading">
+                <div v-if="state.isRegistered == false">
+                    <div v-if="secret != undefined">
+                        Register!
+                        <input v-model="inputs.username" type="text" />
+                        <button @click="register" v-if="secret != undefined">
+                            Register
+                        </button>
+                    </div>
+                    <span v-if="secret == undefined"
+                        >Bitte scanne einen QR code um dich zu
+                        registrieren!</span
+                    >
+                </div>
+                <!--    ADMIN STUFF    -->
+                <div
+                    v-if="state.isAdmin"
+                    style="display: flex; gap: 30px; flex-direction: column"
+                >
+                    <div style="padding-bottom: 50px">
+                        <h3>Settings</h3>
+                        <div v-if="new Date(state.startingAt) > new Date()">
+                            <h2>
+                                Game has not started yet, {{state.alive.length}}
+                                signups so far
+                            </h2>
+                            startingAt
+                            <input
+                                v-model="inputs.admin.startingAt"
+                                type="datetime"
+                            />
+                            imposter
+                            <input
+                                v-model="inputs.admin.imposter"
+                                type="number"
+                            />
+                            initialKillCooldownInSeconds
+                            <input
+                                v-model="inputs.admin.initialKillCooldownInSeconds"
+                                type="number"
+                            />
+                        </div>
+                        killCooldownInSeconds
+                        <input
+                            v-model="inputs.admin.killCooldownInSeconds"
+                            type="number"
+                        />
+                        possibleMurderersPerImposter
+                        <input
+                            v-model="inputs.admin.possibleMurdersPerImposter"
+                            type="number"
+                        />
+                        <button @click="saveSettings">save</button>
+                    </div>
+                    <div
+                        style="display: flex; gap: 10px; flex-direction: column"
+                    >
+                        <h3>Meeting</h3>
+
+                        <div>
+                            <h4>Reports</h4>
+                            <ul>
+                                <li v-for="report in state.reports">
+                                    <span v-if="report.body !== undefined">
+                                        {{report.reporter}} reported
+                                        {{report.body}}
+                                    </span>
+                                    <span v-if="report.body === undefined">
+                                        {{report.reporter}} called an emergency
+                                        Meeting
+                                    </span>
+                                </li>
+                            </ul>
+                        </div>
+
+                        <div>
+                            <h4>Alive Players</h4>
+                            <ul>
+                                <li v-for="alive in state.alive">
+                                    {{alive.name }}
+                                    <button @click="voteKick(alive)">
+                                        vote kick
+                                    </button>
+                                </li>
+                            </ul>
+                        </div>
+                        <button @click="endMeeting">End meeting</button>
+                    </div>
+                    {{state.gameState}}
+                </div>
+
+                <!--        USER STUFF-->
+
+                <div v-if="!state.isAdmin && state.isRegistered">
+                    <div v-if="state.isAlive">
+                        <div v-if="new Date(state.startingAt) > new Date()">
+                            <h1>
+                                Das Spiel started {{new
+                                Date(state.startingAt).toLocaleString()}} (in
+                                {{((new Date(state.startingAt) - new Date()) /
+                                1000 / 60 / 60).toFixed()}} Stunden).
+                            </h1>
+                        </div>
+                        <div v-if="new Date(state.startingAt) < new Date()">
+                            <span>QR code: {{state.secret}}</span>
+                            <h1>There are imposter among us</h1>
+                            <div>{{state.role}}</div>
+                            <p>
+                                Some text about the game - Um einen Raum zu
+                                betreten, musst du den QR code scannen - Wenn
+                                ein Imposter dich erwischt hat, musst du dessen
+                                QR code scannen
+                            </p>
+                            <button
+                                @click="callEmergencyMeeting"
+                                v-if="!state.calledEmergencyMeeting"
+                            >
+                                Call an Emergency Meeting
+                            </button>
+                            <span v-if="state.calledEmergencyMeeting"
+                                >Emergency Meeting called</span
+                            >
+                        </div>
+
+                        <div
+                            v-if="secret != undefined && state.secret != secret && state.role === 'imposter'"
+                        >
+                            <h2>Du willst jemanden Eliminieren?</h2>
+                            <select v-model="inputs.room">
+                                <option
+                                    v-for="room in state.rooms"
+                                    :value="room"
+                                >
+                                    {{room}}
+                                </option>
+                            </select>
+                            <button
+                                @click="kill"
+                                :disabled="inputs.room == undefined"
+                            >
+                                kill
+                            </button>
+                        </div>
+
+                        <div v-if="state.roomInformation != undefined">
+                            <h1>{{state.roomInformation.room.name}}</h1>
+
+                            <div
+                                v-if="state.roomInformation.bodies.length == 0"
+                            >
+                                Der Raum ist leer.
+                            </div>
+                            <div
+                                v-if="(state.roomInformation?.bodies?.length ?? 0)> 0"
+                            >
+                                Oh, was liegt den da auf dem Boden?
+                                <ul>
+                                    <li
+                                        v-for="body in state.roomInformation.bodies"
+                                    >
+                                        {{body.name}}
+                                        <button
+                                            v-if="!body.reported"
+                                            @click="reportBody(body)"
+                                        >
+                                            report
+                                        </button>
+                                        <ul
+                                            v-if="(body.possibleMurders?.length ?? 0) > 0"
+                                            style="padding-left: 10px"
+                                        >
+                                            <li
+                                                v-for="possibleMurder in body.possibleMurders"
+                                            >
+                                                {{possibleMurder}}
+                                            </li>
+                                        </ul>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div v-if="!state.isAlive">
+                        <h1>You are dead</h1>
+                    </div>
+                </div>
+            </div>
+            <!--    {{state}}-->
+        </div>
+
+        <script>
+            const SERVER_URL = "http://localhost:5000"
+            const riddleId = "amogus"
+
+            // from https://stackoverflow.com/questions/105034/how-do-i-create-a-guid-uuid
+            function uuidv4() {
+                return ([1e7] + -1e3 + -4e3 + -8e3 + -1e11).replace(
+                    /[018]/g,
+                    (c) =>
+                        (
+                            c ^
+                            (crypto.getRandomValues(new Uint8Array(1))[0] &
+                                (15 >> (c / 4)))
+                        ).toString(16)
+                )
+            }
+
+            function getOrCreateUserId() {
+                const existing = localStorage.getItem("userId")
+                if (existing != undefined) return existing
+                const newId = uuidv4()
+                localStorage.setItem("userId", newId)
+                return newId
+            }
+
+            function header() {
+                return {
+                    Authorization: "User " + getOrCreateUserId(),
+                    "Content-Type": "application/json",
+                }
+            }
+
+            async function getState() {
+                const result = await fetch(SERVER_URL + "/" + riddleId, {
+                    headers: header(),
+                })
+                return result.json()
+            }
+
+            Vue.createApp({
+                data() {
+                    const userId = getOrCreateUserId()
+                    return {
+                        scannedUser: new URLSearchParams(
+                            window.location.search
+                        ).get("scannedUser"),
+                        room: new URLSearchParams(window.location.search).get(
+                            "room"
+                        ),
+                        secret: new URLSearchParams(window.location.search).get(
+                            "secret"
+                        ),
+                        userId: userId,
+                        loading: true,
+                        state: undefined,
+                        inputs: {},
+                    }
+                },
+                methods: {
+                    async fetchState() {
+                        this.state = await getState(this.userId)
+                        this.loading = false
+                    },
+                    // Admin stuff
+                    async saveSettings() {
+                        const result = await fetch(
+                            `${SERVER_URL}/${riddleId}/changeSettings`,
+                            {
+                                headers: header(),
+                                method: "POST",
+                                body: JSON.stringify({
+                                    ...this.inputs.admin,
+                                }),
+                            }
+                        )
+                        this.state = await result.json()
+                    },
+
+                    async voteKick(user) {
+                        const approval = confirm(
+                            "Are you sure you want to vote kick " +
+                                user.name +
+                                "?"
+                        )
+
+                        const result = await fetch(
+                            `${SERVER_URL}/${riddleId}/voteKillPlayer`,
+                            {
+                                headers: header(),
+                                method: "POST",
+                                body: JSON.stringify({
+                                    playerId: user.id,
+                                }),
+                            }
+                        )
+                        this.state = await result.json()
+                    },
+
+                    async endMeeting() {
+                        const approval = confirm("End meeting?")
+
+                        const result = await fetch(
+                            `${SERVER_URL}/${riddleId}/closeMeeting`,
+                            {
+                                headers: header(),
+                                method: "POST",
+                                body: JSON.stringify({}),
+                            }
+                        )
+                        this.state = await result.json()
+                    },
+                    // User stuff
+                    async register() {
+                        await fetch(`${SERVER_URL}/${riddleId}/start`, {
+                            headers: header(),
+                            method: "POST",
+                        })
+                        const result = await fetch(
+                            `${SERVER_URL}/${riddleId}/register`,
+                            {
+                                headers: header(),
+                                method: "POST",
+                                body: JSON.stringify({
+                                    name: this.inputs.username,
+                                    secret: this.secret,
+                                }),
+                            }
+                        )
+                        this.state = await result.json()
+                        this.loading = false
+                    },
+
+                    async reportBody(body) {
+                        const result = await fetch(
+                            `${SERVER_URL}/${riddleId}/reportBody`,
+                            {
+                                headers: header(),
+                                method: "POST",
+                                body: JSON.stringify({
+                                    bodyId: body.id,
+                                }),
+                            }
+                        )
+                        this.state = await result.json()
+                    },
+
+                    async callEmergencyMeeting() {
+                        const result = await fetch(
+                            `${SERVER_URL}/${riddleId}/callEmergencyMeeting`,
+                            {
+                                headers: header(),
+                                method: "POST",
+                                body: JSON.stringify({}),
+                            }
+                        )
+                        this.state = await result.json()
+                    },
+
+                    async kill() {
+                        const result = await fetch(
+                            `${SERVER_URL}/${riddleId}/kill`,
+                            {
+                                headers: header(),
+                                method: "POST",
+                                body: JSON.stringify({
+                                    inRoom: this.inputs.room,
+                                    victimSecret: this.secret,
+                                }),
+                            }
+                        )
+                        this.state = await result.json()
+                    },
+                },
+                async created() {
+                    await this.fetchState(this.userId)
+                    if (this.state.isAdmin) {
+                        this.inputs.admin = {
+                            startingAt: this.state.startingAt,
+                            imposter: this.state.imposter,
+                            killCooldownInSeconds:
+                                this.state.killCooldownInSeconds,
+                            initialKillCooldownInSeconds:
+                                this.state.initialKillCooldownInSeconds,
+                            possibleMurdersPerImposter:
+                                this.state.possibleMurdersPerImposter,
+                        }
+                    }
+                    if (this.room != undefined) {
+                        const result = await fetch(
+                            `${SERVER_URL}/${riddleId}/goIntoRoom`,
+                            {
+                                headers: header(),
+                                method: "POST",
+                                body: JSON.stringify({
+                                    roomId: this.room,
+                                }),
+                            }
+                        )
+                        this.state = await result.json()
+                    }
+                    setInterval(() => {
+                        this.fetchState()
+                    }, 1000)
+                },
+            }).mount("#app")
+        </script>
+    </body>
+</html>

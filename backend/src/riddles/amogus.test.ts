@@ -158,17 +158,10 @@ test.serial("An imposter should be able to kill", async (t) => {
     const crew = crews[0]
 
     await supertest(app.callback())
-        .post(`/${riddleId}/prepareKill`)
-        .set("Authorization", `User ${imposter.id}`)
-        .expect(200)
-
-    const imposterStateBefore = await getPlayerState(app, imposter.id)
-
-    await supertest(app.callback())
         .post(`/${riddleId}/kill`)
         .set("Authorization", `User ${crew.id}`)
         .send({
-            secret: imposterStateBefore.imposter.secret,
+            imposterId: imposter.id,
             inRoom: "597FD4EA-9416-4617-98F1-5E0CA5F5592E",
         })
         .expect(200)
@@ -221,17 +214,10 @@ test.serial("imposters win", async (t) => {
     const imposter = imposters[0]
     for (const crew of crews) {
         await supertest(app.callback())
-            .post(`/${riddleId}/prepareKill`)
-            .set("Authorization", `User ${imposter.id}`)
-            .expect(200)
-
-        const imposterStateBefore = await getPlayerState(app, imposter.id)
-
-        await supertest(app.callback())
             .post(`/${riddleId}/kill`)
             .set("Authorization", `User ${crew.id}`)
             .send({
-                secret: imposterStateBefore.imposter.secret,
+                imposterId: imposter.id,
                 inRoom: "597FD4EA-9416-4617-98F1-5E0CA5F5592E",
             })
             .expect(200)
@@ -262,9 +248,9 @@ test.serial("crew win", async (t) => {
     t.is(crewState.gameState, GameState.crewWon)
 })
 
-test.serial.only("simulate game", async () => {
+test.serial("simulate game", async () => {
     const results: Array<{ state: GameState; days: number }> = []
-    for (let i = 0; i < 10; i++) {
+    for (let i = 0; i < 1; i++) {
         await wait(100)
         try {
             results.push(await simulateGame())
@@ -326,20 +312,10 @@ async function simulateGame(): Promise<{ state: GameState; days: number }> {
             const victim = aliveCrews[victimIndex]
 
             await supertest(game.app.callback())
-                .post(`/${riddleId}/prepareKill`)
-                .set("Authorization", `User ${imposter.id}`)
-                .expect(200)
-
-            const imposterStateKill = await getPlayerState(
-                game.app,
-                imposter.id
-            )
-
-            await supertest(game.app.callback())
                 .post(`/${riddleId}/kill`)
                 .set("Authorization", `User ${victim.id}`)
                 .send({
-                    secret: imposterStateKill.imposter.secret,
+                    imposterId: imposter.id,
                     inRoom: "597FD4EA-9416-4617-98F1-5E0CA5F5592E",
                 })
                 .expect(200)

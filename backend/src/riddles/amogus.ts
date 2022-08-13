@@ -47,14 +47,14 @@ export type PlayerState = {
     isAdmin: false
 
     name: string
+    secret: string
+
     role?: Role
     isAlive: boolean
 
     kill?: Kill
 
     imposter?: {
-        secret: string
-        validUntil: string
         lastedKilledAt?: string
     }
 
@@ -73,18 +73,23 @@ export enum GameState {
     impostersWon = "impostersWon",
 }
 
+export type NotRegisteredPhoneState = {
+    isAlive: false
+    isRegistered: false
+}
+
 export type PlayerPhoneState = {
     name: string
+    secret: string
     startingAt: string
+    isRegistered: true
     role?: Role
     isAlive: boolean
     gameState: GameState
 
     killCooldown?: string
 
-    imposter?: {
-        secret: string
-    }
+    imposter?: {}
 
     roomInformation?: {
         room: Room
@@ -95,22 +100,31 @@ export type PlayerPhoneState = {
             reported?: boolean
         }>
     }
+
+    rooms?: Array<string>
 }
 
 export type Report = {
     bodyId?: string
     reporterId?: string
+    body?: string
+    reporter?: string
 }
 
 export type AdminPhoneState = {
     name: "admin"
     startingAt: string
+    isRegistered: true
+    isAdmin: true
     imposter: number
     crewAlive: number
     imposterAlive: number
     gameState: GameState
     alive: Array<{ name: string; id: string }>
     reports: Array<Report>
+    killCooldownInSeconds: number
+    initialKillCooldownInSeconds: number
+    possibleMurdersPerImposter: number
 }
 
 type OurState =
@@ -137,6 +151,9 @@ function getState(state: RiddleState<PlayerState | AdminState>): OurState {
         StateWrapper<PlayerState>
     >
     const alive = all.filter((it) => it.state.isAlive)
+    // not registered yet
+    if (state.active == undefined) {
+    }
     if (state.active.state.isAdmin) {
         return {
             isAdmin: true,
@@ -160,7 +177,7 @@ function getState(state: RiddleState<PlayerState | AdminState>): OurState {
 
 export default riddle<
     PlayerState | AdminState,
-    PlayerPhoneState | AdminPhoneState
+    PlayerPhoneState | AdminPhoneState | NotRegisteredPhoneState
 >({
     riddleId,
     start: async (existing) => {
@@ -196,6 +213,7 @@ export default riddle<
         return {
             name: `Crew ${Math.floor(Math.random() * 1000)}`,
             isAlive: true,
+            secret: `${uuid()}`,
             isAdmin: false,
             calledEmergencyMeeting: false,
             foundBodies: [],
@@ -203,6 +221,12 @@ export default riddle<
     },
     solved: () => false,
     getter: (dbState) => {
+        if (dbState.active == undefined) {
+            return {
+                isRegistered: false,
+                isAlive: false,
+            }
+        }
         const state = getState(dbState)
         const gameState = (() => {
             if (!state.admin.state.started) {
@@ -234,6 +258,8 @@ export default riddle<
         if (state.isAdmin) {
             return {
                 name: "admin",
+                isAdmin: true,
+                isRegistered: true,
                 startingAt: state.admin.state.startingAt,
                 imposter: state.admin.state.imposter,
                 crewAlive: state.alive.filter(
@@ -253,18 +279,33 @@ export default riddle<
                             it.state.foundBodies?.map((bodyId) => ({
                                 bodyId: bodyId,
                                 reporterId: it.user,
+                                body: state.all.find((it) => it.user == bodyId)
+                                    ?.state.name,
+                                reporter: it.state.name,
                             })) ?? []
                     ),
                     ...state.alive
                         .filter((it) => it.state.calledEmergencyMeeting)
-                        .map((it) => ({ reporterId: it.user })),
+                        .map((it) => ({
+                            reporterId: it.user,
+                            reporter: it.state.name,
+                        })),
                 ],
+
+                killCooldownInSeconds: state.admin.state.killCooldownInSeconds,
+                initialKillCooldownInSeconds:
+                    state.admin.state.initialKillCooldownInSeconds,
+                possibleMurdersPerImposter:
+                    state.admin.state.possibleMurdersPerImposter,
             }
         }
 
         if (state.isAdmin === false) {
             return {
                 name: state.active.state.name,
+                secret: state.active.state.secret,
+                isRegistered: true,
+                isAdmin: false,
                 startingAt: state.admin.state.startingAt,
                 role: state.active.state.role,
                 isAlive: state.active.state.isAlive,
@@ -274,9 +315,7 @@ export default riddle<
                     if (state.active.state.role !== Role.imposter)
                         return undefined
 
-                    return {
-                        secret: state.active.state.imposter.secret,
-                    }
+                    return {}
                 })(),
                 killCooldown: (() => {
                     const lastedKilledAt =
@@ -291,6 +330,11 @@ export default riddle<
                     )
                     return lastedKilledAtDate.toISOString()
                 })(),
+                calledEmergencyMeeting:
+                    state.active.state.calledEmergencyMeeting,
+                rooms: Object.values(rooms)
+                    .filter((it) => it.name !== "Meeting")
+                    .map((it) => it.name),
                 roomInformation: (() => {
                     if (state.active.state.inRoom === undefined)
                         return undefined
@@ -305,7 +349,7 @@ export default riddle<
                             .filter(
                                 (it) =>
                                     it.state.kill.room ===
-                                    state.active.state.inRoom
+                                    rooms[state.active.state.inRoom].name
                             )
                             .filter(
                                 (it) =>
@@ -319,6 +363,7 @@ export default riddle<
                             .map((it) => ({
                                 name: it.state.name,
                                 id: it.user,
+                                reported: it.state.kill.reported,
                                 possibleMurders: (() => {
                                     if (
                                         it.state.kill.reportedBy ===
@@ -343,17 +388,21 @@ export default riddle<
         /**
          * Setup
          */
-        changeName: async (dbState, name: string) => {
+        register: async (
+            dbState,
+            { name, secret }: { name: string; secret: string }
+        ) => {
             const state = getState(dbState)
             if (state.isAdmin == true) return
             if (state.admin.state.started) return
 
             logger.info(
-                `player change name from ${state.active.state.name} to ${name}`
+                `player registered; chnged name from ${state.active.state.name} to ${name}`
             )
             if (!state.active.state.name.startsWith("Crew ")) return
 
             state.active.state.name = name
+            state.active.state.secret = secret
             return dbState
         },
 
@@ -419,9 +468,7 @@ export default riddle<
                 (it) => it.user === bodyId
             ) as StateWrapper<PlayerState>
             logger.info(
-                `player ${state.active.state.name} reported body of ${
-                    body.state.name
-                } in room ${rooms[body.state.kill?.room].name}`
+                `player ${state.active.state.name} reported body of ${body.state.name} in room ${body.state.kill?.room}`
             )
 
             const killInformation = body.state.kill as Kill
@@ -495,60 +542,25 @@ export default riddle<
          * Imposter action
          */
 
-        // do we really need the secret stuff here?
-        prepareKill: async (dbState) => {
-            const state = getState(dbState)
-            if (!state.admin.state.started) return
-
-            if (state.isAdmin === true) return
-            if (state.active.state.role !== Role.imposter) return
-
-            // check cooldown
-            if (state.active.state.imposter.lastedKilledAt != undefined) {
-                const cooldownEndsAt = new Date(
-                    state.active.state.imposter.lastedKilledAt
-                )
-                cooldownEndsAt.setSeconds(
-                    cooldownEndsAt.getSeconds() +
-                        state.admin.state.killCooldownInSeconds
-                )
-                if (cooldownEndsAt > new Date()) {
-                    logger.info(
-                        `imposter ${
-                            state.active.state.name
-                        } is on cooldown until ${cooldownEndsAt.toISOString()}`
-                    )
-                    return
-                }
-            }
-
-            const date = new Date()
-            date.setMinutes(date.getMinutes() + 15)
-            state.active.state.imposter = {
-                secret: uuid(),
-                validUntil: date.toISOString(),
-            }
-
-            return dbState
-        },
-
-        kill: async (dbState, data: { secret: string; inRoom: string }) => {
+        kill: async (
+            dbState,
+            data: { victimSecret: string; inRoom: string }
+        ) => {
             const state = getState(dbState)
             if (state.isAdmin === true) return
             if (!state.admin.state.started) return
 
-            const player = state.active as StateWrapper<PlayerState>
+            const imposter = state.active as StateWrapper<PlayerState>
 
             const now = new Date().toISOString()
-            const imposter = state.all.find(
+            const player = state.all.find(
                 (it) =>
                     it.state.isAdmin == false &&
-                    it.state.imposter != undefined &&
-                    it.state.imposter?.secret === data.secret
+                    it.state.secret === data.victimSecret
             ) as StateWrapper<PlayerState>
 
             // check cooldown
-            if (imposter.state.imposter.lastedKilledAt != undefined) {
+            if (imposter.state.imposter?.lastedKilledAt != undefined) {
                 const cooldownEndsAt = new Date(
                     imposter.state.imposter.lastedKilledAt
                 )
@@ -564,7 +576,7 @@ export default riddle<
                 }
             }
 
-            imposter.state.imposter.lastedKilledAt = now
+            imposter.state.imposter = { lastedKilledAt: now }
 
             logger.info(`${imposter.state.name} killed ${player.state.name}`)
 
@@ -596,6 +608,12 @@ export default riddle<
         const admin = state.find(
             (it) => it.state.isAdmin == true
         ) as StateWrapper<AdminState>
+
+        // not started
+        if (admin == undefined) {
+            return
+        }
+
         const players = state.filter((it) => !it.state.isAdmin) as Array<
             StateWrapper<PlayerState>
         >
@@ -643,9 +661,6 @@ export default riddle<
                 it.state.role = Role.imposter
                 it.state.imposter = {
                     lastedKilledAt: cooldownStartImposters.toISOString(),
-                    // fake secret and valid until, just to satisfy types
-                    secret: "none",
-                    validUntil: cooldownStartImposters.toISOString(),
                 }
             })
 

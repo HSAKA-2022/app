@@ -2,6 +2,7 @@ import * as fs from "fs"
 import Router from "@koa/router"
 import Koa, { Middleware, Next } from "koa"
 import bodyParser from "koa-bodyparser"
+import cors from "@koa/cors"
 import { log } from "./log"
 
 const excludedSuffixes = [".test.js", ".test.ts"]
@@ -50,6 +51,7 @@ export const checkAuth: Middleware = async (ctx: Koa.Context, next: Next) => {
 
 export async function buildApp(): Promise<Koa> {
     const app = new Koa()
+    app.use(cors({ origin: "*" }))
     app.use(checkAuth)
     app.use(bodyParser())
     await mountAllRiddles(app)
