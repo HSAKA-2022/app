@@ -89,7 +89,9 @@ export type PlayerPhoneState = {
 
     killCooldown?: string
 
-    imposter?: {}
+    imposter?: {
+        otherImposters: Array<string>
+    }
 
     roomInformation?: {
         room: Room
@@ -315,7 +317,11 @@ export default riddle<
                     if (state.active.state.role !== Role.imposter)
                         return undefined
 
-                    return {}
+                    return {
+                        otherImposters: state.others
+                            .filter((it) => it.state.role == Role.imposter)
+                            .map((it) => it.state.name),
+                    }
                 })(),
                 killCooldown: (() => {
                     const lastedKilledAt =
@@ -343,13 +349,15 @@ export default riddle<
                     cutOff.setHours(4)
                     cutOff.setDate(cutOff.getDate() - 1)
                     return {
-                        room: rooms[state.active.state.inRoom],
+                        room: Object.values(rooms).find(
+                            (it) => it.name == state.active.state.inRoom
+                        ),
                         bodies: state.all
                             .filter((it) => !it.state.isAlive)
                             .filter(
                                 (it) =>
                                     it.state.kill.room ===
-                                    rooms[state.active.state.inRoom].name
+                                    state.active.state.inRoom
                             )
                             .filter(
                                 (it) =>
@@ -451,7 +459,7 @@ export default riddle<
                 `player ${state.active.state.name} went into room ${rooms[roomId].name}`
             )
 
-            activeState.state.inRoom = roomId
+            activeState.state.inRoom = rooms[roomId].name
             activeState.state.enteredRoomAt = new Date().toISOString()
 
             return dbState

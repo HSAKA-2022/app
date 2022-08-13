@@ -9,5 +9,7 @@
     "devDependencies": {
         "nuxt": "3.0.0-rc.8"
     },
-    "dependencies": {}
+    "dependencies": {
+        "qrcode": "^1.5.1"
+    }
 }
