@@ -1,0 +1,13 @@
+{
+  "name": "pi-app",
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "node ./raspiService.js"
+  },
+  "dependencies": {
+    "axios": "^0.27.2",
+    "deep-equal": "^2.0.5",
+    "winston": "^3.7.2"
+  }
+}
