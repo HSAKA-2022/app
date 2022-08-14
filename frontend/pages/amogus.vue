@@ -340,6 +340,8 @@
         </div>
         <!--    {{state}}-->
     </div>
+    <img id="amogus" style="display:none;"
+         src="https://cdn.iconscout.com/icon/free/png-512/among-us-3187363-2669561.png" />
 </template>
 <style>
 html,
@@ -624,11 +626,13 @@ export default {
         }
         const canvasElement = document.getElementById("canvas")
         if (canvasElement != undefined) {
+            const width = canvasElement?.clientWidth ?? 250
             QrCode.toCanvas(
                 canvasElement,
                 `${FRONTEND_URL}?secret=${this.state.secret}`,
-                { width: canvasElement?.clientWidth ?? 250 }
+                { width: width}
             )
+            canvas.getContext("2d").drawImage(document.getElementById("amogus"), (width / 2) - 25, width - 50, 50, 50)
         }
         setInterval(() => {
             this.fetchState()
