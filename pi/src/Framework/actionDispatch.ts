@@ -12,7 +12,7 @@ import { config } from "../config.js"
 export function triggerAction(
     riddleId: string,
     actionId: string,
-    payload: Object
+    payload: Record<string, unknown>
 ) {
     // Build Connection String
     logger.info(`Triggering Action ${actionId} for riddle ${riddleId}`)

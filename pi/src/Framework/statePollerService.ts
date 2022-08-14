@@ -2,13 +2,14 @@ import axios from "axios"
 import { logger } from "./logger"
 import { config } from "../config"
 import deepEqual from "deep-equal"
+type callbackfunctions = (state: Record<string, unknown>) => void
 /**
  * Dictionary of JSON Objects, describing the current State for each Riddle.
  * Keys are riddleIDs
  * @private
- * @var {Dictionary<Object>} dictOfCurrentState
+ * @var {Dictionary<Record<string, unknown>>} dictOfCurrentState
  */
-const dictOfCurrentState: { [name: string]: Object } = {}
+const dictOfCurrentState: { [name: string]: Record<string, unknown> } = {}
 /**
  * Dictionary of lists of functions
  * For each riddle, a list of callbackfunctions is kept
@@ -16,7 +17,7 @@ const dictOfCurrentState: { [name: string]: Object } = {}
  * @private
  * @var {Dictionary<Function[]>} dictOfCallbacks
  */
-const dictOfCallbacks: { [name: string]: Function[] } = {}
+const dictOfCallbacks: { [name: string]: callbackfunctions[] } = {}
 
 /**
  * Starts Poll Service
@@ -28,8 +29,8 @@ export async function runPollingService() {
         setTimeout(function () {
             const listOfRiddleIDs = Object.keys(dictOfCallbacks)
             logger.info(`Executing State Update for ${listOfRiddleIDs}`)
-            for (var i = 0; i < listOfRiddleIDs.length; i++) {
-                updateState(listOfRiddleIDs[i])
+            for (const id of listOfRiddleIDs) {
+                updateState(id)
             }
             loop()
         }, config.statePollService.pollDelay)
@@ -41,7 +42,10 @@ export async function runPollingService() {
  * @param {string} riddleID
  * @param {function} callback
  * */
-export function registerCallback(riddleID: string, callback: Function) {
+export function registerCallback(
+    riddleID: string,
+    callback: callbackfunctions
+) {
     if (dictOfCallbacks[riddleID] == undefined) {
         dictOfCallbacks[riddleID] = [callback]
     } else {
@@ -55,8 +59,8 @@ export function registerCallback(riddleID: string, callback: Function) {
  * @param {string} riddleID
  * @param {function} callback
  * */
-export function removeCallback(riddleID: string, callback: Function) {
-    var index = dictOfCallbacks[riddleID].indexOf(callback)
+export function removeCallback(riddleID: string, callback: callbackfunctions) {
+    const index = dictOfCallbacks[riddleID].indexOf(callback)
     dictOfCallbacks[riddleID].splice(index, 1)
 }
 

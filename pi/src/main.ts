@@ -30,7 +30,7 @@ function runUserScripts() {
                 module.default()
             })
             .catch((err) => {
-                if (err) console.error(err)
+                if (err) logger.error("Error executing File: " + err)
             })
     }
 }
