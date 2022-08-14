@@ -1,13 +1,33 @@
 {
-  "name": "pi-app",
-  "version": "1.0.0",
-  "type": "module",
-  "scripts": {
-    "dev": "node ./raspiService.js"
-  },
-  "dependencies": {
-    "axios": "^0.27.2",
-    "deep-equal": "^2.0.5",
-    "winston": "^3.7.2"
-  }
+    "name": "pi",
+    "version": "1.0.0",
+    "type": "module",
+    "author": "",
+    "license": "ISC",
+    "description": "",
+    "scripts": {
+        "dev": "node ./raspiService.js",
+        "lint": "eslint --cache --max-warnings=0 . && prettier -c .",
+        "lint:fix": "eslint --cache --fix --max-warnings=0 . && prettier --write .",
+        "test": "tsc --noEmit",
+        "start:direct": "node --loader ts-node/esm ./src/main.ts",
+        "start": "nodemon"
+    },
+    "dependencies": {
+        "axios": "^0.27.2",
+        "deep-equal": "^2.0.5",
+        "nodemon": "^2.0.19",
+        "ts-node": "^10.9.1",
+        "winston": "^3.7.2"
+    },
+    "nodemonConfig": {
+        "ext": "js,ts",
+        "watch": [
+            "src"
+        ],
+        "exec": "npm run start:direct"
+    },
+    "devDependencies": {
+        "@types/deep-equal": "^1.0.1"
+    }
 }
