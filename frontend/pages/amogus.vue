@@ -1,8 +1,9 @@
 <template>
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/@mdi/font@6.9.96/css/materialdesignicons.min.css">
     <div id="app">
         <div v-if="!loading">
             <div v-if="state.isRegistered == false">
-                <div class="card" v-if="secret != undefined">
+                <div class="card" v-if="secret != undefined && !state.alreadyStarted">
                     <header class="card-header">
                         <p class="card-header-title">Register</p>
                     </header>
@@ -20,10 +21,14 @@
                         </a>
                     </footer>
                 </div>
-                <span v-if="secret == undefined"
-                >Bitte scanne einen QR code um dich zu
-                        registrieren!</span
+                <div v-if="state.alreadyStarted" class="notification is-danger">
+                    Das spiel hat leider schon angefangen :(
+                </div>
+                <div v-if="secret == undefined && !state.alreadyStarted"
+                     class="notification is-info"
                 >
+                    Bitte scanne einen QR code um dich zu registrieren!
+                </div>
             </div>
             <!--    ADMIN STUFF    -->
             <div
@@ -160,56 +165,6 @@
                         </div>
                     </div>
 
-                    <div v-if="new Date(state.startingAt) < new Date()">
-                        <div class="card my-3">
-                            <header class="card-header">
-                                <p class="card-header-title">
-                                    QR code zum scannen von Impostern
-                                </p>
-                            </header>
-                            <div class="pt-1" style="display:flex; align-items: center; justify-content: center; overflow: hidden">
-                                <canvas id="canvas" style="margin:auto;"/>
-                            </div>
-                        </div>
-                        <h1>There are imposter among us</h1>
-
-                        <span class="tag" @click="showRole" v-if="roleClicked < 5">
-                            Klicke 5 mal um deine Rolle zu erfahren!
-                        </span>
-                        <span class="tag is-primary" @click="hideRole" v-if="roleClicked >=5">
-                            {{ state.role }}
-                        </span>
-
-                        <div
-                            @click="hideRole"
-                            class="panel my-3"
-                            v-if="state.role === 'imposter' && roleClicked >=5">
-                            <p class="panel-heading">
-                                Die anderen Imposter; Klicke um zu schließen!
-                            </p>
-                            <div class="panel-block" v-for="imposter in state.imposter.otherImposters">
-                                {{ imposter }}
-                            </div>
-                        </div>
-
-                        <p>
-                            Some text about the game - Um einen Raum zu
-                            betreten, musst du den QR code scannen - Wenn
-                            ein Imposter dich erwischt hat, musst du dessen
-                            QR code scannen
-                        </p>
-                        <button
-                            class="button"
-                            @click="callEmergencyMeeting"
-                            v-if="!state.calledEmergencyMeeting"
-                        >
-                            Call an Emergency Meeting
-                        </button>
-                        <span v-if="state.calledEmergencyMeeting"
-                        >Emergency Meeting called</span
-                        >
-                    </div>
-
                     <div
                         class="card my-3"
                         v-if="secret != undefined && state.secret != secret && state.role === 'imposter'"
@@ -243,6 +198,91 @@
                                 kill
                             </a>
                         </footer>
+                    </div>
+                    <div v-if="new Date(state.startingAt) < new Date()">
+                        <div class="card my-3">
+                            <header class="card-header">
+                                <p class="card-header-title">
+                                    QR code zum scannen von Impostern
+                                </p>
+                            </header>
+                            <div class="pt-1"
+                                 style="display:flex; align-items: center; justify-content: center; overflow: hidden">
+                                <canvas id="canvas" style="margin:auto;" />
+                            </div>
+                        </div>
+                        <h1>There are imposter among us</h1>
+
+                        <span class="tag" @click="showRole" v-if="roleClicked < 5">
+                            Klicke {{ 5 - roleClicked }} mal um deine Rolle zu erfahren!
+                        </span>
+                        <span class="tag is-primary" @click="hideRole" v-if="roleClicked >=5">
+                            {{ state.role }}
+                            <span class="icon-text">
+                              <span class="icon">
+                                <i class="mdi mdi-close"></i>
+                              </span>
+                            </span>
+                        </span>
+
+                        <div
+                            @click="hideRole"
+                            class="panel my-3"
+                            :class="{
+                                'is-success':new Date(state.imposter.killCooldown ) < new Date(),
+                                'is-warning':new Date(state.imposter.killCooldown ) > new Date(),
+                                }"
+                            v-if="state.role === 'imposter' && roleClicked >= 5">
+                            <p class="panel-heading level mb-0"
+                               v-if="new Date(state.imposter.killCooldown ) > new Date()"
+                            >
+                                Du kannst in {{ getTimeDiff(new Date(state.imposter.killCooldown), new Date()) }}
+                                ({{ new Date(state.imposter.killCooldown).toLocaleTimeString() }}) wieder töten
+                                <span class="icon-text">
+                                  <span class="icon">
+                                    <i class="mdi mdi-close"></i>
+                                  </span>
+                                </span>
+                            </p>
+                            <p class="panel-heading level mb-0"
+                               v-if="new Date(state.imposter.killCooldown ) < new Date()"
+                            >
+                                Du kannst jetzt einen Spieler eliminieren!
+                                <span class="icon-text">
+                                  <span class="icon">
+                                    <i class="mdi mdi-close"></i>
+                                  </span>
+                                </span>
+                            </p>
+
+                            <a class="panel-block" @click.stop="showRole"
+                               v-if="roleClicked === 5">
+                                Clicke Hier um die anderen imposter zu sehen
+                            </a>
+                            <a class="panel-block" @click.stop="hideRole"
+                               v-if="roleClicked > 5">
+                                Klicke hier um die Karte zu schließen
+                            </a>
+                            <div v-if="roleClicked >= 6" class="panel-block"
+                                 v-for="imposter in state.imposter.otherImposters">
+                                {{ imposter }}
+                            </div>
+                        </div>
+
+                        <p>
+                            Some text about the game - Um einen Raum zu
+                            betreten, musst du den QR code scannen - Wenn
+                            ein Imposter dich erwischt hat, musst du dessen
+                            QR code scannen
+                        </p>
+                        <button
+                            class="button"
+                            @click="callEmergencyMeeting"
+                            v-if="!state.calledEmergencyMeeting"
+                        >
+                            Call an Emergency Meeting
+                        </button>
+                        <span v-if="state.calledEmergencyMeeting">Emergency Meeting called</span>
                     </div>
                     <div class="my-6" v-if="state.roomInformation != undefined">
 
@@ -345,8 +385,11 @@ h4 {
 </style>
 
 <script>
-const SERVER_URL = "http://192.168.161.102:5000"
-const FRONTEND_URL = "http://192.168.161.102:3000/amogus"
+// const SERVER_URL = "http://192.168.161.102:5000"
+// const FRONTEND_URL = "http://192.168.161.102:3000/amogus"
+
+const SERVER_URL = "https://backend.burg.games"
+const FRONTEND_URL = "https://burg.games/amogus"
 const riddleId = "amogus"
 import QrCode from "qrcode"
 
@@ -378,12 +421,17 @@ function header() {
     }
 }
 
+function padWithZero(number) {
+    return number < 10 ? "0" + number : number
+}
+
 async function getState() {
     const result = await fetch(SERVER_URL + "/" + riddleId, {
         headers: header()
     })
     return result.json()
 }
+
 
 export default {
     data() {
@@ -522,6 +570,7 @@ export default {
                     })
                 }
             )
+            window.location.replace(location.pathname)
             this.state = await result.json()
         },
 
@@ -531,6 +580,18 @@ export default {
         },
         hideRole() {
             this.roleClicked = 0
+        },
+        getTimeDiff(a, b) {
+            const diff = a - b
+            const seconds = Math.floor(diff / 1000)
+            const minutes = Math.floor(seconds / 60)
+            const hours = Math.floor(minutes / 60)
+
+            const hourString = hours > 0 ? hours + ":" : ""
+            const minuteString = minutes > 0 ? padWithZero(minutes % 60) + ":" : ""
+            const secondString = (minutes > 0 || hours > 0) ? padWithZero(seconds % 60) + "" : seconds + "s"
+            return `${hourString}${minuteString}${secondString}`
+
         }
     },
     async created() {
@@ -558,14 +619,17 @@ export default {
                     })
                 }
             )
+            window.location.replace(location.pathname)
             this.state = await result.json()
         }
         const canvasElement = document.getElementById("canvas")
-        QrCode.toCanvas(
-            canvasElement,
-            `${FRONTEND_URL}?secret=${this.state.secret}`,
-            {width: canvasElement.clientWidth}
-        )
+        if (canvasElement != undefined) {
+            QrCode.toCanvas(
+                canvasElement,
+                `${FRONTEND_URL}?secret=${this.state.secret}`,
+                { width: canvasElement?.clientWidth ?? 250 }
+            )
+        }
         setInterval(() => {
             this.fetchState()
         }, 1000)

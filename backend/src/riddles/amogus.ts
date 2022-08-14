@@ -13,8 +13,47 @@ export const rooms: Record<string, Room> = {
     Meeting: {
         name: "Meeting",
     },
+    "94FB7826-A85E-43AB-9DC9-16BE3C2742C0": {
+        name: "Wiese",
+    },
+    "CAEFFE70-EAA2-45FC-BBA3-63AE3D320612": {
+        name: "Burg innenhof",
+    },
+    "23CCABE9-6327-4088-A810-F347DFEAE426": {
+        name: "Werkstatt",
+    },
     "597FD4EA-9416-4617-98F1-5E0CA5F5592E": {
         name: "Webraum",
+    },
+    "EF8F8C6C-3A8A-4961-8B48-57C7A4F5FD23": {
+        name: "9 Säulen raum",
+    },
+    "882607A7-C13D-4EB2-9D08-63FB49F4DC29": {
+        name: "Herrenhaus (+ Zimmer)",
+    },
+    "045B1FB2-1B06-4BF9-B696-B946DE8F9F6D": {
+        name: "Torschenke",
+    },
+    "0D630406-16B8-4CB1-9551-67419E02FAF7": {
+        name: "Speisesaal",
+    },
+    "F1405B96-FB47-4CE6-84B2-A2CE03B1BCB9": {
+        name: "Aquarium",
+    },
+    "606E8F89-4C41-4AEC-9A54-824614987E16": {
+        name: "Halle",
+    },
+    "D8715BB3-A01C-43ED-B7C8-AAA4CB8FCFD1": {
+        name: "vor der Halle (+ Zimmer)",
+    },
+    "715A8826-16C4-4DE7-B3B9-8436DE6B3C89": {
+        name: "Spangenberg",
+    },
+    "0E38C254-6F56-4C86-A8BC-FC368081A299": {
+        name: "Der andere von Spangenberg",
+    },
+    "19BD7A09-397D-4C66-B244-B41A7A595B36": {
+        name: "Tanzplatz",
     },
 }
 
@@ -76,6 +115,7 @@ export enum GameState {
 export type NotRegisteredPhoneState = {
     isAlive: false
     isRegistered: false
+    alreadyStarted: boolean
 }
 
 export type PlayerPhoneState = {
@@ -87,10 +127,9 @@ export type PlayerPhoneState = {
     isAlive: boolean
     gameState: GameState
 
-    killCooldown?: string
-
     imposter?: {
         otherImposters: Array<string>
+        killCooldown: string
     }
 
     roomInformation?: {
@@ -224,8 +263,12 @@ export default riddle<
     solved: () => false,
     getter: (dbState) => {
         if (dbState.active == undefined) {
+            const admin = dbState.all.find((it) => it.state.isAdmin) as
+                | StateWrapper<AdminState>
+                | undefined
             return {
                 isRegistered: false,
+                alreadyStarted: admin?.state?.started ?? false,
                 isAlive: false,
             }
         }
@@ -312,29 +355,28 @@ export default riddle<
                 role: state.active.state.role,
                 isAlive: state.active.state.isAlive,
                 gameState,
-                // todo see other imposters
                 imposter: (() => {
                     if (state.active.state.role !== Role.imposter)
                         return undefined
 
                     return {
+                        killCooldown: (() => {
+                            const lastedKilledAt =
+                                state.active.state.imposter?.lastedKilledAt
+                            if (lastedKilledAt == undefined) {
+                                return undefined
+                            }
+                            const lastedKilledAtDate = new Date(lastedKilledAt)
+                            lastedKilledAtDate.setSeconds(
+                                lastedKilledAtDate.getSeconds() +
+                                    state.admin.state.killCooldownInSeconds
+                            )
+                            return lastedKilledAtDate.toISOString()
+                        })(),
                         otherImposters: state.others
                             .filter((it) => it.state.role == Role.imposter)
                             .map((it) => it.state.name),
                     }
-                })(),
-                killCooldown: (() => {
-                    const lastedKilledAt =
-                        state.active.state.imposter?.lastedKilledAt
-                    if (lastedKilledAt == undefined) {
-                        return undefined
-                    }
-                    const lastedKilledAtDate = new Date(lastedKilledAt)
-                    lastedKilledAtDate.setSeconds(
-                        lastedKilledAtDate.getSeconds() +
-                            state.admin.state.killCooldownInSeconds
-                    )
-                    return lastedKilledAtDate.toISOString()
                 })(),
                 calledEmergencyMeeting:
                     state.active.state.calledEmergencyMeeting,
@@ -342,8 +384,7 @@ export default riddle<
                     .filter((it) => it.name !== "Meeting")
                     .map((it) => it.name),
                 roomInformation: (() => {
-                    if (state.active.state.inRoom === undefined)
-                        return undefined
+                    if (state.active.state.inRoom == undefined) return undefined
 
                     const cutOff = new Date()
                     cutOff.setHours(4)
