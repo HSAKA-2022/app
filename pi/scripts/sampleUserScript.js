@@ -1,25 +1,26 @@
-import { registerCallback } from "../Framework/statePollerService.js"
-import { triggerAction } from "../Framework/actionDispatch.js"
-import { logger } from "../Framework/logger.js"
+import { registerCallback } from "../src/statePollerService"
+import { triggerAction } from "../src/actionDispatch"
+import { logger } from "../src/log"
 
 /**
  * Entrypoint into the Script
  */
-export default function () {
-    logger.info("Starting User Script")
-    callActionOnRiddle1()
+export default async function () {
+    logger.info("Starting User Script 1")
+    await callActionOnRiddle1()
     registerCallbackRiddle1()
     registerCallbackRiddle2()
+    logger.info("Finished User Script 1")
 }
 
 /**
  * Dummy Action Trigger function, calling the backend with a dummy payload
  */
-function callActionOnRiddle1() {
+async function callActionOnRiddle1() {
     const payload = {}
     payload.names = ["Emil", "Berta"]
     payload.id = [1, 2]
-    triggerAction("riddle1", "action1", payload)
+    await triggerAction("riddle1", "action1", payload)
 }
 
 /**

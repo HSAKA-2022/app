@@ -22,7 +22,7 @@ export const config: conf = {
         level: "info",
         path: "./log/",
     },
-    userScriptPath: "./UserScripts/",
+    userScriptPath: "./scripts/",
     statePollService: {
         baseURL: "https://api.kucoin.com/api/v1/market/stats",
         //Delay in MS

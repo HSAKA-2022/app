@@ -1,5 +1,5 @@
 import * as winston from "winston"
-import { config } from "../config.js"
+import { config } from "./config"
 
 // Exports a logger, which can be used in all Scripts
 export const logger = winston.createLogger({

@@ -1,7 +1,7 @@
 {
     "name": "pi",
     "version": "1.0.0",
-    "type": "module",
+    "main": "index.js",
     "author": "",
     "license": "ISC",
     "description": "",
@@ -23,7 +23,8 @@
     "nodemonConfig": {
         "ext": "js,ts",
         "watch": [
-            "src"
+            "src",
+            "scripts"
         ],
         "exec": "npm run start:direct"
     },

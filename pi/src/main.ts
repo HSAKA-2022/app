@@ -1,37 +1,37 @@
 import { readdirSync } from "fs"
-import { logger } from "./Framework/logger"
-import { runPollingService } from "./Framework/statePollerService.js"
+import { logger } from "./log"
+import { runPollingService } from "./statePollerService"
 import { config } from "./config"
+import * as path from "path"
 
 /**
  * Run Pi-App
  */
 async function main() {
     logger.info("Starting Pi-App")
-    runPollingService()
-    runUserScripts()
+    await runPollingService()
+    await runUserScripts()
     logger.info("Finished Setup")
 }
 
 /**
  * Runs all the Scripts inside the UserScripts Folder
  */
-function runUserScripts() {
+async function runUserScripts() {
     //Read Files and filter for JS files
     const files = readdirSync(config.userScriptPath)
     const jsFiles = files.filter((f) => f.endsWith(".js"))
     //Execute Files
     logger.debug(`Files loaded are: ${jsFiles}`)
     for (const file of jsFiles) {
-        const filePath = config.userScriptPath + file
+        const filePath = path.join("../", config.userScriptPath, file)
         logger.info("Executing File: " + filePath)
-        import(filePath)
-            .then((module) => {
-                module.default()
-            })
-            .catch((err) => {
-                if (err) logger.error("Error executing File: " + err)
-            })
+        try {
+            const module = await import(filePath)
+            await module.default()
+        } catch (error) {
+            logger.error("Error executing File: " + error)
+        }
     }
 }
 // eslint-disable-next-line no-console
