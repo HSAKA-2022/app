@@ -1,5 +1,4 @@
 <template>
-    <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/@mdi/font@6.9.96/css/materialdesignicons.min.css">
     <div id="app">
         <div v-if="!loading">
             <div v-if="state.isRegistered == false">
@@ -220,7 +219,7 @@
                             {{ state.role }}
                             <span class="icon-text">
                               <span class="icon">
-                                <i class="mdi mdi-close"></i>
+                                <i class="fa fa-close"></i>
                               </span>
                             </span>
                         </span>
@@ -240,7 +239,7 @@
                                 ({{ new Date(state.imposter.killCooldown).toLocaleTimeString() }}) wieder töten
                                 <span class="icon-text">
                                   <span class="icon">
-                                    <i class="mdi mdi-close"></i>
+                                    <i class="fa fa-close"></i>
                                   </span>
                                 </span>
                             </p>
@@ -250,7 +249,7 @@
                                 Du kannst jetzt einen Spieler eliminieren!
                                 <span class="icon-text">
                                   <span class="icon">
-                                    <i class="mdi mdi-close"></i>
+                                    <i class="fa fa-close"></i>
                                   </span>
                                 </span>
                             </p>
