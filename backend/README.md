@@ -2,6 +2,12 @@
 
 Das Backend baut auf einem einfachem `Koa` Server auf, und ermöglicht es den `State` der einzelnen `Riddles` zu verwalten.
 
+## Running
+
+1. Dependencies instalieren mit `npm install`
+2. Server starten mit `npm run start`
+3. Der Server läuft jetzt auf `http://localhost:5000`
+
 ## Funktionsweise
 
 Jedes `Riddle` bekommt eine eigene sub-url.
