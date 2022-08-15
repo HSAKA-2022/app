@@ -45,6 +45,6 @@ Der Server nutzt diese um ihn zu authentifizieren.
 
 ### Wie schreibt man ein `Riddle` ?
 
-1. Neues File in `riddles`
+1. Neues File im Ordner `/riddles`
 2. Die `riddle()` Funktion aus `riddle.ts` importieren und aufrufen
-3. Die logic in die Argumente einbauen (siehe Beispiele & in `riddle.ts` für mehr Erklärungen)
+3. Die logic in die Argumente einbauen (siehe Beispiele und in `riddle.ts` für mehr Erklärungen)
