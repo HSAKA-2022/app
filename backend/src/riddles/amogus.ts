@@ -55,6 +55,9 @@ export const rooms: Record<string, Room> = {
     "19BD7A09-397D-4C66-B244-B41A7A595B36": {
         name: "Tanzplatz",
     },
+    "FA8EA579-CFB3-4EBD-9D02-F811AFF109F2": {
+        name: "Woanders",
+    },
 }
 
 export enum Role {

@@ -631,7 +631,7 @@ export default {
                 `${FRONTEND_URL}?secret=${this.state.secret}`,
                 { width: width}
             )
-            canvas.getContext("2d").drawImage(document.getElementById("amogus"), (width / 2) - 25, width - 50, 50, 50)
+            canvas.getContext("2d").drawImage(document.getElementById("amogus"), (width / 2) - 50, width - 100, 100, 100)
         }
         setInterval(() => {
             this.fetchState()
