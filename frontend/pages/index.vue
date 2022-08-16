@@ -1,6 +1,6 @@
 <template>
   <layout class="content landing-page">
-    <h1>HSAKA Frontend</h1>
+    <h1>{{ title }}</h1>
 
     <p>
       Dies ist die Startseite des HSAKA-Frontends. Wenn du diese Seite siehst,
@@ -46,3 +46,15 @@
   justify-content: center;
 }
 </style>
+
+<script lang="ts">
+import { defineComponent } from "vue"
+
+export default defineComponent({
+  data() {
+    return {
+      title: "HSAKA Frontend",
+    }
+  },
+})
+</script>
