@@ -15,9 +15,9 @@
                         </div>
                     </div>
                     <footer class="card-footer">
-                        <a class="card-footer-item is-primary" @click="register" v-if="secret != undefined">
+                        <button class="card-footer-item is-primary button" @click="register" :disabled="inputs.username == undefined || inputs.username == ''" v-if="secret != undefined">
                             Register
-                        </a>
+                        </button>
                     </footer>
                 </div>
                 <div v-if="state.alreadyStarted" class="notification is-danger">
