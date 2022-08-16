@@ -1,20 +1,21 @@
 <template>
-  <section class="section">
+  <div class="root">
     <NuxtPage />
-  </section>
+  </div>
 </template>
 
 <style>
-body {
-  /* Apply system font stack */
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
-    Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
-}
-
 html, body {
   padding: 0;
   margin: 0;
-  overflow: auto;
+}
+
+body > div {
+  width: 100%;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  overflow: hidden auto;
 }
 
 .root {
