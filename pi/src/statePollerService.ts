@@ -69,7 +69,13 @@ async function updateState(riddleId: string) {
     logger.info(`Updating State of ${riddleId}`)
     try {
         const response = await axios.get(
-            `${config.actionDispatch.baseURL}/${riddleId}`
+            `${config.actionDispatch.baseURL}/${riddleId}/raw-state`,
+            {
+                headers: {
+                    Authorization:
+                        "User " + "pi-854F8C71-D050-4F98-8FD5-72AD9C5E6870",
+                },
+            }
         )
         logger.http(
             `UpdateState for ${riddleId} :  ${response.status}-${response.statusText} : ${response.data}`
