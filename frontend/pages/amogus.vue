@@ -266,6 +266,16 @@
                                 </div>
                             </div>
 
+                            <button
+                                class="button"
+                                @click="callEmergencyMeeting"
+                                v-if="!state.calledEmergencyMeeting"
+                            >
+                                Notfall Meeting einberufen
+                            </button>
+
+                            <hr>
+
                             <h2>
                                 Was muss ich tun?
                             </h2>
@@ -279,13 +289,6 @@
                             <p class="mt-4">
                                 Als Imposter hingegen möchtest du möglichst viele Crewmates alleine antreffen um sie dann zu "töten". Lass dir dazu den QR Code des Crewmates zeigen und scanne ihn. Beachte jedoch, dass du nicht jederzeit beliebig töten kannst. Ihr müsst beide alleine sein und es gibt einen Cooldown, den du nachschauen kannst.
                             </p>
-                            <button
-                                class="button"
-                                @click="callEmergencyMeeting"
-                                v-if="!state.calledEmergencyMeeting"
-                            >
-                                Notfall Meeting einberufen
-                            </button>
                             <span v-if="state.calledEmergencyMeeting">Emergency Meeting called</span>
                         </div>
                         <div class="my-6" v-if="state.roomInformation != undefined">
