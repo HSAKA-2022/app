@@ -5,7 +5,7 @@
                 <div v-if="state.isRegistered == false">
                     <div class="card" v-if="secret != undefined && !state.alreadyStarted">
                         <header class="card-header">
-                            <p class="card-header-title">Register</p>
+                            <p class="card-header-title">Registrieren</p>
                         </header>
                         <div class="card-content">
                             <div class="field">
@@ -19,17 +19,17 @@
                             <button class="card-footer-item is-primary button" @click="register"
                                     :disabled="inputs.username == undefined || inputs.username == ''"
                                     v-if="secret != undefined">
-                                Register
+                                Registrieren
                             </button>
                         </footer>
                     </div>
                     <div v-if="state.alreadyStarted" class="notification is-danger">
-                        Das spiel hat leider schon angefangen :(
+                        Das Spiel hat bereits angefangen :(
                     </div>
                     <div v-if="secret == undefined && !state.alreadyStarted"
                          class="notification is-info"
                     >
-                        Bitte scanne einen QR code um dich zu registrieren!
+                        Bitte scanne einen QR Code um dich zu registrieren :)
                     </div>
                 </div>
                 <!--    ADMIN STUFF    -->
@@ -156,14 +156,11 @@
                         <div class="message is-primary" v-if="new Date(state.startingAt) > new Date()">
                             <div class="message-header">
                                 <p>
-                                    Das Spiel started {{ new
-                                Date(state.startingAt).toLocaleString() }} (in
-                                    {{ ((new Date(state.startingAt) - new Date()) /
-                                    1000 / 60 / 60).toFixed() }} Stunden).
+                                    Das Spiel startet bald
                                 </p>
                             </div>
                             <div class="message-body">
-                                Komme dann wieder um deine Rolle hier zu erfahren!
+                                Das Spiel startet um {{ new Date(state.startingAt).toLocaleString() }} (in ca. {{ ((new Date(state.startingAt) - new Date()) / 1000 / 60 / 60).toFixed() }} Stunden)
                             </div>
                         </div>
 
@@ -197,7 +194,7 @@
                                     @click="kill"
                                     :disabled="inputs.room == undefined"
                                 >
-                                    kill
+                                    Töten
                                 </a>
                             </footer>
                         </div>
@@ -205,7 +202,7 @@
                             <div class="card my-3">
                                 <header class="card-header">
                                     <p class="card-header-title">
-                                        Identity Code
+                                        ID Code
                                     </p>
                                 </header>
                                 <div class="pt-1"
@@ -213,10 +210,10 @@
                                     <canvas id="canvas" style="margin:auto;" />
                                 </div>
                             </div>
-                            <h1 class="mb-2">There are imposter among us</h1>
+                            <h1 class="mb-2">There are Imposters Among Us</h1>
 
                             <span class="tag" @click="showRole" v-if="roleClicked < 5">
-                                Klicke {{ 5 - roleClicked }} mal um deine Rolle zu erfahren!
+                                Klicke {{ 5 - roleClicked }} mal um deine Rolle zu erfahren
                             </span>
                             <span class="tag is-danger" @click="hideRole" v-if="roleClicked >=5">
                                 {{ state.role }}
@@ -247,7 +244,7 @@
                                 <p class="panel-heading level mb-0"
                                    v-if="new Date(state.imposter.killCooldown ) < new Date()"
                                 >
-                                    Du kannst jetzt einen Spieler eliminieren!
+                                    Du kannst jetzt einen Crewmate töten
                                     <span class="icon-text">
                                   <span class="icon">
                                     <i class="fas fa-times fa-solid"></i>
@@ -257,7 +254,7 @@
 
                                 <a class="panel-block" @click.stop="showRole"
                                    v-if="roleClicked === 5">
-                                    Clicke Hier um die anderen imposter zu sehen
+                                    Klicke hier um die anderen Imposter zu sehen
                                 </a>
                                 <a class="panel-block" @click.stop="hideRole"
                                    v-if="roleClicked > 5">
@@ -269,18 +266,25 @@
                                 </div>
                             </div>
 
+                            <h2>
+                                Was muss ich tun?
+                            </h2>
                             <p class="mt-4">
-                                Some text about the game - Um einen Raum zu
-                                betreten, musst du den QR code scannen - Wenn
-                                ein Imposter dich erwischt hat, musst du dessen
-                                QR code scannen
+                                Als Crewmate ist es dein Ziel die Imposter zu finden und im Morgenplenum rauszuwählen (und natürlich zu überleben).
+                                Um jemanden vorschlagen zu können musst du die Überreste eines Crewmates finden, indem du die QR Codes in den einzelnen Räumen von Burg Fürsteneck regelmäßig scannst. Sollte dort jemand von den Impostern eliminiert worden zu sein, kannst du dies melden und erhälst dann im nächsten Morgenplenum die Chance der versammelten Gemeinschaft jemanden zum rauswählen vorzuschlagen. Um das einfacher zu machen, wird dir zudem eine Liste von SpielerInnen angezeigt, von denen einer oder eine garantiert der Mörder ist. Du solltest also die SpielerInnen auf der Liste zur Rede stellen und schauen was sie so gemacht haben in letzter Zeit und dann deine Ergebnisse allen vorstellen.
+                            </p>
+                            <p class="mt-4">
+                                Zusätzlich kannst du auch ohne Überreste zu finden jemanden vorschlagen, indem du ein Notfall Meeting einberufst. Beachte jedoch dass die Imposter ebenfalls Notfall Meetings einberufen und Überreste finden können, um die Crewmates auf eine falsche Fährte zu locken.
+                            </p>
+                            <p class="mt-4">
+                                Als Imposter hingegen möchtest du möglichst viele Crewmates alleine antreffen um sie dann zu "töten". Lass dir dazu den QR Code des Crewmates zeigen und scanne ihn. Beachte jedoch, dass du nicht jederzeit beliebig töten kannst. Ihr müsst beide alleine sein und es gibt einen Cooldown, den du nachschauen kannst.
                             </p>
                             <button
                                 class="button"
                                 @click="callEmergencyMeeting"
                                 v-if="!state.calledEmergencyMeeting"
                             >
-                                Call an Emergency Meeting
+                                Notfall Meeting einberufen
                             </button>
                             <span v-if="state.calledEmergencyMeeting">Emergency Meeting called</span>
                         </div>
@@ -298,7 +302,7 @@
                                 class="subtitle is-3"
                                 v-if="(state.roomInformation?.bodies?.length ?? 0)> 0"
                             >
-                                Oh, was liegt den da auf dem Boden?
+                                Oh, was liegt denn da auf dem Boden?
                             </p>
                             <div
                                 class="panel is-primary"
@@ -315,7 +319,7 @@
                                         v-if="!body.reported"
                                         @click="reportBody(body)"
                                     >
-                                        Report
+                                        Melden
                                     </button>
                                 </div>
                                 <p
@@ -334,7 +338,7 @@
                         </div>
                     </div>
                     <div v-if="!state.isAlive">
-                        <h1>You are dead</h1>
+                        <h1>Du bist leider gestorben :(</h1>
                     </div>
                 </div>
             </div>
@@ -547,7 +551,7 @@ export default {
         },
 
         async callEmergencyMeeting() {
-            const approval = confirm("Möchtest du morgen im Morgenplenum einen Slot zum sprechen haben?")
+            const approval = confirm("Möchtest du im nächsten Morgenplenum einen Slot zum Sprechen haben?")
             if (!approval) return
             const result = await fetch(
                 `${SERVER_URL}/${riddleId}/callEmergencyMeeting`,
