@@ -160,7 +160,8 @@
                                 </p>
                             </div>
                             <div class="message-body">
-                                Das Spiel startet um {{ new Date(state.startingAt).toLocaleString() }} (in ca. {{ ((new Date(state.startingAt) - new Date()) / 1000 / 60 / 60).toFixed() }} Stunden)
+                                Das Spiel startet um {{ new Date(state.startingAt).toLocaleString() }} (in ca.
+                                {{ ((new Date(state.startingAt) - new Date()) / 1000 / 60 / 60).toFixed() }} Stunden)
                             </div>
                         </div>
 
@@ -212,84 +213,109 @@
                             </div>
                             <h1 class="mb-2">There are Imposters Among Us</h1>
 
-                            <span class="tag" @click="showRole" v-if="roleClicked < 5">
-                                Klicke {{ 5 - roleClicked }} mal um deine Rolle anzuzeigen
-                            </span>
-                            <span class="tag is-danger" @click="hideRole" v-if="roleClicked >=5">
-                                {{ state.role }}
-                                <span class="icon-text">
-                                  <span class="icon">
-                                    <i class="fas fa-times fa-solid"></i>
-                                  </span>
-                                </span>
-                            </span>
-
                             <div
-                                @click="hideRole"
-                                class="panel my-3"
-                                :class="{
+                                class="mt-5"
+                                style="display: flex; flex-direction: column; align-items: center">
+                                <span class="tag is-large" @click="showRole" v-if="roleClicked < 5">
+                                    Klicke {{ 5 - roleClicked }} mal um deine Rolle anzuzeigen
+                                </span>
+                                    <span class="tag is-danger is-large" @click="hideRole" v-if="roleClicked >=5">
+                                    {{ state.role }}
+                                    <span class="ml-2 icon-text">
+                                      <span class="icon">
+                                        <i class="fas fa-times fa-solid"></i>
+                                      </span>
+                                    </span>
+                                </span>
+
+                                <div
+                                    @click="hideRole"
+                                    class="panel my-3"
+                                    :class="{
                                 'is-success':new Date(state.imposter.killCooldown ) < new Date(),
                                 'is-warning':new Date(state.imposter.killCooldown ) > new Date(),
                                 }"
-                                v-if="state.role === 'imposter' && roleClicked >= 5">
-                                <p class="panel-heading level mb-0"
-                                   v-if="new Date(state.imposter.killCooldown ) > new Date()"
-                                >
-                                    Du kannst in {{ getTimeDiff(new Date(state.imposter.killCooldown), new Date()) }}
-                                    ({{ new Date(state.imposter.killCooldown).toLocaleTimeString() }}) wieder töten
-                                    <span class="icon">
+                                    v-if="state.role === 'imposter' && roleClicked >= 5">
+                                    <p class="panel-heading level mb-0"
+                                       v-if="new Date(state.imposter.killCooldown ) > new Date()"
+                                    >
+                                        Du kannst in {{ getTimeDiff(new Date(state.imposter.killCooldown), new Date())
+                                        }}
+                                        ({{ new Date(state.imposter.killCooldown).toLocaleTimeString() }}) wieder töten
+                                        <span class="icon">
                                     <i class="fas fa-times fa-solid"></i>
                                 </span>
-                                </p>
-                                <p class="panel-heading level mb-0"
-                                   v-if="new Date(state.imposter.killCooldown ) < new Date()"
-                                >
-                                    Du kannst jetzt einen Crewmate töten
-                                    <span class="icon-text">
+                                    </p>
+                                    <p class="panel-heading level mb-0"
+                                       v-if="new Date(state.imposter.killCooldown ) < new Date()"
+                                    >
+                                        Du kannst jetzt einen Crewmate töten
+                                        <span class="icon-text">
                                   <span class="icon">
                                     <i class="fas fa-times fa-solid"></i>
                                   </span>
                                 </span>
-                                </p>
+                                    </p>
 
-                                <a class="panel-block" @click.stop="showRole"
-                                   v-if="roleClicked === 5">
-                                    Klicke hier um die anderen Imposter zu sehen
-                                </a>
-                                <a class="panel-block" @click.stop="hideRole"
-                                   v-if="roleClicked > 5">
-                                    Klicke hier um die Karte zu schließen
-                                </a>
-                                <div v-if="roleClicked >= 6" class="panel-block"
-                                     v-for="imposter in state.imposter.otherImposters">
-                                    {{ imposter }}
+                                    <a class="panel-block" @click.stop="showRole"
+                                       v-if="roleClicked === 5">
+                                        Klicke hier um die anderen Imposter zu sehen
+                                    </a>
+                                    <a class="panel-block" @click.stop="hideRole"
+                                       v-if="roleClicked > 5">
+                                        Klicke hier um die Karte zu schließen
+                                    </a>
+                                    <div v-if="roleClicked >= 6" class="panel-block"
+                                         v-for="imposter in state.imposter.otherImposters">
+                                        {{ imposter }}
+                                    </div>
                                 </div>
+
+                                <span
+                                    class="notification mt-3 is-warning"
+                                    v-if="state.calledEmergencyMeeting">Du wirst beim nächsten Morgenplenum sprechen</span>
+                                <button
+                                    class="button mt-3"
+                                    @click="callEmergencyMeeting"
+                                    v-if="!state.calledEmergencyMeeting"
+                                >
+                                    Notfall Meeting einberufen
+                                </button>
                             </div>
-
-                            <span v-if="state.calledEmergencyMeeting">Du wirst beim nächsten Morgenplenum sprechen</span>
-                            <button
-                                class="button"
-                                @click="callEmergencyMeeting"
-                                v-if="!state.calledEmergencyMeeting"
-                            >
-                                Notfall Meeting einberufen
-                            </button>
-
                             <hr>
 
                             <h2>
                                 Was muss ich tun?
                             </h2>
                             <p class="mt-4">
-                                Als Crewmate ist es dein Ziel die Imposter zu finden und im Morgenplenum rauszuwählen (und natürlich zu überleben).
-                                Um jemanden vorschlagen zu können musst du die Überreste eines Crewmates finden, indem du die QR Codes in den einzelnen Räumen von Burg Fürsteneck regelmäßig scannst. Sollte dort jemand von den Impostern eliminiert worden zu sein, kannst du dies melden und erhälst dann im nächsten Morgenplenum die Chance der versammelten Gemeinschaft jemanden zum rauswählen vorzuschlagen. Um das einfacher zu machen, wird dir zudem eine Liste von SpielerInnen angezeigt, von denen einer oder eine garantiert der Mörder ist. Du solltest also die SpielerInnen auf der Liste zur Rede stellen und schauen was sie so gemacht haben in letzter Zeit und dann deine Ergebnisse allen vorstellen.
+                                Als Crewmate ist es dein Ziel die Imposter zu finden und im Morgenplenum rauszuwählen
+                                (und natürlich zu überleben).
+                                Um jemanden vorschlagen zu können musst du die Überreste eines Crewmates finden, indem
+                                du die QR Codes in den einzelnen Räumen von Burg Fürsteneck regelmäßig scannst. Sollte
+                                dort jemand von den Impostern eliminiert worden zu sein, kannst du dies melden und
+                                erhälst dann im nächsten Morgenplenum die Chance der versammelten Gemeinschaft jemanden
+                                zum rauswählen vorzuschlagen. Um das einfacher zu machen, wird dir zudem eine Liste von
+                                SpielerInnen angezeigt, von denen einer oder eine garantiert der Mörder ist. Du solltest
+                                also die SpielerInnen auf der Liste zur Rede stellen und schauen was sie so gemacht
+                                haben in letzter Zeit und dann deine Ergebnisse allen vorstellen.
                             </p>
                             <p class="mt-4">
-                                Zusätzlich kannst du auch ohne Überreste zu finden jemanden vorschlagen, indem du ein Notfall Meeting einberufst. Beachte jedoch dass die Imposter ebenfalls Notfall Meetings einberufen und Überreste finden können, um die Crewmates auf eine falsche Fährte zu locken.
+                                Zusätzlich kannst du auch ohne Überreste zu finden jemanden vorschlagen, indem du ein
+                                Notfall Meeting einberufst. Beachte jedoch dass die Imposter ebenfalls Notfall Meetings
+                                einberufen und Überreste finden können, um die Crewmates auf eine falsche Fährte zu
+                                locken.
                             </p>
                             <p class="mt-4">
-                                Als Imposter hingegen möchtest du möglichst viele QR Codes von Crewmates scannen um sie dann zu "töten". Beachte jedoch, dass du nicht jederzeit beliebig töten kannst, da es einen Cooldown gibt. Außerdem möchtest du natürlich keine Aufmerksamkeit auf dich ziehen.
+                                Als Imposter hingegen möchtest du möglichst viele QR Codes von Crewmates scannen um sie dann zu "töten". Beachte jedoch, dass du nicht jederzeit beliebig töten kannst, da es einen Cooldown gibt, den du hier angezeigt bekommst. Außerdem möchtest du natürlich keine Aufmerksamkeit auf dich ziehen.
                             </p>
+                            <footer class="footer">
+                                <div class="content has-text-centered">
+                                    <p>
+                                        Amogus by Hannes
+                                    </p>
+                                </div>
+                            </footer>
+
                         </div>
 
                         <div class="my-6" v-if="state.roomInformation != undefined">
