@@ -43,17 +43,56 @@ export function riddle<DB_STATE, API_STATE>({
     tick,
     tickRateInMs,
 }: {
+    /**
+     * The name of the riddle
+     */
     riddleId: string
+    /**
+     * Gets called if a player starts the game with a POST to `/:riddleId/start`
+     * @param existingState an Array, of all existing WrappedStates
+     * @returns the state of the new player, or undefined if the player can't start the game for some reason
+     */
     start: (
         existingState: Array<StateWrapper<DB_STATE>>
     ) => Promise<DB_STATE | undefined>
+    /**
+     * Returns of the current game is solved
+     * @param state Array of all WrappedStates
+     * @returns true if the game is solved, false otherwise
+     */
     solved: (state: Array<StateWrapper<DB_STATE>>) => boolean
+    /**
+     * Gets called every {tick*ateInMs} milliseconds and can modify the state of the game
+     * @param state Array of all WrappedStates
+     * @retuns the new state of the game (mostly the same as the old state + modifications)
+     */
     tick?: (
         state: Array<StateWrapper<DB_STATE>>
     ) => Promise<Array<StateWrapper<DB_STATE>>>
+    /**
+     * How often to call {tick} in milliseconds
+     */
     tickRateInMs?: number
+    /**
+     * Gets called when a player sends a GET to `/:riddleId`
+     * Should transform the internal state of the server, to the state the user is allowed to see
+     * @param state { active: StateWrapper<DB_STATE>, others: Array<StateWrapper<DB_STATE>> } The state of the active player, and the state of all other players (an Array!)
+     * @returns the state the user is allowed to see
+     */
     getter: (state: RiddleState<DB_STATE>) => API_STATE
+    /**
+     * Object of PhoneActionHandlers
+     * Each PhoneActionHandler, gets called when the corresponding URL is being called.
+     * The first argument of each handler, is the current state (see getter), the second is whatever the phone send us
+     * Each handler returns the new state of the game
+     */
     phoneActions: Record<string, PhoneAction<unknown, DB_STATE>>
+    /**
+     * Object of PiActionHandlers
+     * Each PiActionHandler, gets called when the corresponding URL is being called.
+     * The first argument of each handler, is the current state (Array of WrappedStates), the second is whatever the pi send us
+     * Each handler returns the new state of the game
+     */
     piActions: Record<string, PiAction<unknown, DB_STATE>>
 }): Middleware {
     const logger = log(riddleId)

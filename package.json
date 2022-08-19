@@ -7,7 +7,8 @@
         "prepare": "husky install"
     },
     "workspaces": [
-        "backend"
+        "backend",
+        "pi"
     ],
     "author": "",
     "license": "ISC",
