@@ -170,7 +170,7 @@
                             v-if="secret != undefined && state.secret != secret && state.role === 'imposter'"
                         >
                             <header class="card-header">
-                                <p class="card-header-title">Du willst jemanden Eliminieren?</p>
+                                <p class="card-header-title">Wo hast du getötet?</p>
                             </header>
                             <div class="card-content">
                                 <div class="field">
