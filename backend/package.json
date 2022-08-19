@@ -1,13 +1,14 @@
 {
     "name": "backend",
     "version": "1.0.0",
-    "main": "index.js",
+    "main": "src/main.ts",
     "scripts": {
         "lint": "eslint --cache --max-warnings=0 . && prettier -c .",
         "lint:fix": "eslint --cache --fix --max-warnings=0 . && prettier --write .",
         "test": "tsc --noEmit",
         "start:direct": "node --loader ts-node/esm ./src/main.ts",
-        "start": "nodemon"
+        "dev": "nodemon",
+        "start": "npm run start:direct"
     },
     "author": "",
     "license": "ISC",
