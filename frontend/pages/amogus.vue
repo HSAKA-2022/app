@@ -213,7 +213,7 @@
                             <h1 class="mb-2">There are Imposters Among Us</h1>
 
                             <span class="tag" @click="showRole" v-if="roleClicked < 5">
-                                Klicke {{ 5 - roleClicked }} mal um deine Rolle zu erfahren
+                                Klicke {{ 5 - roleClicked }} mal um deine Rolle anzuzeigen
                             </span>
                             <span class="tag is-danger" @click="hideRole" v-if="roleClicked >=5">
                                 {{ state.role }}
