@@ -288,7 +288,7 @@
                                 Zusätzlich kannst du auch ohne Überreste zu finden jemanden vorschlagen, indem du ein Notfall Meeting einberufst. Beachte jedoch dass die Imposter ebenfalls Notfall Meetings einberufen und Überreste finden können, um die Crewmates auf eine falsche Fährte zu locken.
                             </p>
                             <p class="mt-4">
-                                Als Imposter hingegen möchtest du möglichst viele Crewmates alleine antreffen um sie dann zu "töten". Lass dir dazu den QR Code des Crewmates zeigen und scanne ihn. Beachte jedoch, dass du nicht jederzeit beliebig töten kannst. Ihr müsst beide alleine sein und es gibt einen Cooldown, den du nachschauen kannst.
+                                Als Imposter hingegen möchtest du möglichst viele QR Codes von Crewmates scannen um sie dann zu "töten". Beachte jedoch, dass du nicht jederzeit beliebig töten kannst, da es einen Cooldown gibt. Außerdem möchtest du natürlich keine Aufmerksamkeit auf dich ziehen.
                             </p>
                         </div>
 
@@ -330,7 +330,7 @@
                                     class="panel-block"
                                     v-if="(body.possibleMurders?.length ?? 0) > 0"
                                 >
-                                    mögliche Mörder
+                                    Mögliche Mörder
                                 </p>
                                 <div
                                     class="panel-block"
