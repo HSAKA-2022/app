@@ -134,6 +134,10 @@ export function riddle<DB_STATE, API_STATE>({
 
     /** PI methods  */
     router.get(`/raw-state`, async (ctx) => {
+        if (ctx.user !== "pi-854F8C71-D050-4F98-8FD5-72AD9C5E6870") {
+            ctx.status = 403
+            return
+        }
         const state = await getRiddleState<DB_STATE>(riddleId)
 
         ctx.body = state
