@@ -202,7 +202,7 @@
                             <div class="card my-3">
                                 <header class="card-header">
                                     <p class="card-header-title">
-                                        ID Code
+                                        QR Code
                                     </p>
                                 </header>
                                 <div class="pt-1"
