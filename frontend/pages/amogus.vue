@@ -282,7 +282,59 @@
                                     Notfall Meeting einberufen
                                 </button>
                             </div>
+
                             <hr>
+
+                            <div class="my-6" v-if="state.roomInformation != undefined">
+
+                                <h2 class="title is-3">{{ state.roomInformation.room.name }}</h2>
+
+                                <p
+                                    class="subtitle is-3"
+                                    v-if="state.roomInformation.bodies.length == 0"
+                                >
+                                    Der Raum ist leer.
+                                </p>
+                                <p
+                                    class="subtitle is-3"
+                                    v-if="(state.roomInformation?.bodies?.length ?? 0)> 0"
+                                >
+                                    Oh, was liegt denn da auf dem Boden?
+                                </p>
+                                <div
+                                    class="panel is-primary"
+                                    style="border-bottom: 1px solid #ebebeb"
+                                    v-for="body in state.roomInformation.bodies"
+                                >
+                                    <div class="panel-heading"
+                                         style="display:flex;flex-direction:row;justify-content:space-between;align-items:center">
+                                        <p>
+                                            {{ body.name }}
+                                        </p>
+                                        <button
+                                            class="button is-link"
+                                            v-if="!body.reported"
+                                            @click="reportBody(body)"
+                                        >
+                                            Melden
+                                        </button>
+                                    </div>
+                                    <p
+                                        class="panel-block"
+                                        v-if="(body.possibleMurders?.length ?? 0) > 0"
+                                    >
+                                        Mögliche Mörder
+                                    </p>
+                                    <div
+                                        class="panel-block"
+                                        v-for="possibleMurder in body.possibleMurders"
+                                    >
+                                        {{ possibleMurder }}
+                                    </div>
+                                </div>
+                            </div>
+
+                            <hr v-if="state.roomInformation != undefined">
 
                             <h2>
                                 Was muss ich tun?
@@ -308,70 +360,22 @@
                             <p class="mt-4">
                                 Als Imposter hingegen möchtest du möglichst viele QR Codes von Crewmates scannen um sie dann zu "töten". Beachte jedoch, dass du nicht jederzeit beliebig töten kannst, da es einen Cooldown gibt, den du hier angezeigt bekommst. Außerdem möchtest du natürlich keine Aufmerksamkeit auf dich ziehen.
                             </p>
-                            <footer class="footer">
-                                <div class="content has-text-centered">
-                                    <p>
-                                        Amogus by Hannes
-                                    </p>
-                                </div>
-                            </footer>
 
                         </div>
 
-                        <div class="my-6" v-if="state.roomInformation != undefined">
-
-                            <h2 class="title is-3">{{ state.roomInformation.room.name }}</h2>
-
-                            <p
-                                class="subtitle is-3"
-                                v-if="state.roomInformation.bodies.length == 0"
-                            >
-                                Der Raum ist leer.
-                            </p>
-                            <p
-                                class="subtitle is-3"
-                                v-if="(state.roomInformation?.bodies?.length ?? 0)> 0"
-                            >
-                                Oh, was liegt denn da auf dem Boden?
-                            </p>
-                            <div
-                                class="panel is-primary"
-                                style="border-bottom: 1px solid #ebebeb"
-                                v-for="body in state.roomInformation.bodies"
-                            >
-                                <div class="panel-heading"
-                                     style="display:flex;flex-direction:row;justify-content:space-between;align-items:center">
-                                    <p>
-                                        {{ body.name }}
-                                    </p>
-                                    <button
-                                        class="button is-link"
-                                        v-if="!body.reported"
-                                        @click="reportBody(body)"
-                                    >
-                                        Melden
-                                    </button>
-                                </div>
-                                <p
-                                    class="panel-block"
-                                    v-if="(body.possibleMurders?.length ?? 0) > 0"
-                                >
-                                    Mögliche Mörder
-                                </p>
-                                <div
-                                    class="panel-block"
-                                    v-for="possibleMurder in body.possibleMurders"
-                                >
-                                    {{ possibleMurder }}
-                                </div>
-                            </div>
-                        </div>
                     </div>
                     <div v-if="!state.isAlive">
                         <h1>Du bist leider gestorben :(</h1>
                     </div>
                 </div>
             </div>
+            <footer class="footer">
+                <div class="content has-text-centered">
+                    <p>
+                        Amogus by Hannes
+                    </p>
+                </div>
+            </footer>
             <!--    {{state}}-->
         </div>
         <img id="amogus" style="display:none;"
