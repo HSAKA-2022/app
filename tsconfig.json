@@ -1,0 +1,9 @@
+{
+    "compilerOptions": {
+        "esModuleInterop": true,
+        "module": "commonjs",
+        "target": "esnext",
+        "allowJs": true,
+        "moduleResolution": "node"
+    }
+}
