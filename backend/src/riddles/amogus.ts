@@ -638,6 +638,7 @@ export default riddle<
                     state.alive
                         .filter((it) => it.user !== imposter.user)
                         .filter((it) => it.user !== player.user)
+                        .filter((it) => it.user !== imposter.user)
                 )
                     .slice(0, state.admin.state.possibleMurdersPerImposter - 1)
                     .map((it) => it.user),

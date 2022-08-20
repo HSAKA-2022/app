@@ -369,7 +369,7 @@
                     </div>
                 </div>
             </div>
-            <footer class="footer">
+            <footer class="footer mt-6">
                 <div class="content has-text-centered">
                     <p>
                         Amogus by Hannes
