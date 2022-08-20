@@ -7,7 +7,7 @@ on:
             - deployment
 
 jobs:
-    deploy:
+    deploy-backend:
         runs-on: ubuntu-latest
         steps:
             - name: Cloning repo
@@ -19,12 +19,24 @@ jobs:
               uses: tailscale/github-action@v1
               with:
                   authkey: ${{ secrets.TAILSCALE_AUTH_KEY }}
-            - name: Backend
+            - name: Deploy
               uses: dokku/github-action@master
               with:
                   git_remote_url: 'ssh://dokku@rocks-server:22/burg-games-backend'
                   ssh_private_key: ${{ secrets.DEPLOY_PRIVATE_KEY }}
-            - name: Frontend
+    deploy-frontend:
+        runs-on: ubuntu-latest
+        steps:
+            - name: Cloning repo
+              uses: actions/checkout@v2
+              with:
+                  fetch-depth: 0
+
+            - name: Tailscale
+              uses: tailscale/github-action@v1
+              with:
+                  authkey: ${{ secrets.TAILSCALE_AUTH_KEY }}
+            - name: Deploy
               uses: dokku/github-action@master
               with:
                   git_remote_url: 'ssh://dokku@rocks-server:22/burg-games-frontend'
