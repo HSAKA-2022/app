@@ -22,7 +22,7 @@ jobs:
             - name: Deploy
               uses: dokku/github-action@master
               with:
-                  git_remote_url: 'ssh://dokku@burg-server:22/backend'
+                  git_remote_url: 'ssh://dokku@100.110.108.65:22/backend'
                   ssh_private_key: ${{ secrets.DEPLOY_PRIVATE_KEY }}
     deploy-frontend:
         runs-on: ubuntu-latest
@@ -39,5 +39,5 @@ jobs:
             - name: Deploy
               uses: dokku/github-action@master
               with:
-                  git_remote_url: 'ssh://dokku@burg-serber:22/frontend'
+                  git_remote_url: 'ssh://dokku@100.110.108.65:22/frontend'
                   ssh_private_key: ${{ secrets.DEPLOY_PRIVATE_KEY }}
