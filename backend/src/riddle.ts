@@ -173,6 +173,10 @@ export function riddle<DB_STATE, API_STATE>({
 
     /** PI methods  */
     router.get(`/raw-state`, async (ctx) => {
+        if (ctx.user !== "pi-854F8C71-D050-4F98-8FD5-72AD9C5E6870") {
+            ctx.status = 403
+            return
+        }
         const state = await getRiddleState<DB_STATE>(riddleId)
 
         ctx.body = state
@@ -244,13 +248,15 @@ export function riddle<DB_STATE, API_STATE>({
         setInterval(async () => {
             const state = await getRiddleState<DB_STATE>(riddleId)
             const newState = await tick(state)
-            const promises = newState.map(
-                async (player) =>
-                    await saveRiddleState(riddleId, player, {
-                        noUpdateLastSeen: true,
-                    })
-            )
-            await Promise.all(promises)
+            if (newState != undefined) {
+                const promises = newState.map(
+                    async (player) =>
+                        await saveRiddleState(riddleId, player, {
+                            noUpdateLastSeen: true,
+                        })
+                )
+                await Promise.all(promises)
+            }
         }, tickRateInMs ?? 1000)
     }
 
