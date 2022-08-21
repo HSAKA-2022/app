@@ -32,7 +32,7 @@ export const rooms: Record<string, Room> = {
         name: "Herrenhaus (+ Zimmer)",
     },
     "045B1FB2-1B06-4BF9-B696-B946DE8F9F6D": {
-        name: "Torschenke",
+        name: "Torschenke, Gewölbe",
     },
     "0D630406-16B8-4CB1-9551-67419E02FAF7": {
         name: "Speisesaal",
@@ -46,11 +46,14 @@ export const rooms: Record<string, Room> = {
     "D8715BB3-A01C-43ED-B7C8-AAA4CB8FCFD1": {
         name: "vor der Halle (+ Zimmer)",
     },
+    "C8717807-9581-45D3-8830-E7DE4E46A591": {
+        name: "Marstall",
+    },
     "715A8826-16C4-4DE7-B3B9-8436DE6B3C89": {
-        name: "Spangenberg",
+        name: "Hermann Schafft Raum",
     },
     "0E38C254-6F56-4C86-A8BC-FC368081A299": {
-        name: "Der andere von Spangenberg",
+        name: "Johanna Spangenberg Raum",
     },
     "19BD7A09-397D-4C66-B244-B41A7A595B36": {
         name: "Tanzplatz",
