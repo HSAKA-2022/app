@@ -1,14 +1,13 @@
 {
-  "private": true,
-  "scripts": {
-    "start": "nuxt dev",
-    "build": "nuxt build",
-    "dev": "nuxt dev",
-    "generate": "nuxt generate",
-    "preview": "nuxt preview"
-  },
-  "devDependencies": {
-    "nuxt": "3.0.0-rc.8"
-  },
-  "dependencies": {}
+    "private": true,
+    "scripts": {
+        "start": "nuxt start",
+        "build": "nuxt build",
+        "dev": "nuxt dev",
+        "generate": "nuxt generate",
+        "preview": "nuxt preview"
+    },
+    "dependencies": {
+        "nuxt": "3.0.0-rc.8"
+    }
 }

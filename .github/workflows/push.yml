@@ -1,0 +1,43 @@
+name: 'deploy'
+
+# yamllint disable-line rule:truthy
+on:
+    push:
+        branches:
+            - main
+
+jobs:
+    deploy-backend:
+        runs-on: ubuntu-latest
+        steps:
+            - name: Cloning repo
+              uses: actions/checkout@v2
+              with:
+                  fetch-depth: 0
+
+            - name: Tailscale
+              uses: tailscale/github-action@v1
+              with:
+                  authkey: ${{ secrets.TAILSCALE_AUTH_KEY }}
+            - name: Deploy
+              uses: dokku/github-action@master
+              with:
+                  git_remote_url: 'ssh://dokku@burg-server:22/backend'
+                  ssh_private_key: ${{ secrets.DEPLOY_PRIVATE_KEY }}
+    deploy-frontend:
+        runs-on: ubuntu-latest
+        steps:
+            - name: Cloning repo
+              uses: actions/checkout@v2
+              with:
+                  fetch-depth: 0
+
+            - name: Tailscale
+              uses: tailscale/github-action@v1
+              with:
+                  authkey: ${{ secrets.TAILSCALE_AUTH_KEY }}
+            - name: Deploy
+              uses: dokku/github-action@master
+              with:
+                  git_remote_url: 'ssh://dokku@burg-serber:22/frontend'
+                  ssh_private_key: ${{ secrets.DEPLOY_PRIVATE_KEY }}
