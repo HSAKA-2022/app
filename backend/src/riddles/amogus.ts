@@ -169,6 +169,7 @@ export type AdminPhoneState = {
     imposterAlive: number
     gameState: GameState
     alive: Array<{ name: string; id: string }>
+    diedToday: Array<{ name: string; id: string }>
     reports: Array<Report>
     killCooldownInSeconds: number
     initialKillCooldownInSeconds: number
@@ -306,6 +307,10 @@ export default riddle<
                 )}`
             )
         })()
+        const cutOff = new Date()
+        cutOff.setHours(cutOff.getHours() - 9)
+
+        cutOff.setHours(9)
 
         if (state.isAdmin) {
             return {
@@ -349,6 +354,13 @@ export default riddle<
                     state.admin.state.initialKillCooldownInSeconds,
                 possibleMurdersPerImposter:
                     state.admin.state.possibleMurdersPerImposter,
+                diedToday: state.all
+                    .filter((it) => !it.state.isAlive)
+                    .filter((it) => new Date(it.state.kill?.time) > cutOff)
+                    .map((it) => ({
+                        name: it.state.name,
+                        id: it.user,
+                    })),
             }
         }
 
@@ -393,13 +405,6 @@ export default riddle<
                     .map((it) => it.name),
                 roomInformation: (() => {
                     if (state.active.state.inRoom == undefined) return undefined
-
-                    const cutOff = new Date()
-                    cutOff.setHours(cutOff.getHours() - 8)
-                    cutOff.setMinutes(cutOff.getMinutes() - 45)
-
-                    cutOff.setHours(8)
-                    cutOff.setMinutes(45)
 
                     return {
                         room: Object.values(rooms).find(

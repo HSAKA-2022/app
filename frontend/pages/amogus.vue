@@ -126,6 +126,15 @@
                         </div>
 
                         <div class="card-content">
+                            <h4>Players who died yesterday</h4>
+                            <div class="level"
+                                 style="border-bottom: 1px solid #ebebeb"
+                                 v-for="alive in state.diedToday.sort((a,b) => { if(a.name > b.name) return 1; else if (a.name === b.name) return 0; else return -1})">
+                                <span class="level-left">{{ alive.name }}</span>
+                            </div>
+                        </div>
+
+                        <div class="card-content">
                             <h4>Alive Players</h4>
                             <div class="level"
                                  style="border-bottom: 1px solid #ebebeb"
