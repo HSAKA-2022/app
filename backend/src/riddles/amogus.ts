@@ -390,8 +390,12 @@ export default riddle<
                     if (state.active.state.inRoom == undefined) return undefined
 
                     const cutOff = new Date()
-                    cutOff.setHours(4)
-                    cutOff.setDate(cutOff.getDate() - 1)
+                    cutOff.setHours(cutOff.getHours() - 8)
+                    cutOff.setMinutes(cutOff.getMinutes() - 45)
+
+                    cutOff.setHours(8)
+                    cutOff.setMinutes(45)
+
                     return {
                         room: Object.values(rooms).find(
                             (it) => it.name == state.active.state.inRoom
