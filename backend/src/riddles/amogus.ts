@@ -618,7 +618,11 @@ export default riddle<
                 (it) =>
                     it.state.isAdmin == false &&
                     it.state.secret === data.victimSecret
-            ) as StateWrapper<PlayerState>
+            ) as StateWrapper<PlayerState> | undefined
+
+            if (player == undefined) {
+                return
+            }
 
             // check cooldown
             if (imposter.state.imposter?.lastedKilledAt != undefined) {
