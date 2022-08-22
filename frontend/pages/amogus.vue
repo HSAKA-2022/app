@@ -374,6 +374,7 @@
                     <p>
                         Amogus by Hannes
                     </p>
+                    <p class="has-text-light">{{state.userId.split("-")[0]}}</p>
                 </div>
             </footer>
             <!--    {{state}}-->

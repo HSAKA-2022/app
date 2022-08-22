@@ -149,6 +149,7 @@ export type PlayerPhoneState = {
     }
 
     rooms?: Array<string>
+    userid: string
 }
 
 export type Report = {
@@ -353,6 +354,7 @@ export default riddle<
 
         if (state.isAdmin === false) {
             return {
+                userId: state.active.user,
                 name: state.active.state.name,
                 secret: state.active.state.secret,
                 isRegistered: true,
