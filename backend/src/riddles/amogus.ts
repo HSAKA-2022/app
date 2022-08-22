@@ -125,6 +125,7 @@ export type NotRegisteredPhoneState = {
 }
 
 export type PlayerPhoneState = {
+    userId: string
     name: string
     secret: string
     startingAt: string
@@ -149,7 +150,6 @@ export type PlayerPhoneState = {
     }
 
     rooms?: Array<string>
-    userid: string
 }
 
 export type Report = {
