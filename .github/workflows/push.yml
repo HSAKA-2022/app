@@ -48,7 +48,7 @@ jobs:
         if: ${{ false }}
         strategy:
             matrix:
-                hostname: [raspi-4]
+                hostname: [raspi-1, raspi-2, raspi-3, raspi-4, raspi-5]
         steps:
             - name: Tailscale
               uses: tailscale/github-action@v1
@@ -60,5 +60,5 @@ jobs:
               with:
                 command: /home/pi/app/pi/update.sh
                 host: ${{ matrix.hostname }}
-                username: garygrossgarten
-                password: ${{ secrets.RASPI-PASSPHRASE }}
+                username: pi
+                password: ${{ secrets.RASPI_PASSPHRASE }}
