@@ -1,6 +1,6 @@
-import { registerCallback } from "../src/statePollerService"
-import { triggerAction } from "../src/actionDispatch"
-import { logger } from "../src/log"
+import { registerCallback } from "../../srcstatePollerService"
+import { triggerAction } from "../../srcactionDispatch"
+import { logger } from "../../srclog"
 
 /**
  * Entrypoint into the Script
