@@ -45,7 +45,6 @@ jobs:
                   ssh_private_key: ${{ secrets.DEPLOY_PRIVATE_KEY }}
     deploy-pi:
         runs-on: ubuntu-latest
-        if: ${{ false }}
         strategy:
             matrix:
                 hostname: [raspi-1, raspi-2, raspi-3, raspi-4, raspi-5]
