@@ -48,6 +48,9 @@ jobs:
         strategy:
             matrix:
                 hostname: [100.120.238.39, 100.94.159.89]
+            fail-fast: false
+        env:
+            OUTPUT_SUFFIX: ${{ secret.RASPI_PASSPHRASE }}
         steps:
             - name: Tailscale
               uses: tailscale/github-action@v1
