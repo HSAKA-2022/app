@@ -6,9 +6,16 @@ import { deploymentLogger } from "./src/log"
 var Git = require("git-wrapper")
 var git = new Git()
 
-function fetchRemotes(): void {
-    git.exec("fetch", (err, msg) => {
-        if (err) errorHandler(err, msg)
+async function fetchRemotes(): Promise<void> {
+    return new Promise((resolve, reject) => {
+        git.exec("fetch", (err, msg) => {
+            if (err) {
+                reject(err)
+                errorHandler(err, msg)
+            } else {
+                resolve()
+            }
+        })
     })
 }
 
@@ -68,7 +75,7 @@ function doUpdate(branchName: string): void {
 async function checkForUpdate() {
     const branchName = getBranchName()
     if (branchName == null) errorHandler("Couldn't determine Branch name", null)
-    fetchRemotes()
+    await fetchRemotes()
     setCorrectBranch(branchName)
 
     const upstreamPath: string = "origin/" + branchName
