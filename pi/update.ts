@@ -39,7 +39,7 @@ function setCorrectBranch(branchName: string): void {
             }
             if (branch.trim() !== branchName.trim()) {
                 console.log("Not on branch " + branchName + " switching to it")
-                git.exec("checkout", [branchName], (err, msg) => {
+                git.exec("checkout", [branchName, "-f"], (err, msg) => {
                     if (err) {
                         errorHandler(err, msg)
                     }
