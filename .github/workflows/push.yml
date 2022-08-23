@@ -43,3 +43,22 @@ jobs:
                   branch: main
                   git_remote_url: 'ssh://dokku@100.110.108.65:22/frontend'
                   ssh_private_key: ${{ secrets.DEPLOY_PRIVATE_KEY }}
+    deploy-pi:
+        runs-on: ubuntu-latest
+        if: ${{ false }}
+        strategy:
+            matrix:
+                hostname: [raspi-1, raspi-2, raspi-4]
+        steps:
+            - name: Tailscale
+              uses: tailscale/github-action@v1
+              with:
+                  authkey: ${{ secrets.TAILSCALE_AUTH_KEY }}
+          
+            - name: Run update script
+              uses: garygrossgarten/github-action-ssh@release
+              with:
+                command: npm run update
+                host: ${{ secrets.HOST }}
+                username: garygrossgarten
+                password: ${{ secrets.PASSPHRASE }}
