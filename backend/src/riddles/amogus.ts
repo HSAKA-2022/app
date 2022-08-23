@@ -312,9 +312,9 @@ export default riddle<
             )
         })()
         const cutOff = new Date()
-        cutOff.setHours(cutOff.getHours() - 9)
+        cutOff.setHours(cutOff.getHours() - 7)
 
-        cutOff.setHours(9)
+        cutOff.setHours(7)
 
         if (state.isAdmin) {
             return {
