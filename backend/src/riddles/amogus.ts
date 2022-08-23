@@ -77,6 +77,8 @@ export type AdminState = {
     killCooldownInSeconds: number
     initialKillCooldownInSeconds: number
     possibleMurdersPerImposter: number
+
+    ticksSinceLastScanCounterDecrement?: number
 }
 
 type Kill = {
@@ -90,6 +92,8 @@ type Kill = {
 
 export type PlayerState = {
     isAdmin: false
+
+    scanDetection?: number
 
     name: string
     secret: string
@@ -365,6 +369,64 @@ export default riddle<
         }
 
         if (state.isAdmin === false) {
+            if (state.active.state.scanDetection >= 4) {
+                return {
+                    userId: state.active.user,
+                    name: state.active.state.name,
+                    secret: state.active.state.secret,
+                    isRegistered: true,
+                    isAdmin: false,
+                    startingAt: state.admin.state.startingAt,
+                    role: state.active.state.role,
+                    isAlive: state.active.state.isAlive,
+                    gameState,
+                    imposter: (() => {
+                        if (state.active.state.role !== Role.imposter)
+                            return undefined
+
+                        return {
+                            killCooldown: (() => {
+                                const lastedKilledAt =
+                                    state.active.state.imposter?.lastedKilledAt
+                                if (lastedKilledAt == undefined) {
+                                    return undefined
+                                }
+                                const lastedKilledAtDate = new Date(
+                                    lastedKilledAt
+                                )
+                                lastedKilledAtDate.setSeconds(
+                                    lastedKilledAtDate.getSeconds() +
+                                        state.admin.state.killCooldownInSeconds
+                                )
+                                return lastedKilledAtDate.toISOString()
+                            })(),
+                            otherImposters: state.others
+                                .filter((it) => it.state.role == Role.imposter)
+                                .map((it) => it.state.name),
+                        }
+                    })(),
+                    calledEmergencyMeeting:
+                        state.active.state.calledEmergencyMeeting,
+                    rooms: Object.values(rooms)
+                        .filter((it) => it.name !== "Meeting")
+                        .map((it) => it.name),
+                    roomInformation: {
+                        room: {
+                            name: "You fell into my trap!",
+                        },
+                        bodies: [
+                            {
+                                name: state.active.state.name + " 💀",
+                                id: "nope",
+                            },
+                            {
+                                name: "Wenn du nicht weisst warum hier quatsch steht, komm bei Hannes vorbei",
+                                id: "nope",
+                            },
+                        ],
+                    },
+                }
+            }
             return {
                 userId: state.active.user,
                 name: state.active.state.name,
@@ -513,6 +575,19 @@ export default riddle<
             const activeState = state.active as StateWrapper<PlayerState>
             if (!activeState.state.isAlive) return
 
+            if (rooms[roomId] == undefined) return
+
+            const fiveMinutesAgo = new Date()
+
+            fiveMinutesAgo.setMinutes(fiveMinutesAgo.getMinutes() - 2)
+            if (
+                activeState.state.enteredRoomAt != undefined &&
+                fiveMinutesAgo < new Date(activeState.state.enteredRoomAt)
+            ) {
+                activeState.state.scanDetection =
+                    (activeState.state.scanDetection ?? 0) + 1
+            }
+
             logger.info(
                 `player ${state.active.state.name} went into room ${rooms[roomId].name}`
             )
@@ -534,8 +609,9 @@ export default riddle<
                 (it) => it.user === bodyId
             ) as StateWrapper<PlayerState>
             logger.info(
-                `player ${state.active.state.name} reported body of ${body.state.name} in room ${body.state.kill?.room}`
+                `player ${state.active.state.name} reported body of ${body?.state?.name} in room ${body?.state.kill?.room}`
             )
+            if (body == undefined) return
 
             const killInformation = body.state.kill as Kill
             killInformation.reported = true
@@ -688,6 +764,19 @@ export default riddle<
         const players = state.filter((it) => !it.state.isAdmin) as Array<
             StateWrapper<PlayerState>
         >
+
+        admin.state.ticksSinceLastScanCounterDecrement =
+            (admin.state.ticksSinceLastScanCounterDecrement ?? 0) + 1
+        if (admin.state.ticksSinceLastScanCounterDecrement >= 60 * 15) {
+            players.forEach((player) => {
+                if (
+                    player.state.scanDetection != undefined &&
+                    player.state.scanDetection > 0
+                ) {
+                    player.state.scanDetection--
+                }
+            })
+        }
 
         ;(
             players.filter((it) => it.state.isAdmin == false) as Array<
