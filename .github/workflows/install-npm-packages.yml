@@ -11,7 +11,7 @@ jobs:
         runs-on: ubuntu-latest
         strategy:
             matrix:
-                hostname: [100.120.238.39, 100.94.159.89]
+                hostname: [100.120.238.39, 100.78.64.55, 100.126.152.59, 100.78.142.4, 100.123.122.6]
             fail-fast: false
         steps:
             - name: Tailscale
