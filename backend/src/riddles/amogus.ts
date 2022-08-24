@@ -204,9 +204,6 @@ function getState(state: RiddleState<PlayerState | AdminState>): OurState {
         StateWrapper<PlayerState>
     >
     const alive = all.filter((it) => it.state.isAlive)
-    // not registered yet
-    if (state.active == undefined) {
-    }
     if (state.active.state.isAdmin) {
         return {
             isAdmin: true,
@@ -732,7 +729,6 @@ export default riddle<
                     state.alive
                         .filter((it) => it.user !== imposter.user)
                         .filter((it) => it.user !== player.user)
-                        .filter((it) => it.user !== imposter.user)
                 )
                     .slice(0, state.admin.state.possibleMurdersPerImposter - 1)
                     .map((it) => it.user),
@@ -837,21 +833,12 @@ export default riddle<
 })
 
 function shuffle<T>(array: Array<T>): Array<T> {
-    let currentIndex = array.length,
-        randomIndex
+    const ret = [...array]
+    for (let i = ret.length - 1; i >= 0; i--) {
+        const j = Math.floor(Math.random() * i)
 
-    // While there remain elements to shuffle.
-    while (currentIndex != 0) {
-        // Pick a remaining element.
-        randomIndex = Math.floor(Math.random() * currentIndex)
-        currentIndex--
-
-        // And swap it with the current element.
-        ;[array[currentIndex], array[randomIndex]] = [
-            array[randomIndex],
-            array[currentIndex],
-        ]
+        ;[ret[i], ret[j]] = [ret[j], ret[i]]
     }
 
-    return array
+    return ret
 }
