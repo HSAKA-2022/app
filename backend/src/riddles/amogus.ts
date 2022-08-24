@@ -312,6 +312,9 @@ export default riddle<
         cutOff.setHours(cutOff.getHours() - 7)
 
         cutOff.setHours(7)
+        cutOff.setMinutes(0)
+        cutOff.setSeconds(0)
+        cutOff.setMilliseconds(0)
 
         if (state.isAdmin) {
             return {
