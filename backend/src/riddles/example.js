@@ -27,7 +27,7 @@ export default riddle({
         },
     },
     piActions: {
-        reset: async (state) => {
+        reroll: async (state) => {
             state.forEach(
                 (player) =>
                     (player.state.guess = Math.ceil(Math.random() * 100))
