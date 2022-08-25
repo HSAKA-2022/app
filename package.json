@@ -1,5 +1,5 @@
 {
-    "name": "parent",
+    "name": "parent-app",
     "version": "1.0.0",
     "scripts": {
         "lint": "eslint --cache --max-warnings=0 . && prettier -c .",
