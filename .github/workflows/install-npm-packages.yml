@@ -22,7 +22,7 @@ jobs:
             - name: Run Install script
               uses: garygrossgarten/github-action-ssh@release
               with:
-                command: /home/pi/app/pi/update-npm-packages.sh
+                command: sudo /home/pi/app/pi/update-npm-packages.sh
                 host: ${{ matrix.hostname }}
                 username: pi
                 password: ${{ secrets.RASPI_PASSPHRASE }}
