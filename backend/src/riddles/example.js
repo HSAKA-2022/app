@@ -5,14 +5,17 @@ const riddleId = "guess"
 export default riddle({
     riddleId,
     start: async (existing) => {
+        if (existing.length > 0) {
+            return
+        }
         return {
             goal: Math.ceil(Math.random() * 100),
         }
     },
-    solved: async (state) => {
+    solved: (state) => {
         return state.every((player) => player.state.guess === player.state.goal)
     },
-    getter: async (state) => {
+    getter: (state) => {
         return {
             guess: state.active.state.guess,
         }
