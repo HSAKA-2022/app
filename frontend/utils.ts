@@ -26,7 +26,16 @@ function headers() {
     }
 }
 
-export async function getRiddle<T>(riddleId: string): Promise<T> {
+export async function startRiddle<T>(riddleId: string): Promise<T> {
+    const result = await fetch(`${SERVER_URL}/${riddleId}/start`, {
+        headers: headers(),
+        method: "POST",
+    })
+
+    return await result.json()
+}
+
+export async function getRiddleState<T>(riddleId: string): Promise<T> {
     const result = await fetch(`${SERVER_URL}/${riddleId}`, {
         headers: headers(),
     })
