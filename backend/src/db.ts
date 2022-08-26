@@ -8,7 +8,7 @@ export async function initDb() {
     const client = await MongoClient.connect(
         process.env.MONGO_URL ?? "mongodb://localhost:27017"
     )
-    db = await client.db("burg_games")
+    db = client.db("burg_games")
 }
 
 /**
@@ -21,6 +21,20 @@ export async function getRiddleState<State>(
     return db
         .collection<StateWrapper<State>>(riddleId)
         .find({ isActive: true })
+        .toArray()
+}
+
+/**
+ * Fetches all riddle state for the riddle from the db
+ * @param riddleId
+ */
+export async function getAllHistoricStates<State>(
+    riddleId: string,
+    includeActive
+): Promise<Array<StateWrapper<State>>> {
+    return db
+        .collection<StateWrapper<State>>(riddleId)
+        .find(includeActive ? {} : { isActive: false })
         .toArray()
 }
 
@@ -53,15 +67,13 @@ export async function saveRiddleState<State>(
     state: StateWrapper<State>,
     options?: { noUpdateLastSeen?: boolean }
 ): Promise<void> {
-    const collection = db.collection<StateWrapper<State>>(riddleId)
-    // @ts-ignore $set's type seem off
-    await collection.updateOne({ _id: state._id }, { $set: { ...state } })
+    const collection = db.collection<StateWrapper<unknown>>(riddleId)
+    await collection.replaceOne({ _id: state._id }, state)
 
     if (!options?.noUpdateLastSeen) {
         await collection.updateOne(
             { _id: state._id },
-            // @ts-ignore $set's type seem off
-            { $set: { lastSeen: now(), lastUpdated: now() } }
+            { $set: { lastUpdated: now(), lastSeen: now() } }
         )
     }
 }
