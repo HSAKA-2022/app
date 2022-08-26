@@ -17,6 +17,24 @@
             "runtimeExecutable": "npm",
             "skipFiles": ["<node_internals>/**"],
             "type": "node"
+        },
+        {
+            "name": "Install Backend",
+            "request": "launch",
+            "runtimeArgs": ["install"],
+            "runtimeExecutable": "npm",
+            "cwd": "${workspaceFolder}/backend",
+            "skipFiles": ["<node_internals>/**"],
+            "type": "node"
+        },
+        {
+            "name": "Start Frontend",
+            "request": "launch",
+            "runtimeArgs": ["run", "dev"],
+            "cwd": "${workspaceFolder}/backend",
+            "runtimeExecutable": "npm",
+            "skipFiles": ["<node_internals>/**"],
+            "type": "node"
         }
     ]
 }
