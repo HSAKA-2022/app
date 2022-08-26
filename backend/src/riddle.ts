@@ -99,14 +99,14 @@ export function riddle<DB_STATE, API_STATE, LEADERBOARD_STATE = unknown>({
      * The first argument of each handler, is the current state (see getter), the second is whatever the phone send us
      * Each handler returns the new state of the game
      */
-    phoneActions: Record<string, PhoneAction<unknown, DB_STATE>>
+    phoneActions?: Record<string, PhoneAction<unknown, DB_STATE>>
     /**
      * Object of PiActionHandlers
      * Each PiActionHandler, gets called when the corresponding URL is being called.
      * The first argument of each handler, is the current state (Array of WrappedStates), the second is whatever the pi send us
      * Each handler returns the new state of the game
      */
-    piActions: Record<string, PiAction<unknown, DB_STATE>>
+    piActions?: Record<string, PiAction<unknown, DB_STATE>>
     /**
      * Gets called when a player sends a GET to `/:riddleId/leaderboard`
      * Maps all historic states to a leaderboard
@@ -162,46 +162,53 @@ export function riddle<DB_STATE, API_STATE, LEADERBOARD_STATE = unknown>({
         ctx.body = getApiState({ active, others, all: state })
     })
 
-    for (const [actionName, action] of Object.entries(phoneActions)) {
-        router.post(`/${actionName}`, async (ctx) => {
-            logger.debug(
-                `[Phone action] ${actionName} ${JSON.stringify(
-                    ctx.request.body
-                )}`
-            )
-            const state = await getRiddleState<DB_STATE>(riddleId)
-            const param = ctx.request.body
-
-            const active = state.find((s) => s.user == ctx.user)
-            if (active == undefined) {
-                logger.debug("[Phone action] No active state")
-                ctx.status = 409
-                return
-            }
-            const others = state.filter((s) => s.user != ctx.user)
-
-            logger.debug("Executing action")
-            const newState = await action({ active, others, all: state }, param)
-
-            if (newState != undefined) {
-                logger.debug("saving new state")
-                await saveRiddleState(riddleId, newState.active)
-                await Promise.all(
-                    newState.others.map((it) => saveRiddleState(riddleId, it))
+    if (phoneActions != undefined) {
+        for (const [actionName, action] of Object.entries(phoneActions)) {
+            router.post(`/${actionName}`, async (ctx) => {
+                logger.debug(
+                    `[Phone action] ${actionName} ${JSON.stringify(
+                        ctx.request.body
+                    )}`
                 )
-                logger.debug("done saving")
-            }
-            logger.debug("returning state")
-            const stateAfter = await getRiddleState<DB_STATE>(riddleId)
-            const newActive = stateAfter.find((s) => s.user == ctx.user)
-            const newOthers = stateAfter.filter((s) => s.user != ctx.user)
-            ctx.body = getApiState({
-                active: newActive,
-                others: newOthers,
-                all: stateAfter,
+                const state = await getRiddleState<DB_STATE>(riddleId)
+                const param = ctx.request.body
+
+                const active = state.find((s) => s.user == ctx.user)
+                if (active == undefined) {
+                    logger.debug("[Phone action] No active state")
+                    ctx.status = 409
+                    return
+                }
+                const others = state.filter((s) => s.user != ctx.user)
+
+                logger.debug("Executing action")
+                const newState = await action(
+                    { active, others, all: state },
+                    param
+                )
+
+                if (newState != undefined) {
+                    logger.debug("saving new state")
+                    await saveRiddleState(riddleId, newState.active)
+                    await Promise.all(
+                        newState.others.map((it) =>
+                            saveRiddleState(riddleId, it)
+                        )
+                    )
+                    logger.debug("done saving")
+                }
+                logger.debug("returning state")
+                const stateAfter = await getRiddleState<DB_STATE>(riddleId)
+                const newActive = stateAfter.find((s) => s.user == ctx.user)
+                const newOthers = stateAfter.filter((s) => s.user != ctx.user)
+                ctx.body = getApiState({
+                    active: newActive,
+                    others: newOthers,
+                    all: stateAfter,
+                })
+                logger.debug("[action] done")
             })
-            logger.debug("[action] done")
-        })
+        }
     }
 
     /** PI methods  */
@@ -222,22 +229,23 @@ export function riddle<DB_STATE, API_STATE, LEADERBOARD_STATE = unknown>({
         ctx.body = state
     })
 
-    for (const [actionName, action] of Object.entries(piActions)) {
-        router.post(`/${actionName}`, async (ctx) => {
-            logger.debug(`[PI action] ${actionName}`)
-            const state = await getRiddleState<DB_STATE>(riddleId)
-            const param = ctx.request.body
+    if (piActions != undefined) {
+        for (const [actionName, action] of Object.entries(piActions)) {
+            router.post(`/${actionName}`, async (ctx) => {
+                logger.debug(`[PI action] ${actionName}`)
+                const state = await getRiddleState<DB_STATE>(riddleId)
+                const param = ctx.request.body
 
-            const newState = await action(state, param)
+                const newState = await action(state, param)
 
-            await Promise.all(
-                newState.map((it) => saveRiddleState(riddleId, it))
-            )
+                await Promise.all(
+                    newState.map((it) => saveRiddleState(riddleId, it))
+                )
 
-            ctx.body = newState
-        })
+                ctx.body = newState
+            })
+        }
     }
-
     /** start **/
     router.post(`/start`, async (ctx) => {
         logger.debug(`[Start]`)
