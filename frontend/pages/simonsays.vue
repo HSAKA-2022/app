@@ -1,15 +1,11 @@
 <template>
     <layout v-if="!state.solved">
-        Rate eine Zahl zwischen 0 und 100:
-        <input class="input mt-2" type="number" placeholder="Zahl eingeben" v-model="numberInput" />
+        <p> Erinnerst du dich noch an das, was Simon mit den Lampen gemacht hat?^^<br>
+        Gebe es in der richtigen Reihenfolge wieder! </p>
 
         <button class="button is-primary mt-2" @click="guessNumber">Zahl raten</button>
 
         <h1 v-if="state.guess != undefined">Du hast zuletzt {{ state.guess }} geraten.</h1>
-    </layout>
-
-    <layout v-if="state.solved">
-        <h1 class="is-size-1 has-text-success">Du hast richtig geraten!</h1>
     </layout>
 </template>
 
@@ -28,8 +24,7 @@ export default {
 
     data() {
         return {
-            state: {},
-            numberInput: undefined,
+            state: {}
         }
     },
     methods: {
