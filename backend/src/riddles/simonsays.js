@@ -1,6 +1,6 @@
 import { riddle } from "../riddle"
 
-const riddleId = "guess"
+const riddleId = "simon"
 
 function randomInt(max=4) { 
     return Math.floor(Math.random() * max);
