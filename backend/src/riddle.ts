@@ -2,6 +2,7 @@ import Router from "@koa/router"
 import { Middleware } from "koa"
 import {
     finishRiddleOnDb,
+    getAllHistoricStates,
     getRiddleState,
     now,
     saveRiddleState,
@@ -33,7 +34,7 @@ export type PiAction<PARAM, DB_STATE> = (
     param: PARAM
 ) => Promise<Array<StateWrapper<DB_STATE>>>
 
-export function riddle<DB_STATE, API_STATE>({
+export function riddle<DB_STATE, API_STATE, LEADERBOARD_STATE = unknown>({
     riddleId,
     start,
     solved,
@@ -42,6 +43,8 @@ export function riddle<DB_STATE, API_STATE>({
     piActions,
     tick,
     tickRateInMs,
+    getLeaderboard,
+    leaderboardIncludesActive,
 }: {
     /**
      * The name of the riddle
@@ -94,6 +97,15 @@ export function riddle<DB_STATE, API_STATE>({
      * Each handler returns the new state of the game
      */
     piActions: Record<string, PiAction<unknown, DB_STATE>>
+    /**
+     * Gets called when a player sends a GET to `/:riddleId/leaderboard`
+     * Maps all historic states to a leaderboard
+     */
+    getLeaderboard?: (state: Array<StateWrapper<DB_STATE>>) => LEADERBOARD_STATE
+    /**
+     * If the leaderboards also contains current active states
+     */
+    leaderboardIncludesActive?: boolean
 }): Middleware {
     const logger = log(riddleId)
     const router = new Router().prefix(`/${riddleId}`)
@@ -265,6 +277,17 @@ export function riddle<DB_STATE, API_STATE>({
                 await Promise.all(promises)
             }
         }, tickRateInMs ?? 1000)
+    }
+
+    /** leaderboard **/
+    if (getLeaderboard != undefined) {
+        router.get(`/leaderboard`, async (ctx) => {
+            const state = await getAllHistoricStates<DB_STATE>(
+                riddleId,
+                leaderboardIncludesActive
+            )
+            ctx.body = getLeaderboard(state)
+        })
     }
 
     return router.routes()
