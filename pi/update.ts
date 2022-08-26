@@ -66,7 +66,7 @@ async function getCurrentCommitHash(path: string): Promise<string> {
 }
 
 function doUpdate(branchName: string): void {
-    git.exec("pull", ["origin", branchName], (err, result) => {
+    git.exec("pull", ["origin", branchName, "-f"], (err, result) => {
         if (err) {
             errorHandler(err, result)
         } else {

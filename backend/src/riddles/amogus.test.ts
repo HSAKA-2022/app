@@ -258,18 +258,6 @@ test.serial("simulate game", async () => {
             // ignore
         }
     }
-
-    const stateAggregate = results.reduce(
-        (acc, cur) => ({ ...acc, [cur.state]: (acc[cur.state] ?? 0) + 1 }),
-        {}
-    )
-    console.dir(stateAggregate)
-
-    const daysAggregate = results.reduce(
-        (acc, cur) => ({ ...acc, [cur.days]: (acc[cur.days] ?? 0) + 1 }),
-        {}
-    )
-    console.dir(daysAggregate)
 })
 
 async function simulateGame(): Promise<{ state: GameState; days: number }> {
