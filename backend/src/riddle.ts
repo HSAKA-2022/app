@@ -34,9 +34,17 @@ export type PiAction<PARAM, DB_STATE> = (
     param: PARAM
 ) => Promise<Array<StateWrapper<DB_STATE>>>
 
+export type GameMode =
+    // The default mode
+    | "default"
+    // Allows users to run the game at the same time, solving it independently. Will only clean up the user, if they are finished, indepenent of all other.
+    // The solved function will only get
+    | "simultaneousSinglePlayer"
+
 export function riddle<DB_STATE, API_STATE, LEADERBOARD_STATE = unknown>({
     riddleId,
     start,
+    mode: configMode,
     solved,
     getter,
     phoneActions,
@@ -50,6 +58,8 @@ export function riddle<DB_STATE, API_STATE, LEADERBOARD_STATE = unknown>({
      * The name of the riddle
      */
     riddleId: string
+
+    mode?: GameMode
     /**
      * Gets called if a player starts the game with a POST to `/:riddleId/start`
      * @param existingState an Array, of all existing WrappedStates
@@ -110,6 +120,8 @@ export function riddle<DB_STATE, API_STATE, LEADERBOARD_STATE = unknown>({
     const logger = log(riddleId)
     const router = new Router().prefix(`/${riddleId}`)
 
+    const mode = configMode ?? "default"
+
     function getApiState(state: RiddleState<DB_STATE>): API_STATE {
         return {
             ...getter(state),
@@ -125,15 +137,24 @@ export function riddle<DB_STATE, API_STATE, LEADERBOARD_STATE = unknown>({
         const active = state.find((s) => s.user === ctx.user)
         const others = state.filter((s) => s !== active)
 
-        const isSolved = solved(state)
+        if (mode === "default") {
+            const isSolved = solved(state)
 
-        if (isSolved) {
-            logger.info(`${ctx.user} solved the riddle`)
-            setTimeout(async () => {
-                state.forEach((it) => {
-                    finishRiddleOnDb(riddleId, it._id)
-                })
-            }, 60 * 1000)
+            if (isSolved) {
+                logger.info(`${ctx.user} solved the riddle`)
+                setTimeout(async () => {
+                    state.forEach((it) => {
+                        finishRiddleOnDb(riddleId, it._id)
+                    })
+                }, 60 * 1000)
+            }
+        } else if (mode === "simultaneousSinglePlayer") {
+            const sameUserExisting = state.find((it) => it.user === ctx.user)
+            if (sameUserExisting != undefined) {
+                if (solved([sameUserExisting])) {
+                    await finishRiddleOnDb(riddleId, sameUserExisting._id)
+                }
+            }
         }
 
         await updateLastSeen(riddleId, ctx.user)
@@ -188,7 +209,7 @@ export function riddle<DB_STATE, API_STATE, LEADERBOARD_STATE = unknown>({
         if (riddleId === "amogus") {
             ctx.body = {
                 url: "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
-                text: "you find the easter egg. If you read this in code: happy coding!",
+                text: "you found the easter egg. If you read this in code: happy coding!",
             }
             return
         }
@@ -222,11 +243,24 @@ export function riddle<DB_STATE, API_STATE, LEADERBOARD_STATE = unknown>({
         logger.debug(`[Start]`)
         const checkExisting = await getRiddleState<DB_STATE>(riddleId)
 
-        const isSolved = solved(checkExisting)
-        if (isSolved) {
-            await Promise.all(
-                checkExisting.map((it) => finishRiddleOnDb(riddleId, it._id))
+        if (mode === "default") {
+            const isSolved = solved(checkExisting)
+            if (isSolved) {
+                await Promise.all(
+                    checkExisting.map((it) =>
+                        finishRiddleOnDb(riddleId, it._id)
+                    )
+                )
+            }
+        } else if (mode === "simultaneousSinglePlayer") {
+            const sameUserExisting = checkExisting.find(
+                (it) => it.user === ctx.user
             )
+            if (sameUserExisting != undefined) {
+                if (solved([sameUserExisting])) {
+                    await finishRiddleOnDb(riddleId, sameUserExisting._id)
+                }
+            }
         }
 
         const existing = await getRiddleState<DB_STATE>(riddleId)
