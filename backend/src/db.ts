@@ -48,7 +48,7 @@ export async function updateLastSeen(riddleId: string, userId: string) {
  * @param state
  * @param options - Options for the update, `noUpdateLastSeen`: true does not update last seen
  */
-export async function saveRiddleState<State extends Record<string, unknown>>(
+export async function saveRiddleState<State>(
     riddleId: string,
     state: StateWrapper<State>,
     options?: { noUpdateLastSeen?: boolean }
