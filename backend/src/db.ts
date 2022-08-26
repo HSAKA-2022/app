@@ -24,6 +24,20 @@ export async function getRiddleState<State>(
         .toArray()
 }
 
+/**
+ * Fetches all riddle state for the riddle from the db
+ * @param riddleId
+ */
+export async function getAllHistoricStates<State>(
+    riddleId: string,
+    includeActive
+): Promise<Array<StateWrapper<State>>> {
+    return db
+        .collection<StateWrapper<State>>(riddleId)
+        .find(includeActive ? {} : { isActive: false })
+        .toArray()
+}
+
 export function now() {
     return new Date()
 }
