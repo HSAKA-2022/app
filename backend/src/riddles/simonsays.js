@@ -22,13 +22,16 @@ export default riddle({
     getter: (state) => {
 
         return {
-            sequenceLength: state.active.sequence.length
+            sequenceLength: state.active.sequence.length,
+            inGame: state.active.inGame
         }
     },
     phoneActions: {
         submit: async (players, input) => {
             players.active.state.inGame = input.playerSequence == players.active.state.sequence
-            players.active.state.sequence.push(randomInt())
+            if (players.active.state.inGame) {
+                players.active.state.sequence.push(randomInt())
+            }
             return players
         },
     },
