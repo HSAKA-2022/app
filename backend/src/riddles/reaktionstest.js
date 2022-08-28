@@ -13,6 +13,8 @@ export default riddle({
         }
     },
     solved: (states) => {
+        if (states.length === 0)
+            return
         return states[0].state.reactionspeed <= schwelle
     },
     getter: (state) => {
