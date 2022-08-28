@@ -11,6 +11,7 @@ import dotenv from "dotenv"
 async function main() {
     dotenv.config()
     logger.info("Starting Pi-App")
+    console.log("User is: " + require("os").userInfo().username)
     await runPollingService()
     await runUserScripts()
     logger.info("Finished Setup")

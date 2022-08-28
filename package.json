@@ -2,9 +2,9 @@
     "name": "parent-app",
     "version": "1.0.0",
     "scripts": {
-        "lint": "eslint --cache --max-warnings=0 . && prettier -c .",
-        "lint:fix": "eslint --cache --fix --max-warnings=0 . && prettier --write .",
-        "prepare": "husky install"
+        "lint": "sudo eslint --cache --max-warnings=0 . && prettier -c .",
+        "lint:fix": "sudo eslint --cache --fix --max-warnings=0 . && prettier --write .",
+        "prepare": "sudo husky install"
     },
     "workspaces": [
         "backend",
@@ -26,9 +26,9 @@
         "watch": [
             "src"
         ],
-        "exec": "npm run start:direct"
+        "exec": "sudo npm run start:direct"
     },
     "lint-staged": {
-        "*.{ts,tsx,jsx,js,css,html,json}": "prettier --write"
+        "*.{ts,tsx,jsx,js,css,html,json}": "sudo prettier --write"
     }
 }
