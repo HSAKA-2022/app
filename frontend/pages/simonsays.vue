@@ -1,11 +1,13 @@
 <template>
     <layout v-if="!state.solved">
-        <p> Erinnerst du dich noch an das, was Simon mit den Lampen gemacht hat?^^<br>
-        Gebe es in der richtigen Reihenfolge wieder! </p>
+        <button @click="">Lampe 1</button>
+        <button>Lampe 2</button>
+        <button>Lampe 3</button>
+        <button>Lampe 4</button>
+    </layout>
 
-        <button class="button is-primary mt-2" @click="guessNumber">Zahl raten</button>
-
-        <h1 v-if="state.guess != undefined">Du hast zuletzt {{ state.guess }} geraten.</h1>
+    <layout v-if="state.solved">
+        <h1 class="is-size-1 has-text-success">Du hast richtig geraten!</h1>
     </layout>
 </template>
 
@@ -24,7 +26,8 @@ export default {
 
     data() {
         return {
-            state: {}
+            state: {},
+            numberInput: undefined,
         }
     },
     methods: {
