@@ -4,10 +4,13 @@ import { GPIO } from "onoff"
 import { logger } from "../../src/log"
 
 const process = require("process")
-const ws281x = require("rpi-ws281x-native")
+const ws281x = require("@gbkwiatt/node-rpi-ws281x-native")
 
 const button = new GPIO(4, "in", "both")
-const ledChannel = ws281x(100, { stripType: "sk6812" })
+const [ledChannel] = ws281x.init({
+    freq: 800000,
+    channels: [{ count: 100, gpio: 18, stripType: "sk6812-rgbw" }],
+})
 
 /**
  * Entrypoint into the Script
