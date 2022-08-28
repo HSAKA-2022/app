@@ -39,7 +39,7 @@
         "exec": "npm run start:direct"
     },
     "engines": {
-        "node": ">=18.0.0"
+        "node": ">=16.0.0"
     },
     "ava": {
         "files": [

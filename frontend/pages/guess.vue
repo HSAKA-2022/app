@@ -1,62 +1,48 @@
 <template>
-  <layout class="content">
-    <div
-      class="section is-flex is-flex-direction-column"
-      v-if="!state?.solved"
-    >
-      Rate eine Zahl zwischen 0 und 100:
+    <layout v-if="!state.solved">
+        Rate eine Zahl zwischen 0 und 100:
+        <input class="input mt-2" type="number" placeholder="Zahl eingeben" v-model="numberInput" />
 
-      <input
-        class="input mt-2"
-        type="number"
-        placeholder="Zahl eingeben"
-        v-model="numberInput"
-      />
+        <button class="button is-primary mt-2" @click="guessNumber">Zahl raten</button>
 
-      <button class="button is-primary mt-2" @click="makeGuess">
-        Zahl raten
-      </button>
+        <h1 v-if="state.guess != undefined">Du hast zuletzt {{ state.guess }} geraten.</h1>
+    </layout>
 
-      <h1 class="mt-4" v-if="state?.guess != undefined">
-        Du hast zuletzt {{ state?.guess }} geraten.
-      </h1>
-    </div>
-
-    <div class="section" v-if="state?.solved">
-      <h1 class="has-text-success">Du hast das Rätsel gelöst!</h1>
-    </div>
-  </layout>
+    <layout v-if="state.solved">
+        <h1 class="is-size-1 has-text-success">Du hast richtig geraten!</h1>
+    </layout>
 </template>
 
+<style>
+</style>
+
 <script>
-import { startRiddle, doRiddleAction } from "../utils"
+import { startRiddle, doRiddleAction, getRiddleState } from "../utils"
 
 const riddleId = "guess"
 
 export default {
-  data() {
-    return {
-      state: undefined,
-      numberInput: undefined,
-    }
-  },
-
-  async mounted() {
-    this.state = await startRiddle(riddleId)
-  },
-
-  methods: {
-    async makeGuess() {
-      if (this.numberInput == undefined) {
-        return
-      }
-
-      this.state = await doRiddleAction("guess", "makeAGuess", {
-        guess: this.numberInput,
-      })
-
-      this.numberInput = undefined
+    async mounted() {
+        this.state = await startRiddle(riddleId)
     },
-  },
+
+    data() {
+        return {
+            state: {},
+            numberInput: undefined,
+        }
+    },
+    methods: {
+        async guessNumber() {
+            if (this.numberInput == undefined) {
+                return
+            }
+
+            this.state = await doRiddleAction(riddleId, "makeAGuess", {
+                guess: this.numberInput,
+            })
+        }
+    }
+
 }
 </script>
