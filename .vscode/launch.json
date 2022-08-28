@@ -28,7 +28,7 @@
             "type": "node"
         },
         {
-            "name": "Start Frontend",
+            "name": "Start Backend  ",
             "request": "launch",
             "runtimeArgs": ["run", "dev"],
             "cwd": "${workspaceFolder}/backend",
