@@ -2,8 +2,8 @@ import { riddle } from "../riddle"
 
 const riddleId = "simon"
 
-function randomInt(max=4) { 
-    return Math.floor(Math.random() * max);
+function randomInt(max = 4) {
+    return Math.floor(Math.random() * max)
 }
 
 export default riddle({
@@ -12,30 +12,28 @@ export default riddle({
         if (existing.length === 0) {
             return {
                 sequence: [randomInt(), randomInt(), randomInt()],
-                inGame: true
-            }            
+                inGame: true,
+            }
         }
     },
     solved: (states) => {
         return !states[0].state.inGame
     },
     getter: (state) => {
-
         return {
-            sequenceLength: state.active.sequence.length,
-            inGame: state.active.inGame
+            sequenceLength: state.active.state.sequence.length,
+            inGame: state.active.state.inGame,
         }
     },
     phoneActions: {
         submit: async (players, input) => {
-            players.active.state.inGame = input.playerSequence == players.active.state.sequence
+            players.active.state.inGame =
+                input.playerSequence == players.active.state.sequence
             if (players.active.state.inGame) {
                 players.active.state.sequence.push(randomInt())
             }
             return players
         },
     },
-    piActions: {
-        
-    },
+    piActions: {},
 })
