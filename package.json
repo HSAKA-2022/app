@@ -1,9 +1,9 @@
 {
-    "name": "parent",
+    "name": "parent-app",
     "version": "1.0.0",
     "scripts": {
-        "lint": "turbo run lint",
-        "lint:fix": "turbo run lint:fix",
+        "lint": "eslint --cache --max-warnings=0 . && prettier -c .",
+        "lint:fix": "eslint --cache --fix --max-warnings=0 . && prettier --write .",
         "prepare": "husky install"
     },
     "workspaces": [

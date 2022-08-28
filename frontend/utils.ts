@@ -1,20 +1,11 @@
-const SERVER_URL = "https://backend.burg.games"
+import { v4 as uuid } from "uuid"
 
-function uuidv4() {
-    return (([1e7] as any) + -1e3 + -4e3 + -8e3 + -1e11).replace(
-        /[018]/g,
-        (c: any) =>
-            (
-                c ^
-                (crypto.getRandomValues(new Uint8Array(1))[0] & (15 >> (c / 4)))
-            ).toString(16)
-    )
-}
+const SERVER_URL = "https://backend.burg.games"
 
 function getOrCreateUserId() {
     const existing = localStorage.getItem("userId")
     if (existing) return existing
-    const newId = uuidv4()
+    const newId = uuid()
     localStorage.setItem("userId", newId)
     return newId
 }
