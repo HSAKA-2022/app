@@ -2,22 +2,20 @@ import { riddle } from "../riddle"
 
 const riddleId = "colorMatch"
 
+const colors = ["red", "green", "blue"]
+
 function getRandomColorValue() {
-    return Math.ceil(Math.random() * 256) - 1;
+    return Math.ceil(Math.random() * 256) - 1
 }
 
 export default riddle({
     riddleId,
     start: (players) => {
-        if (players.length === 3) {
-
-            // map players with colors
-            players[0].state.color = 'red'
-            players[0].state.goal = getRandomColorValue()
-            players[1].state.color = 'green'
-            players[1].state.goal = getRandomColorValue()
-            players[2].state.color = 'blue'
-            players[2].state.goal = getRandomColorValue()
+        if (players.length < 3) {
+            return {
+                color: colors[players.length],
+                goal: getRandomColorValue(),
+            }
         }
     },
 
@@ -41,8 +39,7 @@ export default riddle({
         setCurrent: (players, input) => {
             players.active.state.current = input.current
             return players
-        }
+        },
     },
-    piActions: {
-    },
+    piActions: {},
 })
