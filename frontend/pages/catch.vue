@@ -1,8 +1,8 @@
 <template>
     <layout >
-        <h1>Gotta Catch'em All</h1>
-        <h6>01001001 01101110 01100110 01101111 00100000 01000101 01100100 01101001 01110100 01101001 01101111 01101110 </h6>
-        <table class="table table is-bordered table is-fullwidth">
+        <h1 class="has-text-centered">Gotta Catch'em All</h1>
+        <h6 class="is-size-7 has-text-centered">01001001 01101110 01100110 01101111 00100000 01000101 01100100 01101001 01110100 01101001 01101111 01101110 </h6>
+        <table class="table table is-bordered table is-fullwidth has-text-centered">
             <tbody>
                 <tr>
                     <th>1</th>
@@ -104,7 +104,7 @@
 <script>
 import { startRiddle, doRiddleAction, getRiddleState } from "../utils"
 
-const riddleId = "guess"
+const riddleId = "catch"
 
 export default {
     async mounted() {
@@ -116,20 +116,9 @@ export default {
             state: {
                 infoIDs: {}
             },
-            numberInput: undefined,
         }
     },
-    methods: {
-        async guessNumber() {
-            if (this.numberInput == undefined) {
-                return
-            }
-
-            this.state = await doRiddleAction(riddleId, "makeAGuess", {
-                guess: this.numberInput,
-            })
-        }
-    }
+    methods: {}
 
 }
 </script>
