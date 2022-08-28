@@ -47,3 +47,7 @@ export async function doRiddleAction<T, V>(
 
     return await result.json()
 }
+
+export function getUrlParams(): URLSearchParams {
+    return new URLSearchParams(window.location.search)
+}
