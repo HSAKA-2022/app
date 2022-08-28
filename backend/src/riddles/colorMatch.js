@@ -23,7 +23,7 @@ export default riddle({
 
     solved: (players) => {
         for (let i = 0; i < players.length; i++) {
-            if (players[i].state.try !== players[i].state.goal) {
+            if (players[i].state.current !== players[i].state.goal) {
                 return false
             }
         }
@@ -32,13 +32,14 @@ export default riddle({
 
     getter: (players) => {
         return {
-            try: players.active.state.try
+            current: players.active.state.current,
+            color: players.active.state.color,
         }
     },
 
     phoneActions: {
-        setTry: (players, input) => {
-            players.active.state.try = input.try
+        setCurrent: (players, input) => {
+            players.active.state.current = input.current
             return players
         }
     },
