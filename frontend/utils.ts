@@ -1,7 +1,5 @@
 import { v4 as uuid } from "uuid"
 
-const SERVER_URL = "https://backend.burg.games"
-
 function getOrCreateUserId() {
     const existing = localStorage.getItem("userId")
     if (existing) return existing
@@ -18,7 +16,8 @@ function headers() {
 }
 
 export async function startRiddle<T>(riddleId: string): Promise<T> {
-    const result = await fetch(`${SERVER_URL}/${riddleId}/start`, {
+    const c = useRuntimeConfig()
+    const result = await fetch(`${c.serverUrl}/${riddleId}/start`, {
         headers: headers(),
         method: "POST",
     })
@@ -27,7 +26,8 @@ export async function startRiddle<T>(riddleId: string): Promise<T> {
 }
 
 export async function getRiddleState<T>(riddleId: string): Promise<T> {
-    const result = await fetch(`${SERVER_URL}/${riddleId}`, {
+    const c = useRuntimeConfig()
+    const result = await fetch(`${c.serverUrl}/${riddleId}`, {
         headers: headers(),
     })
 
@@ -39,7 +39,8 @@ export async function doRiddleAction<T, V>(
     action: string,
     values: V
 ): Promise<T> {
-    const result = await fetch(`${SERVER_URL}/${riddleId}/${action}`, {
+    const c = useRuntimeConfig()
+    const result = await fetch(`${c.serverUrl}/${riddleId}/${action}`, {
         method: "POST",
         headers: headers(),
         body: JSON.stringify(values),
