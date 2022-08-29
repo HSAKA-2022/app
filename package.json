@@ -2,13 +2,13 @@
     "name": "parent-app",
     "version": "1.0.0",
     "scripts": {
-        "lint": "sudo eslint --cache --max-warnings=0 . && prettier -c .",
-        "lint:fix": "sudo eslint --cache --fix --max-warnings=0 . && prettier --write .",
-        "prepare": "sudo husky install"
+        "lint": "eslint --cache --max-warnings=0 . && prettier -c .",
+        "lint:fix": "eslint --cache --fix --max-warnings=0 . && prettier --write .",
+        "prepare": "husky install"
     },
     "workspaces": [
         "backend",
-        "pi"
+        "frontend"
     ],
     "author": "",
     "license": "ISC",
