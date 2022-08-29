@@ -76,3 +76,10 @@ jobs:
                   host: ${{ matrix.hostname }}
                   username: pi
                   password: ${{ secrets.RASPI_PASSPHRASE }}
+            - name: Run LibraryRebiuld for Pi4.5
+              uses: garygrossgarten/github-action-ssh@release
+              with:
+                  command: sudo /home/pi/app/pi/update-library-led.sh
+                  host: ${{ matrix.hostname }}
+                  username: pi
+                  password: ${{ secrets.RASPI_PASSPHRASE }}
