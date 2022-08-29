@@ -42,6 +42,8 @@ const riddleId = "reaktionstest"
 export default {
     async mounted() {
         this.state = await startRiddle(riddleId)
+        this.state.reactionspeed = this.state.reactionspeed || 999999
+
     },
 
     data() {
