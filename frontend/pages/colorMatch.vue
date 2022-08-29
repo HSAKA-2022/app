@@ -4,28 +4,33 @@
     <h1>Color Match</h1>
     <div v-if="!state.solved">
       <p>Willkommen beim Spiel Color Match. Versuche, dass beide Lampen die gleiche Farbe haben.</p>
+
+      <!-- waiting queue -->
       <p v-if="state.color === undefined">Dir wird noch eine Farbe zugeordent...</p>
+
+      <!-- in game page -->
       <div v-if="state.color !== undefined">
-        <p>Du hast die Farbe <b>{{ colorGermanDict[state.color] }}</b> erhalten.</p>
-        <input class="input is-primary" type="number" placeholder="Farbe" v-model="currentTry">
-        <button class="button is-primary" @click="setTry" >Submit</button>
-        <progress class="progress is-primary" :value="currentTry" max="255">15%</progress>
+        <p>Du hast die Farbe <b>{{ colorDict[state.color] }}</b> erhalten.</p>
+        <vue-slider v-model="currentTry" height="30"></vue-slider>
+        <button class="button" @click="setTry" >Submit</button>
+        <progress class="progress" :value="currentTry" max="255">15%</progress>
         <button
-            class="button is-primary"
+            class="button"
             @mousedown="startIncCurrentTry"
-            @mouseup="stopValueInterval"
         >
           Increment
         </button>
         <button
-            class="button is-primary"
+            class="button"
             @mousedown="startDecCurrentTry"
-            @mouseup="stopValueInterval"
         >
           Decrement
         </button>
       </div>
-    </div>
+
+      </div>
+
+    <!-- win page -->
     <div v-if="state.solved">
       <p>Durch Koordination und Zusammenarbeit habt ihr das Spiel gewonnen -> herzlichen Glückwunsch!</p>
     </div>
@@ -35,16 +40,20 @@
 
 <script>
 import { startRiddle, doRiddleAction, getRiddleState } from "../utils"
+import VueSlider from 'vue-slider-component/dist-css/vue-slider-component.umd.min.js'
+import 'vue-slider-component/dist-css/vue-slider-component.css'
+import 'vue-slider-component/theme/antd.css'
 
 const riddleId = 'colorMatch'
 const valueIntervalDuration = 40
 let refreshIntervalId, valueIntervalId
 
 export default {
+  components: { VueSlider },
   data() {
     return {
       state: {},
-      colorGermanDict: {
+      colorDict: {
         red: 'rot',
         green: 'grün',
         blue: 'blau',
@@ -57,7 +66,6 @@ export default {
     this.state = await startRiddle(riddleId)
     refreshIntervalId = setInterval(this.refreshState, 300)
   },
-
 
   methods: {
     async setTry() {
@@ -75,16 +83,32 @@ export default {
 
     startIncCurrentTry() {
       this.stopValueInterval()
-      valueIntervalId = setInterval(() => {this.currentTry++}, valueIntervalDuration)
+      valueIntervalId = setInterval(this.incCurrentValue, valueIntervalDuration)
     },
 
     startDecCurrentTry() {
       this.stopValueInterval()
-      valueIntervalId = setInterval(() => {this.currentTry--}, valueIntervalDuration)
+      valueIntervalId = setInterval(this.decCurrentValue, valueIntervalDuration)
     },
 
     stopValueInterval() {
       clearInterval(valueIntervalId)
+    },
+
+    incCurrentValue() {
+      if (this.currentTry >= 255) {
+        this.currentTry = 255
+        return
+      }
+      this.currentTry++
+    },
+
+    decCurrentValue() {
+      if (this.currentTry <= 0) {
+        this.currentTry = 0
+        return
+      }
+      this.currentTry--
     }
   }
 
