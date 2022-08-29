@@ -308,6 +308,9 @@ export function riddle<DB_STATE, API_STATE, LEADERBOARD_STATE = unknown>({
     if (tick) {
         setInterval(async () => {
             const state = await getRiddleState<DB_STATE>(riddleId)
+            if (state.length === 0) {
+                return
+            }
             const newState = await tick(state)
             if (newState != undefined) {
                 const promises = newState.map(
