@@ -26,9 +26,9 @@
         "watch": [
             "src"
         ],
-        "exec": "sudo npm run start:direct"
+        "exec": "npm run start:direct"
     },
     "lint-staged": {
-        "*.{ts,tsx,jsx,js,css,html,json}": "sudo prettier --write"
+        "*.{ts,tsx,jsx,js,css,html,json}": "prettier --write"
     }
 }
