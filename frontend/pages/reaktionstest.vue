@@ -1,6 +1,8 @@
 <template>
     <layout v-if="!state.solved && !earlyClickNotification" class="buttons are-large">
-        <button v-if="!showPictureBool" class="chadButton button is-primary mt-2 mx-1 is-size-1" @click="earlyclick" style="background-color: #f44336;">{{ state.reactionspeed }} ms </button>
+        <h1 class="is-size-1 has-text-success">Reaktionstest</h1>
+        <p>Willkommen, der Reaktionstest funktioniert, indem man auf den Button klickt, sobald dieser Grün wird. Das Ziel ist innerhalb von 200ms zu reagieren. Viel Spaß ;)</p>
+        <button v-if="!showPictureBool && buttonhide" class="chadButton button is-primary mt-2 mx-1 is-size-1" @click="earlyclick" style="background-color: #f44336;">{{ state.reactionspeed }} ms </button>
         <button v-if="showPictureBool" class="chadButton button is-primary mt-2 mx-1 is-size-1" @click="react" style="background-color: #4CAF50;">{{ state.reactionspeed }} ms </button>
 
         <button v-if="!buttonhide" class="chadButton button is-primary mt-2 mx-1 is-size-1" @click="wait">START</button>
@@ -19,17 +21,14 @@
 
     <layout v-if="state.solved" class="buttons are-large">
 
-        <h1 class="is-size-1 has-text-success">Du hast unter 200ms gebraucht!</h1>
-        <h1 v-if="state.reactionspeed != undefined">Du hast zuletzt {{ state.reactionspeed }} ms gebraucht.</h1>
-        <button class="button is-primary mt-2 is-size-1" @click="retry">Nochmal versuchen</button>
-
+        <h1 class="is-size-1 has-text-success">Du hast {{ state.reactionspeed }}ms gebraucht!</h1>
     </layout>
 </template>
 
 <style>
     .chadButton {
-        width: 100%;
-        height: 300px;
+        width: 90%;
+        height: 500px;
     }
 
 </style>
@@ -42,7 +41,7 @@ const riddleId = "reaktionstest"
 export default {
     async mounted() {
         this.state = await startRiddle(riddleId)
-        this.state.reactionspeed = this.state.reactionspeed || 999999
+        this.state.reactionspeed = this.state.reactionspeed || "..."
 
     },
 
@@ -88,11 +87,9 @@ export default {
             this.state = await doRiddleAction(riddleId, "react", {
                 reactionspeed: this.reactionspeed,
             })
-            this.state.reactionspeed = this.state.reactionspeed || 999999
         },
         retry() {
             this.earlyClickNotification = false
-            this.state.solved = false
         }
     }
 
