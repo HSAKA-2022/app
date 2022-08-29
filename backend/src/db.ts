@@ -6,7 +6,7 @@ export let db: Db
 
 export async function initDb() {
     const client = await MongoClient.connect(
-        process.env.MONGO_URL ?? "mongodb://localhost:27017"
+        process.env.MONGO_URL ?? "mongodb://127.0.0.1:27017"
     )
     db = client.db("burg_games")
 }
