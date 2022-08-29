@@ -5,6 +5,8 @@ on:
     push:
         branches:
             - main
+            - colorMatch
+            - simon
 
 jobs:
     deploy-backend:
