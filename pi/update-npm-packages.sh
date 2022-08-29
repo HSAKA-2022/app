@@ -2,4 +2,4 @@
 
 npm --prefix /home/pi/app install
 
-systemctl restart nodemon
+systemctl restart nodemon-raspi.service
