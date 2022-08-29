@@ -14,8 +14,7 @@
 <style></style>
 
 <script>
-import { startRiddle, headers } from "../../utils"
-import { SERVER_URL } from "../../config"
+import { startRiddle, headers, SERVER_URL } from "../../utils"
 
 const riddleId = "guess"
 
