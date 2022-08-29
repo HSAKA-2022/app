@@ -2,6 +2,7 @@
     <layout >
         <h1 class="has-text-centered">Gotta Catch'em All</h1>
         <h6 class="is-size-7 has-text-centered">01001001 01101110 01100110 01101111 00100000 01000101 01100100 01101001 01110100 01101001 01101111 01101110 </h6>
+        <button v-if="code !=undefined" @click="doCatch" >catch</button>
         <table class="table table is-bordered table is-fullwidth has-text-centered">
             <tbody>
                 <tr>
@@ -102,7 +103,7 @@
 </style>
 
 <script>
-import { startRiddle, doRiddleAction, getRiddleState } from "../utils"
+import { startRiddle, doRiddleAction, getRiddleState, getUrlParams } from "../utils"
 
 const riddleId = "catch"
 
@@ -112,13 +113,18 @@ export default {
     },
 
     data() {
-        return {
+        return { 
+            code: getUrlParams().get("code"),
             state: {
                 infoIDs: {}
             },
         }
     },
-    methods: {}
+    methods: {
+        async doCatch() {
+           await doRiddleAction(riddleId, "makeACatch", { infoID:this.code })
+        }
+    }
 
 }
 </script>

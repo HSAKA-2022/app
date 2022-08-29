@@ -3,55 +3,55 @@ import { riddle } from "../riddle"
 const riddleId = "catch"
 const informatiker = {
     "ceb3b59a-2523-11ed-861d-0242ac120002":{
-        name: Ada,
+        name: "Ada",
     },
     "ceb3b6bc-2523-11ed-861d-0242ac120002":{
-        name: Alex,
+        name: "Alex",
     },
     "ceb3a3d4-2523-11ed-861d-0242ac120002": {
-        name: Bene,
+        name: "Bene",
     },
     "ceb3a672-2523-11ed-861d-0242ac120002": {
-        name: Björn,
+        name: "Björn",
     },
     "ceb3b7e8-2523-11ed-861d-0242ac120002":{
-        name: Emil,
+        name: "Emil",
     },
     "ceb3a906-2523-11ed-861d-0242ac120002": {
-        name: Farida,
+        name: "Farida",
     },
     "ceb3bf04-2523-11ed-861d-0242ac120002":{
-        name: Hannes,
+        name: "Hannes",
     },
     "ceb3ad8e-2523-11ed-861d-0242ac120002":{
-        name: Hilmar,
+        name: "Hilmar",
     },
     "ceb3bdc4-2523-11ed-861d-0242ac120002":{
-        name: Jan,
+        name: "Jan",
     },
     "ceb3ab40-2523-11ed-861d-0242ac120002":{
-        name:Katharina,
+        name: "Katharina",
     },
     "ceb3ac6c-2523-11ed-861d-0242ac120002":{
-        name: Leon,
+        name: "Leon",
     },
     "30ceb3b356-2523-11ed-861d-0242ac120002UV":{
-        name: Lukas,
+        name: "Lukas",
     },
     "ceb3affa-2523-11ed-861d-0242ac120002":{
-        name: Mischa,
+        name: "Mischa",
     },
     "ceb3b126-2523-11ed-861d-0242ac120002":{
-        name: Philipp,
+        name: "Philipp",
     },
     "ceb3b932-2523-11ed-861d-0242ac120002":{
-        name: Sophia,
+        name: "Sophia",
     },
     "ceb3aa1e-2523-11ed-861d-0242ac120002":{
-        name:Toby,
+        name: "Toby",
     },
     "ceb3b248-2523-11ed-861d-0242ac120002":{
-        name: Toplink,
+        name: "Toplink",
     },
 }
 
