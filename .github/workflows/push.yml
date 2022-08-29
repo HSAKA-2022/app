@@ -5,8 +5,6 @@ on:
     push:
         branches:
             - main
-            - colorMatch
-            - simon
 
 jobs:
     deploy-backend:
@@ -45,43 +43,3 @@ jobs:
                   branch: main
                   git_remote_url: "ssh://dokku@100.110.108.65:22/frontend"
                   ssh_private_key: ${{ secrets.DEPLOY_PRIVATE_KEY }}
-    deploy-pi:
-        runs-on: ubuntu-latest
-        strategy:
-            matrix:
-                hostname:
-                    [
-                        100.120.238.39,
-                        100.78.64.55,
-                        100.126.152.59,
-                        100.78.142.4,
-                        100.123.122.6,
-                    ]
-            fail-fast: false
-        steps:
-            - name: Tailscale
-              uses: tailscale/github-action@v1
-              with:
-                  authkey: ${{ secrets.TAILSCALE_AUTH_KEY }}
-
-            - name: Run update script
-              uses: garygrossgarten/github-action-ssh@release
-              with:
-                  command: sudo npm --prefix /home/pi/app/pi run update
-                  host: ${{ matrix.hostname }}
-                  username: pi
-                  password: ${{ secrets.RASPI_PASSPHRASE }}
-            - name: Run NPM Update and Restart
-              uses: garygrossgarten/github-action-ssh@release
-              with:
-                  command: sudo /home/pi/app/pi/update-npm-packages.sh
-                  host: ${{ matrix.hostname }}
-                  username: pi
-                  password: ${{ secrets.RASPI_PASSPHRASE }}
-            - name: Run LibraryRebiuld for Pi4.5
-              uses: garygrossgarten/github-action-ssh@release
-              with:
-                  command: sudo /home/pi/app/pi/update-library-led.sh
-                  host: ${{ matrix.hostname }}
-                  username: pi
-                  password: ${{ secrets.RASPI_PASSPHRASE }}
