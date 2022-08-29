@@ -1,20 +1,23 @@
 import { registerCallback } from "../../src/statePollerService"
 import { triggerAction } from "../../src/actionDispatch"
-import { GPIO } from "onoff"
+//import { GPIO } from "onoff"
 import { logger } from "../../src/log"
 
 const process = require("process")
 const ws281x = require("rpi-ws281x-native")
 
-const button = new GPIO(4, "in", "both")
-const ledChannel = ws281x(100, { stripType: "sk6812" })
+//const button = new GPIO(4, "in", "both")
+const ledChannel = ws281x(10, {
+    stripType: "sk6812-rgbw",
+})
 
 /**
  * Entrypoint into the Script
  */
 export default async function () {
-    handleButtonPresses()
+    //handleButtonPresses()
     await resetStateNow()
+    console.log("Current user:" + require("os").userInfo().username)
     await resetStateEvery60Seconds()
     await changeColorEvery20Seconds()
     registerCallback("guess", handleStateChange)
@@ -45,19 +48,23 @@ async function resetStateNow() {
  * @param {Object} newState JSON object representing the new State
  */
 function handleStateChange(newState) {
+    logger.info(newState)
     if (newState[0].state.guess === newState[0].state.goal) {
-        turnLEDToColor(" #ff0000")
+        turnLEDToColor(0xff0000)
     } else if (newState[0].state.guess > newState[0].state.goal) {
-        turnLEDToColor(" #FFFF00")
+        turnLEDToColor(0xffff00)
     } else {
-        turnLEDToColor("0000FF")
+        turnLEDToColor(0x0000ff)
     }
 }
 
 function turnLEDToColor(hexCode) {
+    console.log("Color Array Pre: " + ledChannel.array)
     for (let i = 0; i < 10; i++) {
         ledChannel.array[i] = hexCode
     }
+    console.log("Color Array Post: " + ledChannel.array)
+    console.log("turning LED to color " + hexCode)
     ws281x.render()
 }
 
@@ -69,22 +76,24 @@ async function resetStateEvery60Seconds() {
 
 async function changeColorEvery20Seconds() {
     setInterval(function () {
-        newState = [
+        const newState = [
             { state: { guess: Math.floor(Math.random() * 3), goal: 1 } },
         ]
-        handleStateChange()
-    }, 20 * 1000)
+        handleStateChange(newState)
+    }, 10 * 1000)
 }
 
 // Save game before restarting
 process.once("SIGUSR2", function () {
-    console.info("SIGUR2 received")
+    console.log("SIGUR2 received")
     ws281x.reset()
     ws281x.finalize()
+    console.log("SIGUR2 finished")
 })
 
 process.once("SIGINT", function () {
-    logger.info("SIGINT received")
+    console.log("SIGINT received")
     ws281x.reset()
     ws281x.finalize()
+    console.log("SIGINT finished")
 })
