@@ -42,8 +42,8 @@ export default riddle({
         }
 
         // calc sum of goal and current values
-        totalGoal = sumPlayerValue(players, "goal")
-        totalCurrent = sumPlayerValue(players, "current")
+        const totalGoal = sumPlayerValue(players, "goal")
+        const totalCurrent = sumPlayerValue(players, "current")
 
         // compare goal and current values
         return Math.abs(totalCurrent - totalGoal) <= 30

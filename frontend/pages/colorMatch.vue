@@ -9,6 +9,21 @@
         <p>Du hast die Farbe <b>{{ colorGermanDict[state.color] }}</b> erhalten.</p>
         <input class="input is-primary" type="number" placeholder="Farbe" v-model="currentTry">
         <button class="button is-primary" @click="setTry" >Submit</button>
+        <progress class="progress is-primary" :value="currentTry" max="255">15%</progress>
+        <button
+            class="button is-primary"
+            @mousedown="startIncCurrentTry"
+            @mouseup="stopValueInterval"
+        >
+          Increment
+        </button>
+        <button
+            class="button is-primary"
+            @mousedown="startDecCurrentTry"
+            @mouseup="stopValueInterval"
+        >
+          Decrement
+        </button>
       </div>
     </div>
     <div v-if="state.solved">
@@ -22,7 +37,8 @@
 import { startRiddle, doRiddleAction, getRiddleState } from "../utils"
 
 const riddleId = 'colorMatch'
-let intervalId
+const valueIntervalDuration = 40
+let refreshIntervalId, valueIntervalId
 
 export default {
   data() {
@@ -33,14 +49,15 @@ export default {
         green: 'grün',
         blue: 'blau',
       },
-      currentTry: 0
+      currentTry: 0,
     }
   },
 
   async mounted() {
     this.state = await startRiddle(riddleId)
-    intervalId = setInterval(this.refreshState, 300)
+    refreshIntervalId = setInterval(this.refreshState, 300)
   },
+
 
   methods: {
     async setTry() {
@@ -52,8 +69,22 @@ export default {
     async refreshState() {
       this.state = await getRiddleState(riddleId)
       if (this.state.solved) {
-        clearInterval(intervalId)
+        clearInterval(refreshIntervalId)
       }
+    },
+
+    startIncCurrentTry() {
+      this.stopValueInterval()
+      valueIntervalId = setInterval(() => {this.currentTry++}, valueIntervalDuration)
+    },
+
+    startDecCurrentTry() {
+      this.stopValueInterval()
+      valueIntervalId = setInterval(() => {this.currentTry--}, valueIntervalDuration)
+    },
+
+    stopValueInterval() {
+      clearInterval(valueIntervalId)
     }
   }
 
