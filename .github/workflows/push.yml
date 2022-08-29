@@ -69,7 +69,6 @@ jobs:
                   host: ${{ matrix.hostname }}
                   username: pi
                   password: ${{ secrets.RASPI_PASSPHRASE }}
-                      - name: Run Install script
             - name: Run NPM Update and Restart
               uses: garygrossgarten/github-action-ssh@release
               with:
