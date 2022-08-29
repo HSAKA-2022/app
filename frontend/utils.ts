@@ -1,6 +1,6 @@
 import { v4 as uuid } from "uuid"
 
-const SERVER_URL = "https://backend.burg.games"
+export const SERVER_URL = "https://backend.burg.games"
 
 function getOrCreateUserId() {
     const existing = localStorage.getItem("userId")
