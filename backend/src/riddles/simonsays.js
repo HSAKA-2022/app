@@ -17,7 +17,11 @@ export default riddle({
         }
     },
     solved: (states) => {
-        return !states[0].state.inGame
+        if (states.length === 0) {
+            return
+        } else {
+            return !states[0].state.inGame
+        }
     },
     getter: (state) => {
         return {
@@ -26,13 +30,15 @@ export default riddle({
         }
     },
     phoneActions: {
-        submit: async (players, input) => {
-            players.active.state.inGame =
-                input.playerSequence == players.active.state.sequence
-            if (players.active.state.inGame) {
-                players.active.state.sequence.push(randomInt())
+        submit: async (states, input) => {
+            states.active.state.inGame =
+                input.playerSequence == states.active.state.sequence
+            console.dir(input.playerSequence)
+            console.dir(states.active.state.sequence)
+            if (states.active.state.inGame) {
+                states.active.state.sequence.push(randomInt())
             }
-            return players
+            return states
         },
     },
     piActions: {},
