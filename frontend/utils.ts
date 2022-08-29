@@ -10,7 +10,7 @@ function getOrCreateUserId() {
     return newId
 }
 
-function headers() {
+export function headers() {
     return {
         Authorization: "User " + getOrCreateUserId(),
         "Content-Type": "application/json",

@@ -335,5 +335,16 @@ export function riddle<DB_STATE, API_STATE, LEADERBOARD_STATE = unknown>({
         })
     }
 
+    /** Admin reset **/
+    router.post(`/admin/reset`, async (ctx) => {
+        if (riddleId === "amogus") {
+            return
+        }
+        const state = await getRiddleState(riddleId)
+        await Promise.all(
+            state.map(async (it) => finishRiddleOnDb(riddleId, it._id))
+        )
+    })
+
     return router.routes()
 }
