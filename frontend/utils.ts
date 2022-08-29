@@ -49,5 +49,6 @@ export async function doRiddleAction<T, V>(
 }
 
 export function getUrlParams(): URLSearchParams {
+    if (typeof window === "undefined") return new URLSearchParams()
     return new URLSearchParams(window?.location?.search ?? "")
 }
