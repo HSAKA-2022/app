@@ -1,5 +1,5 @@
 <template>
-    <layout v-if="!state.solved">
+    <layout v-if="!state.solved && state.canSubmit">
         <header>
             <h1>Simon Says</h1>
             <p>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Quisquam, nostrum, rem exercitationem ratione
@@ -22,11 +22,52 @@
         </div>
 
         <p>Deine Eingaben {{  userMoves  }}</p>
-        <ul>
-            <li v-for="item in input">
-                {{  item  }}
-            </li>
-        </ul>
+
+        <div>
+            
+        </div>
+        <div class="inputList" v-for="item in input">
+            <div class="smallBox red" v-if="item == 0"></div>
+            <div class="smallBox blue" v-if="item == 1"></div>
+            <div class="smallBox yellow" v-if="item == 2"></div>
+            <div class="smallBox green" v-if="item == 3"></div>
+        </div>
+
+    </layout>
+
+    <layout v-if="!state.solved && !state.canSubmit">
+        <header>
+            <h1>Simon Says</h1>
+            <p>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Quisquam, nostrum, rem exercitationem ratione
+                vitae magnam autem laboriosam non repellat voluptatibus illum explicabo nihil dolorem! In commodi
+                maiores quia officia explicabo.</p>
+        </header>
+        <div class="box">
+            <div class="tile is-vertical is-8">
+                <button disabled class="red lampButton content" @click="makeArray(0)">Lampe 1</button>
+                <button disabled class="blue lampButton content" @click="makeArray(1)">Lampe 2</button>
+            </div>
+            <div class="tile">
+                <button class="yellow lampButton content" @click="makeArray(2)">Lampe 3</button>
+                <button class="green lampButton content" @click="makeArray(3)">Lampe 4</button>
+            </div>
+
+            <button class="button is-danger" @click="deleteTry">Löschen</button>
+
+            <button class="button is-success" @click="submit">Abschicken</button>
+        </div>
+
+        <p>Deine Eingaben {{  userMoves  }}</p>
+
+        <div>
+            
+        </div>
+        <div class="inputList" v-for="item in input">
+            <div class="smallBox red" v-if="item == 0"></div>
+            <div class="smallBox blue" v-if="item == 1"></div>
+            <div class="smallBox yellow" v-if="item == 2"></div>
+            <div class="smallBox green" v-if="item == 3"></div>
+        </div>
 
     </layout>
 
@@ -36,6 +77,10 @@
 </template>
 
 <style>
+.inputList {
+    display: inline-block;
+
+}
 .box {
     margin-top: 20px;
 }
@@ -58,6 +103,12 @@
 
 .green {
     background-color: #67BE39;
+}
+
+.smallBox {
+    height: 10px;
+    width: 10px;
+    margin-right: 5px;
 }
 </style>
 
@@ -90,6 +141,7 @@ export default {
         async submit() {
             this.state = await doRiddleAction(riddleId, "submit", {
                 playerSequence: this.input,
+                canSubmit: false,
             })
         },
 
