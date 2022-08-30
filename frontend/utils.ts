@@ -1,6 +1,7 @@
 import { v4 as uuid } from "uuid"
 
-const SERVER_URL = "http://localhost:5000"
+export const SERVER_URL = "http://localhost:5000"
+// export const SERVER_URL = "https://backend.burg.games"
 
 function getOrCreateUserId() {
     const existing = localStorage.getItem("userId")
@@ -49,5 +50,6 @@ export async function doRiddleAction<T, V>(
 }
 
 export function getUrlParams(): URLSearchParams {
+    if (typeof window === "undefined") return new URLSearchParams()
     return new URLSearchParams(window?.location?.search ?? "")
 }
