@@ -3,7 +3,7 @@ import { riddle } from "../riddle"
 
 const riddleId = "catch"
 const informatiker = {
-    "ceb3b59a-2523-11ed-861d-0242ac120002": {
+    "76b8d9f5-7fa5-491b-9918-f55837e4212c": {
         name: "Ada",
         age: "17",
         augenfarbe: "braun",
@@ -11,7 +11,7 @@ const informatiker = {
         mukks: "Elektronische Musik; Malen und Zeichnen",
         bild: "/static/catch/Pokeball.png",
     },
-    "ceb3b6bc-2523-11ed-861d-0242ac120002": {
+    "7bdb5477-a7e4-4b05-a1b6-7d785dd12d92": {
         name: "Alex",
         age: "17",
         augenfarbe: "braun",
@@ -19,7 +19,7 @@ const informatiker = {
         mukks: "Elektronische Musik; Malen und Zeichnen",
         bild: "/static/catch/Pokeball.png",
     },
-    "ceb3a3d4-2523-11ed-861d-0242ac120002": {
+    "b7723245-3f44-440f-8ae7-88b02f68d3c8": {
         name: "Bene",
         age: "17",
         augenfarbe: "braun",
@@ -27,7 +27,7 @@ const informatiker = {
         mukks: "Elektronische Musik; Malen und Zeichnen",
         bild: "/static/catch/Pokeball.png",
     },
-    "ceb3a672-2523-11ed-861d-0242ac120002": {
+    "c7a6525e8-151d-4a0f-8931-fdde63fce302": {
         name: "Björn",
         age: "17",
         augenfarbe: "braun",
@@ -35,7 +35,7 @@ const informatiker = {
         mukks: "Elektronische Musik; Malen und Zeichnen",
         bild: "/static/catch/Pokeball.png",
     },
-    "ceb3b7e8-2523-11ed-861d-0242ac120002": {
+    "cde614b3-b09c-4145-bcb2-4b01cbc390ee": {
         name: "Emil",
         age: "17",
         augenfarbe: "braun",
@@ -43,7 +43,7 @@ const informatiker = {
         mukks: "Elektronische Musik; Malen und Zeichnen",
         bild: "/static/catch/Pokeball.png",
     },
-    "ceb3a906-2523-11ed-861d-0242ac120002": {
+    "e4585e6e-5f03-4d7c-b42b-81cd8bc90bb6": {
         name: "Farida",
         age: "17",
         augenfarbe: "braun",
@@ -51,7 +51,7 @@ const informatiker = {
         mukks: "Elektronische Musik; Malen und Zeichnen",
         bild: "/static/catch/Pokeball.png",
     },
-    "ceb3bf04-2523-11ed-861d-0242ac120002": {
+    "c54b367a-2e96-4d0d-b310-fc31043b2606": {
         name: "Hannes",
         age: "17",
         augenfarbe: "braun",
@@ -59,7 +59,7 @@ const informatiker = {
         mukks: "Elektronische Musik; Malen und Zeichnen",
         bild: "/static/catch/Pokeball.png",
     },
-    "ceb3ad8e-2523-11ed-861d-0242ac120002": {
+    "1aa5be55-ad4e-4e8b-ad78-da75263cbe42": {
         name: "Hilmar",
         age: "17",
         augenfarbe: "braun",
@@ -67,7 +67,7 @@ const informatiker = {
         mukks: "Elektronische Musik; Malen und Zeichnen",
         bild: "/static/catch/Pokeball.png",
     },
-    "ceb3bdc4-2523-11ed-861d-0242ac120002": {
+    "33f01436-e4bd-435a-b0d7-63e6a8884cad": {
         name: "Jan",
         age: "17",
         augenfarbe: "braun",
@@ -75,7 +75,7 @@ const informatiker = {
         mukks: "Elektronische Musik; Malen und Zeichnen",
         bild: "/static/catch/Pokeball.png",
     },
-    "ceb3ab40-2523-11ed-861d-0242ac120002": {
+    "79cf39d5-4879-4b6f-80a6-7841bc3a16d7": {
         name: "Katharina",
         age: "17",
         augenfarbe: "braun",
@@ -83,7 +83,7 @@ const informatiker = {
         mukks: "Elektronische Musik; Malen und Zeichnen",
         bild: "/static/catch/Pokeball.png",
     },
-    "ceb3ac6c-2523-11ed-861d-0242ac120002": {
+    "cac5fa29-b7d9-4626-a547-7c4277133c0d": {
         name: "Leon",
         age: "17",
         augenfarbe: "braun",
@@ -91,7 +91,7 @@ const informatiker = {
         mukks: "Elektronische Musik; Malen und Zeichnen",
         bild: "/static/catch/Pokeball.png",
     },
-    "30ceb3b356-2523-11ed-861d-0242ac120002UV": {
+    "abb7d5e7-8492-4246-ab74-f6b6765a8545": {
         name: "Lukas",
         age: "17",
         augenfarbe: "braun",
@@ -99,7 +99,7 @@ const informatiker = {
         mukks: "Elektronische Musik; Malen und Zeichnen",
         bild: "/static/catch/Pokeball.png",
     },
-    "ceb3affa-2523-11ed-861d-0242ac120002": {
+    "1099e545-59c3-4e6b-a448-f7b6b5bc3dd0": {
         name: "Mischa",
         age: "17",
         augenfarbe: "braun",
@@ -107,7 +107,7 @@ const informatiker = {
         mukks: "Elektronische Musik; Malen und Zeichnen",
         bild: "/static/catch/Pokeball.png",
     },
-    "ceb3b126-2523-11ed-861d-0242ac120002": {
+    "322778c1-799f-444e-99a0-66fa92e4c2a6": {
         name: "Philipp",
         age: "17",
         augenfarbe: "braun",
@@ -115,7 +115,7 @@ const informatiker = {
         mukks: "Elektronische Musik; Malen und Zeichnen",
         bild: "/static/catch/Pokeball.png",
     },
-    "ceb3b932-2523-11ed-861d-0242ac120002": {
+    "ef884d80-852b-4619-90f5-454854e58890": {
         name: "Sophia",
         age: "17",
         augenfarbe: "braun",
@@ -123,7 +123,7 @@ const informatiker = {
         mukks: "Elektronische Musik; Malen und Zeichnen",
         bild: "/static/catch/Pokeball.png",
     },
-    "ceb3aa1e-2523-11ed-861d-0242ac120002": {
+    "b2675dfe-2dbf-4a33-943f-a2fb4a9b5dd8": {
         name: "Toby",
         age: "17",
         augenfarbe: "braun",
@@ -131,7 +131,7 @@ const informatiker = {
         mukks: "Elektronische Musik; Malen und Zeichnen",
         bild: "/static/catch/Pokeball.png",
     },
-    "ceb3b248-2523-11ed-861d-0242ac120002": {
+    "c2f2180f-c1de-49cd-8003-ff0472bb1d85": {
         name: "Toplink",
         age: "17",
         augenfarbe: "braun",
