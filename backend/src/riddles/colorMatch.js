@@ -22,7 +22,7 @@ export default riddle({
         if (players.length < 3) {
             return {
                 color: colors[players.length],
-                goal: getRandomColorValue(),
+                goal: 255,
                 current: null,
             }
         }
