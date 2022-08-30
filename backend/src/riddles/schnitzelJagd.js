@@ -1,10 +1,10 @@
-import { } from "../"
+import { riddle } from "../riddle"
 
 const riddleId = "schnitzelJagd"
 const places = [
     {
         name: "Baenke an der Werkstatt",
-        hint: "Hier sitzen wir",
+        hint: "hier sitzen wir",
         secret:"a3dalaziza"
     }, 
     {
@@ -41,27 +41,35 @@ const places = [
 
 export default riddle({
     riddleId: riddleId,
+    mode: "simultaneousSinglePlayer",
     /**
      * Starts the riddle for a new player
      */
     start: (existingPlayers) => { 
          // Zahl generieren und Ort zuordnen
         return {
-            goal: Math.floor(Math.random() * 6),
+            goal: Math.floor(Math.random() * places.length),
             foundPlaces: []
         }
     },
     /**
      * Checks if the player has solved the riddle
      */
-    solved: () => {
-        return false
+    solved: (players) => {
+        return players[0].state.foundPlaces.length === places.length
     },
     /**
      * Maps the player's guess to the riddle's state
      */
     getter: (players) => {
-    return { goal: players.active.state.goal }
+        if (players.active === undefined) {
+            return {}
+        }
+
+        return {
+            goal: players.active.state.goal,
+            isActive: true
+        }
     },
     /**
      * Actions that can be performed on the phone
@@ -78,11 +86,11 @@ export default riddle({
                 const isGoal = players.active.state.goal == i
                 
                 if (isSameSecret && isGoal) {
-                    players.active.state.goal = Math.floor(Math.random() * 6)
+                    players.active.state.goal = Math.floor(Math.random() *  places.length)
                     players.active.state.foundPlaces.push(i)
                
                     while (foundPlaces.includes(players.active.state.goal)) {
-                        players.active.state.goal = Math.floor(Math.random() * 6)
+                        players.active.state.goal = Math.floor(Math.random() *  places.length)
                     }     
                 }
             }
