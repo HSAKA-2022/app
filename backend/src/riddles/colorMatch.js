@@ -22,7 +22,7 @@ export default riddle({
         if (players.length < 3) {
             return {
                 color: colors[players.length],
-                goal: 0,
+                goal: getRandomColorValue(),
                 current: null,
             }
         }
@@ -44,16 +44,29 @@ export default riddle({
         // calc sum of goal and current values
         const totalGoal = sumPlayerValue(players, "goal")
         const totalCurrent = sumPlayerValue(players, "current")
-
         // compare goal and current values
         return Math.abs(totalCurrent - totalGoal) <= 30
     },
 
     getter: (players) => {
-        return {
-            current: players.active.state.current,
-            color: players.active.state.color,
+        let state
+        if (typeof players.active === "undefined") {
+            state = {
+                gameState: 2,
+                // game state values
+                // 0 - waiting for players
+                // 1 - ingame
+                // 2 - there is/was a game
+            }
+        } else {
+            state = {
+                gameState: players.all.length >= 3 ? 1 : 0,
+                current: players.active.state.current,
+                color: players.active.state.color,
+            }
+            console.dir(players.active.state.goal)
         }
+        return state
     },
 
     phoneActions: {

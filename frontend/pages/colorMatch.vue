@@ -2,38 +2,35 @@
 
   <div>
     <h1>Color Match</h1>
-    <div v-if="!state.solved">
-      <p>Willkommen beim Spiel Color Match. Versuche, dass beide Lampen die gleiche Farbe haben.</p>
-
-      <!-- waiting queue -->
-      <p v-if="state.color === undefined">Dir wird noch eine Farbe zugeordent...</p>
-
-      <!-- in game page -->
-      <div v-if="state.color !== undefined">
+    <!-- waiting queue -->
+    <div v-if="state.gameState === 0">Warte auf weitere Spieler...</div>
+    <div v-else-if="state.gameState === 2">Es läuft bereits ein Spiel. Bitte habe einen Moment Geduld...</div>
+<!--    <div v-else-if="state.gameState === 3">Spiel ist offen.</div>-->
+    <div v-else-if="state.gameState === 1">
+      <div v-if="!state.solved">
+        <p>
+          Willkommen beim Spiel Color Match. Euer Ziel ist es, beide Lampen in den gleichen Farbe leuchten zu lassen.
+        </p>
         <p>Du hast die Farbe <b>{{ colorDict[state.color] }}</b> erhalten.</p>
-        <vue-slider v-model="currentTry" height="30"></vue-slider>
-        <button class="button" @click="setTry" >Submit</button>
-        <progress class="progress" :value="currentTry" max="255">15%</progress>
-        <button
-            class="button"
-            @mousedown="startIncCurrentTry"
-        >
-          Increment
-        </button>
-        <button
-            class="button"
-            @mousedown="startDecCurrentTry"
-        >
-          Decrement
-        </button>
-      </div>
 
+        <!-- slider -->
+        <vue-slider style="position: relative; top: 24px" tooltip='none' :min="0" :max="255" v-model="currentTry" height="4" :dotSize=30></vue-slider>
+        <div v-if="state.color === 'red'">
+          <progress style="position: relative" class="progress is-danger" :value="currentTry" max="255">15%</progress>
+        </div>
+        <div v-if="state.color === 'green'">
+          <progress style="position: relative" class="progress is-success" :value="currentTry" max="255">15%</progress>
+        </div>
+        <div v-if="state.color === 'blue'">
+          <progress style="position: relative" class="progress is-info" :value="currentTry" max="255">15%</progress>
+        </div>
       </div>
-
-    <!-- win page -->
-    <div v-if="state.solved">
-      <p>Durch Koordination und Zusammenarbeit habt ihr das Spiel gewonnen -> herzlichen Glückwunsch!</p>
+      <!-- win page -->
+      <div v-if="state.solved">
+        <p>Durch Koordination und Zusammenarbeit habt ihr das Spiel gewonnen -> herzlichen Glückwunsch!</p>
+      </div>
     </div>
+<!--    <div v-else>FEHLER ELSE</div>-->
   </div>
 
 </template>
@@ -46,7 +43,9 @@ import 'vue-slider-component/theme/antd.css'
 
 const riddleId = 'colorMatch'
 const valueIntervalDuration = 40
-let refreshIntervalId, valueIntervalId
+const updateCurrentTryIntervalDuration = 500
+const refreshStateIntervalDuration = 300
+let refreshIntervalId, valueIntervalId, setTryInteralId
 
 export default {
   components: { VueSlider },
@@ -58,60 +57,51 @@ export default {
         green: 'grün',
         blue: 'blau',
       },
-      currentTry: 0,
+      currentTry: 0, // null ?
     }
   },
 
   async mounted() {
-    this.state = await startRiddle(riddleId)
-    refreshIntervalId = setInterval(this.refreshState, 300)
+    try {
+      this.state = await startRiddle(riddleId)
+      setTryInteralId = setInterval(this.setTry, updateCurrentTryIntervalDuration)
+    } catch (error) {
+      console.log(error)
+    }
+    refreshIntervalId = setInterval(this.refreshState, refreshStateIntervalDuration)
   },
 
   methods: {
     async setTry() {
-      this.state = await doRiddleAction(riddleId, "setCurrent", {
-        current: this.currentTry
-      })
+      if (this.clientInGame()) {
+        this.state = await doRiddleAction(riddleId, "setCurrent", {
+          current: this.currentTry
+        })
+      }
     },
 
     async refreshState() {
       this.state = await getRiddleState(riddleId)
-      if (this.state.solved) {
+      console.log(this.state.gameState)
+      if (this.state.solved && typeof this.state.color != "undefined") {
+        this.state.gameState = 1
         clearInterval(refreshIntervalId)
-      }
-    },
-
-    startIncCurrentTry() {
-      this.stopValueInterval()
-      valueIntervalId = setInterval(this.incCurrentValue, valueIntervalDuration)
-    },
-
-    startDecCurrentTry() {
-      this.stopValueInterval()
-      valueIntervalId = setInterval(this.decCurrentValue, valueIntervalDuration)
-    },
-
-    stopValueInterval() {
-      clearInterval(valueIntervalId)
-    },
-
-    incCurrentValue() {
-      if (this.currentTry >= 255) {
-        this.currentTry = 255
+        clearInterval(setTryInteralId)
         return
       }
-      this.currentTry++
+      else if (this.state.gameState === 2 && this.state.solved) {
+        try {
+          this.state = await startRiddle(riddleId)
+        } catch (error) {
+          console.log(error)
+        }
+      }
     },
 
-    decCurrentValue() {
-      if (this.currentTry <= 0) {
-        this.currentTry = 0
-        return
-      }
-      this.currentTry--
+    clientInGame() {
+      return this.state.gameState === 1;
     }
-  }
-
+  },
 }
 </script>
 
