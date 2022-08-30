@@ -132,12 +132,12 @@ export function riddle<DB_STATE, API_STATE, LEADERBOARD_STATE = unknown>({
     }
 
     function getSolved(state: Array<StateWrapper<DB_STATE>>): boolean {
+        if (state.length === 0) {
+            return false
+        }
         if (mode === "simultaneousSinglePlayer") {
             return solved(state)
         } else {
-            if (state.length === 0) {
-                return
-            }
             return solved(state)
         }
     }
