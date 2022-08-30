@@ -1,7 +1,11 @@
 import { registerCallback } from "../../src/statePollerService"
 import { triggerAction } from "../../src/actionDispatch"
 import { logger } from "../../src/log"
+import { v3 } from "node-hue-api"
 
+const HUE_HOST = "192.168.5.116"
+const USERNAME = "AT0cUBe8aB9zedDIkfkVi3l9jOkRwIrVhfzqTZlm"
+const api = v3.api.createLocal(HUE_HOST).connect(USERNAME)
 /**
  * Entrypoint into the Script
  */
@@ -26,7 +30,12 @@ async function callActionOnRiddle1() {
  * Dummy Callback function
  * @param {Object} newState JSON object representing the new State
  */
-function changeColors(newState) {
+async function changeColors(newState) {
+    const state = new LightState().on().ct(200)
+    const LIGHT_ID = 12
+
+    await api.lights.setLightState(LIGHT_ID, state)
+
     for (let i = 0; i < newState.all[0].state.sequence.length; i++) {}
     logger.verbose("Handling State change for Riddle 1")
     logger.debug("Received new State1: " + JSON.stringify(newState))
