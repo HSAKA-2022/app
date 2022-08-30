@@ -20,8 +20,9 @@
     </layout>
 
     <layout v-if="state.solved" class="buttons are-large">
-
         <h1 class="is-size-1 has-text-success">Du hast {{ state.reactionspeed }}ms gebraucht!</h1>
+        <button class="chadButton button is-primary mt-2 is-size-1" @click="retry">Nochmal versuchen</button>
+
     </layout>
 </template>
 
@@ -90,6 +91,13 @@ export default {
         },
         retry() {
             this.earlyClickNotification = false
+            this.state.solved = false
+            clearTimeout(this.activeTimer)
+            this.showPictureBool = false
+            this.buttonhide = false
+            this.state.reactionspeed = "..."
+
+
         }
     }
 
