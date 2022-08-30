@@ -2,6 +2,11 @@ import { defineNuxtConfig } from "nuxt"
 
 // https://v3.nuxtjs.org/api/configuration/nuxt.config
 export default defineNuxtConfig({
+    runtimeConfig: {
+        public: {
+            serverUrl: process.env.SERVER_URL || "https://backend.burg.games"
+        },
+    },
     app: {
         head: {
             title: "HSAKA 2022",

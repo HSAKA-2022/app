@@ -24,11 +24,11 @@ export const config: conf = {
     },
     userScriptPath: "./scripts/",
     statePollService: {
-        baseURL: "https://api.kucoin.com/api/v1/market/stats",
+        baseURL: "https://backend.burg.games/",
         //Delay in MS
         pollDelay: 1000,
     },
     actionDispatch: {
-        baseURL: "https://ptsv2.com/t/kruv3-1655553613/post",
+        baseURL: "https://backend.burg.games/",
     },
 }

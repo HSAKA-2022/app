@@ -18,7 +18,8 @@ export function headers() {
 }
 
 export async function startRiddle<T>(riddleId: string): Promise<T> {
-    const result = await fetch(`${SERVER_URL}/${riddleId}/start`, {
+    const c = useRuntimeConfig()
+    const result = await fetch(`${c.serverUrl}/${riddleId}/start`, {
         headers: headers(),
         method: "POST",
     })
@@ -27,7 +28,8 @@ export async function startRiddle<T>(riddleId: string): Promise<T> {
 }
 
 export async function getRiddleState<T>(riddleId: string): Promise<T> {
-    const result = await fetch(`${SERVER_URL}/${riddleId}`, {
+    const c = useRuntimeConfig()
+    const result = await fetch(`${c.serverUrl}/${riddleId}`, {
         headers: headers(),
     })
 
@@ -39,7 +41,8 @@ export async function doRiddleAction<T, V>(
     action: string,
     values: V
 ): Promise<T> {
-    const result = await fetch(`${SERVER_URL}/${riddleId}/${action}`, {
+    const c = useRuntimeConfig()
+    const result = await fetch(`${c.serverUrl}/${riddleId}/${action}`, {
         method: "POST",
         headers: headers(),
         body: JSON.stringify(values),
@@ -49,5 +52,17 @@ export async function doRiddleAction<T, V>(
 }
 
 export function getUrlParams(): URLSearchParams {
+    if (typeof window === "undefined") return new URLSearchParams()
     return new URLSearchParams(window?.location?.search ?? "")
+}
+
+export async function getLeaderboard<LEADERBOARD>(
+    riddleId: string
+): Promise<LEADERBOARD> {
+    const c = useRuntimeConfig()
+    const result = await fetch(`${c.serverUrl}/${riddleId}/leaderboard`, {
+        headers: headers(),
+    })
+
+    return await result.json()
 }
