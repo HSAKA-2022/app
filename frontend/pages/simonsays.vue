@@ -7,13 +7,21 @@
                 maiores quia officia explicabo.</p>
         </header>
         <div class="box">
-            <div class="tile is-vertical is-8">
-                <button class="red lampButton content" @click="makeArray(0)">Lampe 1</button>
-                <button class="blue lampButton content" @click="makeArray(1)">Lampe 2</button>
+            <div class="columns">
+                <div class="column">
+                    <button class="red lampButton content" @click="makeArray(0)"></button>
+                </div>
+                <div class="column">
+                    <button class="blue lampButton content" @click="makeArray(1)"></button>
+                </div>
             </div>
-            <div class="tile">
-                <button class="yellow lampButton content" @click="makeArray(2)">Lampe 3</button>
-                <button class="green lampButton content" @click="makeArray(3)">Lampe 4</button>
+            <div class="columns">
+                <div class="column">
+                    <button class="yellow lampButton content" @click="makeArray(2)"></button>
+                </div>
+                <div class="column">
+                    <button class="green lampButton content" @click="makeArray(3)"></button>
+                </div>
             </div>
 
             <button class="button is-danger" @click="deleteTry">Löschen</button>
@@ -27,10 +35,10 @@
             
         </div>
         <div class="inputList" v-for="item in input">
-            <div class="smallBox red" v-if="item == 0"></div>
-            <div class="smallBox blue" v-if="item == 1"></div>
-            <div class="smallBox yellow" v-if="item == 2"></div>
-            <div class="smallBox green" v-if="item == 3"></div>
+            <div class="smallBox red" v-if="item === 0"></div>
+            <div class="smallBox blue" v-if="item === 1"></div>
+            <div class="smallBox yellow" v-if="item === 2"></div>
+            <div class="smallBox green" v-if="item === 3"></div>
         </div>
 
     </layout>
@@ -43,18 +51,26 @@
                 maiores quia officia explicabo.</p>
         </header>
         <div class="box">
-            <div class="tile is-vertical is-8">
-                <button disabled class="red lampButton content" @click="makeArray(0)">Lampe 1</button>
-                <button disabled class="blue lampButton content" @click="makeArray(1)">Lampe 2</button>
+            <div class="columns">
+                <div class="column">
+                    <button disabled class="red lampButton content" @click="makeArray(0)"></button>
+                </div>
+                <div class="column">
+                    <button disabled class="blue lampButton content" @click="makeArray(1)"></button>
+                </div>
             </div>
-            <div class="tile">
-                <button class="yellow lampButton content" @click="makeArray(2)">Lampe 3</button>
-                <button class="green lampButton content" @click="makeArray(3)">Lampe 4</button>
+            <div class="columns">
+                <div class="column">
+                    <button disabled class="yellow lampButton content" @click="makeArray(2)"></button>
+                </div>
+                <div class="column">
+                    <button disabled class="green lampButton content" @click="makeArray(3)"></button>
+                </div>
             </div>
 
-            <button class="button is-danger" @click="deleteTry">Löschen</button>
+            <button disabled class="button is-danger" @click="deleteTry">Löschen</button>
 
-            <button class="button is-success" @click="submit">Abschicken</button>
+            <button disabled class="button is-success" @click="submit">Abschicken</button>
         </div>
 
         <p>Deine Eingaben {{  userMoves  }}</p>
@@ -63,10 +79,10 @@
             
         </div>
         <div class="inputList" v-for="item in input">
-            <div class="smallBox red" v-if="item == 0"></div>
-            <div class="smallBox blue" v-if="item == 1"></div>
-            <div class="smallBox yellow" v-if="item == 2"></div>
-            <div class="smallBox green" v-if="item == 3"></div>
+            <div class="smallBox red" v-if="item === 0"></div>
+            <div class="smallBox blue" v-if="item === 1"></div>
+            <div class="smallBox yellow" v-if="item === 2"></div>
+            <div class="smallBox green" v-if="item === 3"></div>
         </div>
 
     </layout>
@@ -87,6 +103,7 @@
 
 .lampButton {
     min-height: 100px;
+    min-width: 200px;
 }
 
 .red {
