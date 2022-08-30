@@ -5,167 +5,83 @@
       01001001 01101110 01100110 01101111 00100000 01000101 01100100 01101001
       01110100 01101001 01101111 01101110
     </h6>
-    <button v-if="code != undefined" @click="doCatch">catch</button>
-    <table class="table table is-bordered table is-fullwidth has-text-centered">
+    <br />
+    <button
+      v-if="code != undefined"
+      @click="doCatch"
+      class="button is-success button is-small front-size is-size-5 is-fullwidth button is-rounded"
+    >
+      Catch!
+    </button>
+    <br />
+    <p
+      class="has-text-success is-size-2 has-text-weight-bold"
+      v-if="
+        Object.keys(state.informatiker).length ===
+          Object.keys(state.infoIDs).length &&
+        Object.keys(state.infoIDs).length > 0
+      "
+    >
+      Yay das sind alle Informatiker!
+    </p>
+    <br />
+    <p class="is-size-7">
+      (Tipp: du kannst dir Informationen anzeigen lassen, indem du auf die Namen
+      klickst.)
+    </p>
+
+    <table class="table is-bordered is-fullwidth has-text-centered">
       <tbody>
-        <tr>
-          <th>1</th>
-          <th v-if="!state.infoIDs['ceb3b59a-2523-11ed-861d-0242ac120002']">
-            ???
-          </th>
-          <th v-if="state.infoIDs['ceb3b59a-2523-11ed-861d-0242ac120002']">
-            Ada
-          </th>
-        </tr>
-        <tr>
-          <th>2</th>
-          <th v-if="!state.infoIDs['ceb3b6bc-2523-11ed-861d-0242ac120002']">
-            ???
-          </th>
-          <th v-if="state.infoIDs['ceb3b6bc-2523-11ed-861d-0242ac120002']">
-            Alex
-          </th>
-        </tr>
-        <tr>
-          <th>3</th>
-          <th v-if="!state.infoIDs['ceb3a3d4-2523-11ed-861d-0242ac120002']">
-            ???
-          </th>
-          <th v-if="state.infoIDs['ceb3a3d4-2523-11ed-861d-0242ac120002']">
-            Bene
-          </th>
-        </tr>
-        <tr>
-          <th>4</th>
-          <th v-if="!state.infoIDs['ceb3a672-2523-11ed-861d-0242ac120002']">
-            ???
-          </th>
-          <th v-if="state.infoIDs['ceb3a672-2523-11ed-861d-0242ac120002']">
-            Björn
-          </th>
-        </tr>
-        <tr>
-          <th>5</th>
-          <th v-if="!state.infoIDs['ceb3b7e8-2523-11ed-861d-0242ac120002']">
-            ???
-          </th>
-          <th v-if="state.infoIDs['ceb3b7e8-2523-11ed-861d-0242ac120002']">
-            Emil
-          </th>
-        </tr>
-        <tr>
-          <th>6</th>
-          <th v-if="!state.infoIDs['ceb3a906-2523-11ed-861d-0242ac120002']">
-            ???
-          </th>
-          <th v-if="state.infoIDs['ceb3a906-2523-11ed-861d-0242ac120002']">
-            Farida
-          </th>
-        </tr>
-        <tr>
-          <th>7</th>
-          <th v-if="!state.infoIDs['ceb3bf04-2523-11ed-861d-0242ac120002']">
-            ???
-          </th>
-          <th v-if="state.infoIDs['ceb3bf04-2523-11ed-861d-0242ac120002']">
-            Hannes
-          </th>
-        </tr>
-        <tr>
-          <th>8</th>
-          <th v-if="!state.infoIDs['ceb3ad8e-2523-11ed-861d-0242ac120002']">
-            ???
-          </th>
-          <th v-if="state.infoIDs['ceb3ad8e-2523-11ed-861d-0242ac120002']">
-            Hilmar
-          </th>
-        </tr>
-        <tr>
-          <th>9</th>
-          <th v-if="!state.infoIDs['ceb3bdc4-2523-11ed-861d-0242ac120002']">
-            ???
-          </th>
-          <th v-if="state.infoIDs['ceb3bdc4-2523-11ed-861d-0242ac120002']">
-            Jan
-          </th>
-        </tr>
-        <tr>
-          <th>10</th>
-          <th v-if="!state.infoIDs['ceb3ab40-2523-11ed-861d-0242ac120002']">
-            ???
-          </th>
-          <th v-if="state.infoIDs['ceb3ab40-2523-11ed-861d-0242ac120002']">
-            Katharina
-          </th>
-        </tr>
-        <tr>
-          <th>11</th>
-          <th v-if="!state.infoIDs['ceb3ac6c-2523-11ed-861d-0242ac120002']">
-            ???
-          </th>
-          <th v-if="state.infoIDs['ceb3ac6c-2523-11ed-861d-0242ac120002']">
-            Leon
-          </th>
-        </tr>
-        <tr>
-          <th>12</th>
-          <th v-if="!state.infoIDs['30ceb3b356-2523-11ed-861d-0242ac120002UV']">
-            ???
-          </th>
-          <th v-if="state.infoIDs['30ceb3b356-2523-11ed-861d-0242ac120002UV']">
-            Lukas
-          </th>
-        </tr>
-        <tr>
-          <th>13</th>
-          <th v-if="!state.infoIDs['ceb3affa-2523-11ed-861d-0242ac120002']">
-            ???
-          </th>
-          <th v-if="state.infoIDs['ceb3affa-2523-11ed-861d-0242ac120002']">
-            Mischa
-          </th>
-        </tr>
-        <tr>
-          <th>14</th>
-          <th v-if="!state.infoIDs['ceb3b126-2523-11ed-861d-0242ac120002']">
-            ???
-          </th>
-          <th v-if="state.infoIDs['ceb3b126-2523-11ed-861d-0242ac120002']">
-            Philipp
-          </th>
-        </tr>
-        <tr>
-          <th>15</th>
-          <th v-if="!state.infoIDs['ceb3b932-2523-11ed-861d-0242ac120002']">
-            ???
-          </th>
-          <th v-if="state.infoIDs['ceb3b932-2523-11ed-861d-0242ac120002']">
-            Sophia
-          </th>
-        </tr>
-        <tr>
-          <th>16</th>
-          <th v-if="!state.infoIDs['ceb3aa1e-2523-11ed-861d-0242ac120002']">
-            ???
-          </th>
-          <th v-if="state.infoIDs['ceb3aa1e-2523-11ed-861d-0242ac120002']">
-            Toby
-          </th>
-        </tr>
-        <tr>
-          <th>17</th>
-          <th v-if="!state.infoIDs['ceb3b248-2523-11ed-861d-0242ac120002']">
-            ???
-          </th>
-          <th v-if="state.infoIDs['ceb3b248-2523-11ed-861d-0242ac120002']">
-            Toplink
+        <tr v-for="(info, key, index) in state.informatiker">
+          <th>{{ index + 1 }}</th>
+          <th v-if="!state.infoIDs[key]">???</th>
+          <th @click="openModal(key)" v-if="state.infoIDs[key]">
+            {{ info.name }}
           </th>
         </tr>
       </tbody>
     </table>
-  </layout>
 
-  <layout> </layout>
+    <div v-if="activInfo" class="modal is-active">
+      <div class="modal-background"></div>
+      <div class="modal-content is-clipped">
+        <div class="columns">
+          <div class="column">
+            <p class="image is-4by4">
+              <img :src="state.informatiker[activInfo].bild" alt="." />
+            </p>
+          </div>
+          <div class="column has-text-grey-lighter m-4">
+            <h3>{{ state.informatiker[activInfo].name }}</h3>
+            <ul>
+              <li>Alter: {{ state.informatiker[activInfo].age }}</li>
+              <li>
+                Augenfarbe: {{ state.informatiker[activInfo].augenfarbe }}
+              </li>
+              <li>Schule: {{ state.informatiker[activInfo].schule }}</li>
+              <li>Mukks: {{ state.informatiker[activInfo].mukks }}</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <button
+        @click="closeModal()"
+        class="modal-close is-large"
+        aria-label="close"
+      ></button>
+    </div>
+    <br />
+    <button
+      class="button is-danger is-outlined"
+      @click="restart"
+      v-if="Object.keys(state.infoIDs).length === 17"
+    >
+      <span>Restart</span>
+      <span class="icon is-small">
+        <i class="fas fa-times"></i>
+      </span>
+    </button>
+  </layout>
 </template>
 
 <style></style>
@@ -183,6 +99,7 @@ const riddleId = "catch"
 export default {
   async mounted() {
     this.state = await startRiddle(riddleId)
+    console.log(this.state)
   },
 
   data() {
@@ -190,7 +107,9 @@ export default {
       code: getUrlParams().get("code"),
       state: {
         infoIDs: {},
+        informatiker: {},
       },
+      activInfo: undefined,
     }
   },
   methods: {
@@ -198,6 +117,17 @@ export default {
       this.state = await doRiddleAction(riddleId, "makeACatch", {
         infoID: this.code,
       })
+    },
+    openModal(key) {
+      this.activInfo = key
+    },
+    closeModal() {
+      this.activInfo = undefined
+    },
+    async restart() {
+      if (confirm("Sicher?")) {
+        this.state = await doRiddleAction(riddleId, "restart", {})
+      }
     },
   },
 }

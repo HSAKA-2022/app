@@ -1,6 +1,6 @@
 import { v4 as uuid } from "uuid"
 
-const SERVER_URL = "http://localhost:5000"
+export const SERVER_URL = "http://localhost:5000"
 
 function getOrCreateUserId() {
     const existing = localStorage.getItem("userId")
@@ -10,7 +10,7 @@ function getOrCreateUserId() {
     return newId
 }
 
-function headers() {
+export function headers() {
     return {
         Authorization: "User " + getOrCreateUserId(),
         "Content-Type": "application/json",
@@ -49,5 +49,6 @@ export async function doRiddleAction<T, V>(
 }
 
 export function getUrlParams(): URLSearchParams {
+    if (typeof window === "undefined") return new URLSearchParams()
     return new URLSearchParams(window?.location?.search ?? "")
 }
