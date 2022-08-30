@@ -23,7 +23,7 @@ async function callActionOnRiddle3() {
             id: [1, 2],
         }
         triggerAction("riddle3", "action1", payload)
-    }, 1000)
+    }, 60 * 1000)
     logger.info("Calling Action on Riddle 1")
 }
 
