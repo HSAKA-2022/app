@@ -14,7 +14,8 @@
 <style></style>
 
 <script>
-import { startRiddle, headers, SERVER_URL } from "../../utils"
+import { startRiddle, headers } from "../../utils"
+import { useRuntimeConfig } from "#app"
 
 const riddleId = "guess"
 
@@ -34,7 +35,8 @@ export default {
       if (!ok) {
         return
       }
-      const result = await fetch(`${SERVER_URL}/${riddleId}/admin/reset`, {
+      const c = useRuntimeConfig()
+      const result = await fetch(`${c.serverUrl}/${riddleId}/admin/reset`, {
         method: "POST",
         headers: headers(),
       })

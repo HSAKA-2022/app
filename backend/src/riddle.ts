@@ -125,12 +125,22 @@ export function riddle<DB_STATE, API_STATE, LEADERBOARD_STATE = unknown>({
     function getApiState(state: RiddleState<DB_STATE>): API_STATE {
         return {
             ...getter(state),
-            solved: solved(
+            solved: getSolved(
                 [...state.others, state.active].filter((it) => it != undefined)
             ),
         }
     }
 
+    function getSolved(state: Array<StateWrapper<DB_STATE>>): boolean {
+        if (mode === "simultaneousSinglePlayer") {
+            return solved(state)
+        } else {
+            if (state.length === 0) {
+                return
+            }
+            return solved(state)
+        }
+    }
     router.get(`/`, async (ctx) => {
         const state = await getRiddleState<DB_STATE>(riddleId)
 
@@ -138,7 +148,7 @@ export function riddle<DB_STATE, API_STATE, LEADERBOARD_STATE = unknown>({
         const others = state.filter((s) => s !== active)
 
         if (mode === "default") {
-            const isSolved = solved(state)
+            const isSolved = getSolved(state)
 
             if (isSolved) {
                 logger.info(`${ctx.user} solved the riddle`)
@@ -151,7 +161,7 @@ export function riddle<DB_STATE, API_STATE, LEADERBOARD_STATE = unknown>({
         } else if (mode === "simultaneousSinglePlayer") {
             const sameUserExisting = state.find((it) => it.user === ctx.user)
             if (sameUserExisting != undefined) {
-                if (solved([sameUserExisting])) {
+                if (getSolved([sameUserExisting])) {
                     await finishRiddleOnDb(riddleId, sameUserExisting._id)
                 }
             }
@@ -252,7 +262,7 @@ export function riddle<DB_STATE, API_STATE, LEADERBOARD_STATE = unknown>({
         const checkExisting = await getRiddleState<DB_STATE>(riddleId)
 
         if (mode === "default") {
-            const isSolved = solved(checkExisting)
+            const isSolved = getSolved(checkExisting)
             if (isSolved) {
                 await Promise.all(
                     checkExisting.map((it) =>
@@ -265,7 +275,7 @@ export function riddle<DB_STATE, API_STATE, LEADERBOARD_STATE = unknown>({
                 (it) => it.user === ctx.user
             )
             if (sameUserExisting != undefined) {
-                if (solved([sameUserExisting])) {
+                if (getSolved([sameUserExisting])) {
                     await finishRiddleOnDb(riddleId, sameUserExisting._id)
                 }
             }

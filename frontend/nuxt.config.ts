@@ -4,7 +4,7 @@ import { defineNuxtConfig } from "nuxt"
 export default defineNuxtConfig({
     runtimeConfig: {
         public: {
-            serverUrl: process.env.SERVER_URL || "https://backend.burg.games"
+            serverUrl: process.env.SERVER_URL || "https://backend.burg.games",
         },
     },
     app: {
