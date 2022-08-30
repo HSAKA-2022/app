@@ -52,3 +52,13 @@ export function getUrlParams(): URLSearchParams {
     if (typeof window === "undefined") return new URLSearchParams()
     return new URLSearchParams(window?.location?.search ?? "")
 }
+
+export async function getLeaderboard<LEADERBOARD>(
+    riddleId: string
+): Promise<LEADERBOARD> {
+    const result = await fetch(`${SERVER_URL}/${riddleId}/leaderboard`, {
+        headers: headers(),
+    })
+
+    return await result.json()
+}
