@@ -8,7 +8,7 @@ function getOrCreateUserId() {
     return newId
 }
 
-function headers() {
+export function headers() {
     return {
         Authorization: "User " + getOrCreateUserId(),
         "Content-Type": "application/json",
@@ -50,5 +50,17 @@ export async function doRiddleAction<T, V>(
 }
 
 export function getUrlParams(): URLSearchParams {
-    return new URLSearchParams(window.location.search)
+    if (typeof window === "undefined") return new URLSearchParams()
+    return new URLSearchParams(window?.location?.search ?? "")
+}
+
+export async function getLeaderboard<LEADERBOARD>(
+    riddleId: string
+): Promise<LEADERBOARD> {
+    const c = useRuntimeConfig()
+    const result = await fetch(`${c.serverUrl}/${riddleId}/leaderboard`, {
+        headers: headers(),
+    })
+
+    return await result.json()
 }

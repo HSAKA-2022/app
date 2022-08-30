@@ -5,6 +5,9 @@ on:
     push:
         branches:
             - main
+            - colorMatch
+            - simon
+
 
 jobs:
     install-pi:
@@ -26,10 +29,24 @@ jobs:
               with:
                   authkey: ${{ secrets.TAILSCALE_AUTH_KEY }}
 
-            - name: Run Install script
+            - name: Run update script
+              uses: garygrossgarten/github-action-ssh@release
+              with:
+                  command: sudo npm --prefix /home/pi/app/pi run update
+                  host: ${{ matrix.hostname }}
+                  username: pi
+                  password: ${{ secrets.RASPI_PASSPHRASE }}
+            - name: Run NPM Update and Restart
               uses: garygrossgarten/github-action-ssh@release
               with:
                   command: sudo /home/pi/app/pi/update-npm-packages.sh
+                  host: ${{ matrix.hostname }}
+                  username: pi
+                  password: ${{ secrets.RASPI_PASSPHRASE }}
+            - name: Run LibraryRebiuld for Pi4.5
+              uses: garygrossgarten/github-action-ssh@release
+              with:
+                  command: sudo /home/pi/app/pi/update-library-led.sh
                   host: ${{ matrix.hostname }}
                   username: pi
                   password: ${{ secrets.RASPI_PASSPHRASE }}
