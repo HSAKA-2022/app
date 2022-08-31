@@ -6,8 +6,8 @@ const places = [
     {
         name: "Baenke an der Werkstatt",
         hint: "Hier sitzen wir",
-        secret:"a3dalaziza"
-    }, 
+        secret: "a3dalaziza",
+    },
     {
         name: "Torschaenke",
         hint: "Zisch!",
@@ -18,26 +18,26 @@ const places = [
         hint: "Willkommen an der Akademie",
         secret: "ezakasa7bi",
     },
-   {
+    {
         name: "Buehne",
         hint: "Showtime",
-       secret: "fananin",
-   },
+        secret: "fananin",
+    },
     {
         name: "Webraum",
         hint: "Back to black",
-       secret: "basha3a",
-   },
+        secret: "basha3a",
+    },
     {
         name: "Halle",
         hint: "Hier wird mit Schnee geworfen",
-       secret: "hatalfhatal",  
+        secret: "hatalfhatal",
     },
     {
         name: "Wiese",
         hint: "An apple a day keeps the doctor away!",
         secret: "lehla2",
-    }
+    },
 ]
 
 export default riddle({
@@ -46,11 +46,11 @@ export default riddle({
     /**
      * Starts the riddle for a new player
      */
-    start: (existingPlayers) => { 
-         // Zahl generieren und Ort zuordnen
+    start: (existingPlayers) => {
+        // Zahl generieren und Ort zuordnen
         return {
             goal: Math.floor(Math.random() * places.length),
-            foundPlaces: []
+            foundPlaces: [],
         }
     },
     /**
@@ -74,7 +74,7 @@ export default riddle({
             isActive: true,
             hint: places[goal].hint,
             number: foundPlaces.length,
-            total: places.length
+            total: places.length,
         }
     },
     /**
@@ -84,43 +84,25 @@ export default riddle({
         /**
          * The player makes a guess
          */
-        ScanCode: (players, input) => {          
+        ScanCode: (players, input) => {
             const guessedSecret = input.guessedSecret
 
             for (let i = 0; i < places.length; i++) {
                 const isSameSecret = guessedSecret === places[i].secret
                 const isGoal = players.active.state.goal == i
-                
+
                 if (isSameSecret && isGoal) {
-                    console.dir(players.active.state)
-                    players.active.state.goal = Math.floor(Math.random() *  places.length)
+                    players.active.state.goal = Math.floor(Math.random() * places.length)
                     players.active.state.foundPlaces.push(i)
-               
+
                     if (places.length != foundPlaces.length) {
                         while (players.active.state.foundPlaces.includes(players.active.state.goal)) {
                             players.active.state.goal = Math.floor(Math.random() * places.length)
                         }
-                    }     
+                    }
                 }
             }
             return players
         },
     },
-    /**
-     * Actions that can be performed in the real world on the pi
-     */
-    piActions: {
-    },
-    /**
-     * Periodic functions that gets called ever {tickRateInMs} milliseconds
-     * Can be used to implement timers and other periodic functions
-     */
-    tick: async (players) => {
-        players[0].state.guess = Math.ceil(Math.random() * 100)
-        return players
-    },
-    /**
-     * Hov often {tick} gets called in milliseconds
-     */
-    tickRateInMs: 60 * 1000,
 })
