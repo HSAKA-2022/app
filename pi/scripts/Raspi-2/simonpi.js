@@ -3,7 +3,7 @@ import { triggerAction } from "../../src/actionDispatch"
 import { logger } from "../../src/log"
 import { v3 } from "node-hue-api"
 
-const api = await v3.api
+const apiPromise = v3.api
     .createLocal("192.168.5.116")
     .connect("AT0cUBe8aB9zedDIkfkVi3l9jOkRwIrVhfzqTZlm")
 /**
@@ -21,8 +21,6 @@ export default async function () {
  */
 async function callActionOnRiddle1() {
     const payload = {}
-    payload.names = ["Emil", "Berta"]
-    payload.id = [1, 2]
     await triggerAction("riddle1", "action1", payload)
 }
 
@@ -32,21 +30,16 @@ async function callActionOnRiddle1() {
  */
 async function changeColors(newState) {
     const green = new LightState().rgb(103, 190, 97).alertShort()
+    const api = await apiPromise
 
     for (let i = 0; i < newState.all[0].state.sequence.length; i++) {}
     const lampOne = 12
     const lampTwo = 5
     const lampThree = 8
     const lampFour = 9
-    for (let i = 0; i < 20; i++) {
-        try {
-            console.log("Setting light " + i)
-            await api.lights.setLightState(lampOne, new LightState().off())
-            await sleep(100)
-            await api.lights.setLightState(lampOne, green)
-        } catch (e) {}
-        await sleep(1000)
-    }
+    await api.lights.setLightState(lampOne, new LightState().off())
+    await sleep(100)
+    await api.lights.setLightState(lampOne, green)
 }
 /**
  * Dummy Callback function
