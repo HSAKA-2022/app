@@ -52,6 +52,7 @@ export default riddle({
     },
     piActions: {
         deactiveLock: async (state) => {
+            console.dir(state)
             if (state.length > 0) state[0].state.canSubmit = true
             return state
         },
