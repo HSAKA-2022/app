@@ -1,19 +1,11 @@
 import { riddle } from "../riddle"
 
-const riddleId = "colorMatch"
+const riddleId = "colormatch"
 
 const colors = ["red", "green", "blue"]
 
 function getRandomColorValue() {
     return Math.ceil(Math.random() * 256) - 1
-}
-
-function sumPlayerValue(players, valueName) {
-    let sum = 0
-    for (let i = 0; i < players.length; i++) {
-        sum += players[i].state[valueName]
-    }
-    return sum
 }
 
 export default riddle({
@@ -22,7 +14,7 @@ export default riddle({
         if (players.length < 3) {
             return {
                 color: colors[players.length],
-                goal: 255,
+                goal: getRandomColorValue(),
                 current: null,
             }
         }
@@ -41,11 +33,16 @@ export default riddle({
             }
         }
 
-        // calc sum of goal and current values
-        const totalGoal = sumPlayerValue(players, "goal")
-        const totalCurrent = sumPlayerValue(players, "current")
-        // compare goal and current values
-        return Math.abs(totalCurrent - totalGoal) <= 30
+        // compare color component of each player
+        for (let i = 0; i < players.length; i++) {
+            if (
+                Math.abs(players[i].state.goal - players[i].state.current) > 10
+            ) {
+                return false
+            }
+        }
+
+        return true
     },
 
     getter: (players) => {
@@ -64,7 +61,9 @@ export default riddle({
                 current: players.active.state.current,
                 color: players.active.state.color,
             }
-            console.dir(players.active.state.goal)
+            console.dir(
+                players.active.state.color + ": " + players.active.state.goal
+            )
         }
         return state
     },

@@ -5,6 +5,7 @@ import { logger } from "../../src/log"
 
 const process = require("process")
 const ws281x = require("rpi-ws281x-native")
+const riddleId = "colormatch"
 
 const ledChannel = ws281x(2, {
     stripType: "sk6812-rgbw",
@@ -14,7 +15,7 @@ const ledChannel = ws281x(2, {
  * Entrypoint into the Script
  */
 export default async function () {
-    registerCallback("colorMatch", handleStateChange)
+    registerCallback(riddleId, handleStateChange)
 }
 
 /**

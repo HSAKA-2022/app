@@ -5,7 +5,6 @@
     <!-- waiting queue -->
     <div v-if="state.gameState === 0">Warte auf weitere Spieler...</div>
     <div v-else-if="state.gameState === 2">Es läuft bereits ein Spiel. Bitte habe einen Moment Geduld...</div>
-<!--    <div v-else-if="state.gameState === 3">Spiel ist offen.</div>-->
     <div v-else-if="state.gameState === 1">
       <div v-if="!state.solved">
         <p>
@@ -15,14 +14,17 @@
 
         <!-- slider -->
         <vue-slider style="position: relative; top: 24px" tooltip='none' :min="0" :max="255" v-model="currentTry" height="4" :dotSize=30></vue-slider>
-        <div v-if="state.color === 'red'">
-          <progress style="position: relative" class="progress is-danger" :value="currentTry" max="255">15%</progress>
-        </div>
-        <div v-if="state.color === 'green'">
-          <progress style="position: relative" class="progress is-success" :value="currentTry" max="255">15%</progress>
-        </div>
-        <div v-if="state.color === 'blue'">
-          <progress style="position: relative" class="progress is-info" :value="currentTry" max="255">15%</progress>
+        <!-- progress bar -->
+        <div>
+          <progress
+              style="position: relative"
+              :class="{'is-danger': state.color === 'red', 'is-success': state.color === 'green', 'is-info': state.color === 'blue'}"
+              class="progress"
+              :value="currentTry"
+              max="255"
+          >
+            15%
+          </progress>
         </div>
       </div>
       <!-- win page -->
@@ -30,7 +32,6 @@
         <p>Durch Koordination und Zusammenarbeit habt ihr das Spiel gewonnen -> herzlichen Glückwunsch!</p>
       </div>
     </div>
-<!--    <div v-else>FEHLER ELSE</div>-->
   </div>
 
 </template>
@@ -41,7 +42,7 @@ import VueSlider from 'vue-slider-component/dist-css/vue-slider-component.umd.mi
 import 'vue-slider-component/dist-css/vue-slider-component.css'
 import 'vue-slider-component/theme/antd.css'
 
-const riddleId = 'colorMatch'
+const riddleId = 'colormatch'
 const valueIntervalDuration = 40
 const updateCurrentTryIntervalDuration = 500
 const refreshStateIntervalDuration = 300
