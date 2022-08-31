@@ -346,7 +346,7 @@ export function riddle<DB_STATE, API_STATE, LEADERBOARD_STATE = unknown>({
     }
 
     /** Admin reset **/
-    router.post(`/admin/reset`, async (ctx) => {
+    router.post(`/admin-reset`, async (ctx) => {
         if (riddleId === "amogus") {
             return
         }
@@ -354,6 +354,8 @@ export function riddle<DB_STATE, API_STATE, LEADERBOARD_STATE = unknown>({
         await Promise.all(
             state.map(async (it) => finishRiddleOnDb(riddleId, it._id))
         )
+        ctx.body = { success: true }
+        ctx.status = 200
     })
 
     return router.routes()

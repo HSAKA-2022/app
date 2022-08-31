@@ -5,9 +5,9 @@ import { logger } from "../../src/log"
 
 const process = require("process")
 const ws281x = require("rpi-ws281x-native")
+const riddleId = "colormatch"
 
-//const button = new GPIO(4, "in", "both")
-const ledChannel = ws281x(10, {
+const ledChannel = ws281x(2, {
     stripType: "sk6812-rgbw",
 })
 
@@ -15,32 +15,7 @@ const ledChannel = ws281x(10, {
  * Entrypoint into the Script
  */
 export default async function () {
-    //handleButtonPresses()
-    await resetStateNow()
-    console.log("Current user:" + require("os").userInfo().username)
-    await resetStateEvery60Seconds()
-    await changeColorEvery20Seconds()
-    registerCallback("guess", handleStateChange)
-}
-
-/**
- * Dummy Action Trigger function, calling the backend with a dummy payload
- */
-function handleButtonPresses() {
-    button.watch(function (err, value) {
-        if (err) {
-            logger.error(err)
-            return
-        }
-        if (value == 1) {
-            resetStateNow()
-        }
-    })
-}
-
-async function resetStateNow() {
-    const payload = {}
-    await triggerAction("guess", "reroll", payload)
+    registerCallback(riddleId, handleStateChange)
 }
 
 /**
@@ -49,38 +24,30 @@ async function resetStateNow() {
  */
 function handleStateChange(newState) {
     logger.info(newState)
-    if (newState[0].state.guess === newState[0].state.goal) {
-        turnLEDToColor(0xff0000)
-    } else if (newState[0].state.guess > newState[0].state.goal) {
-        turnLEDToColor(0xffff00)
-    } else {
-        turnLEDToColor(0x0000ff)
-    }
+    turnLEDToStateValue(newState, "goal", 0)
+    turnLEDToStateValue(newState, "current", 1)
 }
 
-function turnLEDToColor(hexCode) {
-    console.log("Color Array Pre: " + ledChannel.array)
-    for (let i = 0; i < 10; i++) {
-        ledChannel.array[i] = hexCode
-    }
-    console.log("Color Array Post: " + ledChannel.array)
-    console.log("turning LED to color " + hexCode)
+function turnLEDToColor(hexCode, ledIndex) {
+    ledChannel.array[ledIndex] = hexCode
     ws281x.render()
 }
 
-async function resetStateEvery60Seconds() {
-    setInterval(function () {
-        resetStateNow()
-    }, 60 * 1000)
+function turnLEDToStateValue(newState, valueName, ledIndex) {
+    const hexCode = getHexCode(newState, valueName)
+    logger.info(hexCode)
+    turnLEDToColor(hexCode, ledIndex)
 }
 
-async function changeColorEvery20Seconds() {
-    setInterval(function () {
-        const newState = [
-            { state: { guess: Math.floor(Math.random() * 3), goal: 1 } },
-        ]
-        handleStateChange(newState)
-    }, 10 * 1000)
+function getHexCode(newState, valueName) {
+    let hexCode = "#"
+    for (let i = 0; i < 3; i++) {
+        if (newState[i].state[valueName] == null) {
+            return "#000000"
+        }
+        hexCode += newState[i].state[valueName].toString(16)
+    }
+    return hexCode
 }
 
 // Save game before restarting

@@ -1,5 +1,11 @@
 <template>
-  <img src="https://scontent-ham3-1.xx.fbcdn.net/v/t39.30808-6/251962284_1803500679858446_1425780834639349214_n.jpg?_nc_cat=103&ccb=1-7&_nc_sid=09cbfe&_nc_ohc=e2nuMsH3-9QAX_g61sx&_nc_ht=scontent-ham3-1.xx&oh=00_AT9IZOgN0cbmFxDtfDFiCh0gsRe7lyeG_5I1ANJQKgZM0w&oe=6313AA75" alt="AlumniLogo" width="100" height="" class="m-3">
+  <img
+    src="https://scontent-ham3-1.xx.fbcdn.net/v/t39.30808-6/251962284_1803500679858446_1425780834639349214_n.jpg?_nc_cat=103&ccb=1-7&_nc_sid=09cbfe&_nc_ohc=e2nuMsH3-9QAX_g61sx&_nc_ht=scontent-ham3-1.xx&oh=00_AT9IZOgN0cbmFxDtfDFiCh0gsRe7lyeG_5I1ANJQKgZM0w&oe=6313AA75"
+    alt="AlumniLogo"
+    width="100"
+    height=""
+    class="m-3"
+  />
   <layout>
     <h1 class="has-text-centered is-size-2">Gotta Catch'em All</h1>
     <h6 class="is-size-7 has-text-centered">
@@ -15,9 +21,13 @@
       Catch!
     </button>
     <br />
-    <p 
-      v-if="Object.keys(state.infoIDs).length === 0 && Object.keys(state.informatiker).length > 0" 
-      class="is-size-4 has-text-link has-text-weight-bold ">
+    <p
+      v-if="
+        Object.keys(state.infoIDs).length === 0 &&
+        Object.keys(state.informatiker).length > 0
+      "
+      class="is-size-4 has-text-link has-text-weight-bold"
+    >
       Fange Informatiker - scanne Ihren QR-Code im Namesschild!
     </p>
     <p
@@ -32,8 +42,8 @@
     </p>
     <br />
     <p class="is-size-7">
-      (Tipp: du kannst dir Informationen anzeigen lassen, indem du auf die Namen in der Tabelle
-      klickst.)
+      (Tipp: du kannst dir Informationen anzeigen lassen, indem du auf die Namen
+      in der Tabelle klickst.)
     </p>
 
     <table class="table is-bordered is-fullwidth has-text-centered">
