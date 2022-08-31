@@ -1,38 +1,28 @@
-import { registerCallback } from "../src/statePollerService"
-import { triggerAction } from "../src/actionDispatch"
-import { logger } from "../src/log"
+const v3 = require("node-hue-api").v3
+const LightState = v3.lightStates.LightState
 
-/**
- * Entrypoint into the Script
- */
-export default async function () {
-    logger.info("Starting User Script 1")
-    await callActionOnRiddle1()
-    registerCallbackRiddle1()
-    registerCallbackRiddle2()
-    logger.info("Finished User Script 1")
+const USERNAME = "your username to authenticating with the bridge",
+    // The name of the light we wish to retrieve by name
+    LIGHT_ID = 1
+
+async function sleep(number) {
+    return new Promise((resolve) => setTimeout(resolve, number))
 }
 
-/**
- * Dummy Action Trigger function, calling the backend with a dummy payload
- */
-async function callActionOnRiddle1() {
-    const payload = {}
-    payload.names = ["Emil", "Berta"]
-    payload.id = [1, 2]
-    await triggerAction("riddle1", "action1", payload)
-}
+async function main() {
+    const api = await v3.api
+        .createLocal("192.168.5.116")
+        .connect("AT0cUBe8aB9zedDIkfkVi3l9jOkRwIrVhfzqTZlm")
+    // Using a LightState object to build the desired state
+    const state = new LightState().rgb(255, 0, 0).alertShort()
 
-/**
- * Dummy Callback function
- * @param {Object} newState JSON object representing the new State
- */
-function stateChangeHandlerRiddle1(newState) {
-    logger.verbose("Handling State change for Riddle 1")
-    logger.debug("Received new State1: " + JSON.stringify(newState))
-}
-
-function registerCallbackRiddle1() {
-    logger.info("Registring Callback for riddle1")
-    registerCallback("riddle1", stateChangeHandlerRiddle1)
+    for (let i = 0; i < 20; i++) {
+        try {
+            console.log("Setting light " + i)
+            await api.lights.setLightState(i, new LightState().off())
+            await sleep(100)
+            await api.lights.setLightState(i, state)
+        } catch (e) {}
+        await sleep(1000)
+    }
 }
