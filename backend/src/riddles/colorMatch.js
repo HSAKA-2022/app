@@ -37,7 +37,7 @@ export default riddle({
         // compare color component of each player
         for (let i = 0; i < players.length; i++) {
             if (
-                Math.abs(players[i].state.goal - players[i].state.current) > 10
+                Math.abs(players[i].state.goal - players[i].state.current) > 25
             ) {
                 return false
             }
