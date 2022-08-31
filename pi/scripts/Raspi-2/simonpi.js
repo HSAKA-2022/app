@@ -2,7 +2,6 @@ import { registerCallback } from "../../src/statePollerService"
 import { triggerAction } from "../../src/actionDispatch"
 import { logger } from "../../src/log"
 import { v3 } from "node-hue-api"
-import sampleUserScript from "../sampleUserScript"
 
 const apiPromise = v3.api
     .createLocal("192.168.5.116")
@@ -11,11 +10,10 @@ const apiPromise = v3.api
  * Entrypoint into the Script
  */
 export default async function () {
-    logger.info("Starting User Script 1")
-    test
+    logger.info("Starting Simon Says")
     await callActionOnRiddle1()
     registerCallback("simon", changeColors)
-    logger.info("Finished User Script 1")
+    logger.info("Finished Setuo for Simon Says")
 }
 
 /**
