@@ -30,5 +30,8 @@
     },
     "lint-staged": {
         "*.{ts,tsx,jsx,js,css,html,json}": "prettier --write"
+    },
+    "dependencies": {
+        "vue-slider-component": "^4.1.0-beta.2"
     }
 }

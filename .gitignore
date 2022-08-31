@@ -212,3 +212,4 @@ frontend/.cache
 frontend/.output
 frontend/.env
 frontend/dist
+frontend/pages/test.vue

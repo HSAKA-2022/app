@@ -24,11 +24,11 @@ export const config: conf = {
     },
     userScriptPath: "./scripts/",
     statePollService: {
-        baseURL: "https://backend.burg.games/",
+        baseURL: "https://backend.burg.games",
         //Delay in MS
         pollDelay: 1000,
     },
     actionDispatch: {
-        baseURL: "https://backend.burg.games/",
+        baseURL: "https://backend.burg.games",
     },
 }
