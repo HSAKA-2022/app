@@ -59,12 +59,10 @@ function handleStateChange(newState) {
 }
 
 function turnLEDToColor(hexCode) {
-    console.log("Color Array Pre: " + ledChannel.array)
+    logger.info("Changing color to: " + hexCode)
     for (let i = 0; i < 10; i++) {
         ledChannel.array[i] = hexCode
     }
-    console.log("Color Array Post: " + ledChannel.array)
-    console.log("turning LED to color " + hexCode)
     ws281x.render()
 }
 

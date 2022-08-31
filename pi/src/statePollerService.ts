@@ -27,7 +27,7 @@ const dictOfCallbacks: { [name: string]: callbackfunctions[] } = {}
 export async function runPollingService() {
     setInterval(async function () {
         const listOfRiddleIDs = Object.keys(dictOfCallbacks)
-        logger.info(`Executing State Update for ${listOfRiddleIDs}`)
+        logger.verbose(`Executing State Update for ${listOfRiddleIDs}`)
         for (const id of listOfRiddleIDs) {
             await updateState(id)
         }
@@ -66,7 +66,7 @@ export function removeCallback(riddleId: string, callback: callbackfunctions) {
  * @param {string} riddleId
  * */
 async function updateState(riddleId: string) {
-    logger.info(`Updating State of ${riddleId}`)
+    logger.verbose(`Updating State of ${riddleId}`)
     try {
         const response = await axios.get(
             `${config.actionDispatch.baseURL}/${riddleId}/raw-state`,
@@ -77,13 +77,13 @@ async function updateState(riddleId: string) {
                 },
             }
         )
-        logger.http(
+        logger.verbose(
             `UpdateState for ${riddleId} :  ${response.status}-${response.statusText} : ${response.data}`
         )
         if (deepEqual(dictOfCurrentState[riddleId], response.data)) {
-            logger.verbose(`State changed for ${riddleId}`)
+            logger.info(`State changed for ${riddleId}`)
             dictOfCurrentState[riddleId] = response.data
-            updateCallbacks(riddleId)
+            await updateCallbacks(riddleId)
         }
     } catch (error) {
         if (error.response != undefined)
@@ -98,9 +98,9 @@ async function updateState(riddleId: string) {
  * Calls all the calback functions stored for the given riddleId, with the changed state
  * @param {string} riddleId
  * */
-function updateCallbacks(riddleId: string) {
+async function updateCallbacks(riddleId: string) {
     logger.verbose(`Updating callbacks for ${riddleId}`)
     for (const callback of dictOfCallbacks[riddleId]) {
-        callback(dictOfCurrentState[riddleId])
+        await callback(dictOfCurrentState[riddleId])
     }
 }
