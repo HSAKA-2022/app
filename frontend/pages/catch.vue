@@ -1,6 +1,6 @@
 <template>
   <layout>
-    <h1 class="has-text-centered">Gotta Catch'em All</h1>
+    <h1 class="has-text-centered is-size-2">Gotta Catch'em All</h1>
     <h6 class="is-size-7 has-text-centered">
       01001001 01101110 01100110 01101111 00100000 01000101 01100100 01101001
       01110100 01101001 01101111 01101110
@@ -16,8 +16,8 @@
     <br />
     <p 
       v-if="Object.keys(state.infoIDs).length === 0 && Object.keys(state.informatiker).length > 0" 
-      class="is-size-3 has-text-danger has-text-weight-bold">
-      Fange Informatiker - scanne ihren Code
+      class="is-size-4 has-text-link has-text-weight-bold ">
+      Fange Informatiker - scanne Ihren QR-Code im Namesschild!
     </p>
     <p
       class="has-text-success is-size-2 has-text-weight-bold"
@@ -31,7 +31,7 @@
     </p>
     <br />
     <p class="is-size-7">
-      (Tipp: du kannst dir Informationen anzeigen lassen, indem du auf die Namen
+      (Tipp: du kannst dir Informationen anzeigen lassen, indem du auf die Namen in der Tabelle
       klickst.)
     </p>
 
