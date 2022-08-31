@@ -10,10 +10,10 @@ const apiPromise = v3.api
 /**
  * Entrypoint into the Script
  */
-const green = new LightState().rgb(103, 190, 97).alertShort()
-const red = new LightState().rgb(255, 56, 89).alertShort()
-const blue = new LightState().rgb(69, 162, 229).alertShort()
-const yellow = new LightState().rgb(254, 192, 9).alertShort()
+const green = new LightState().rgb(103, 190, 97).on()
+const red = new LightState().rgb(255, 56, 89).on()
+const blue = new LightState().rgb(69, 162, 229).on(t)
+const yellow = new LightState().rgb(254, 192, 9).on(t)
 
 const lampOne = 12
 const lampTwo = 5
@@ -30,10 +30,10 @@ export default async function () {
     await registerCallback("simon", changeColors)
     logger.info("Simon Says setting leds")
     const api = await apiPromise
-    await api.lights.setLightState(lampOne, red.on())
-    await api.lights.setLightState(lampTwo, blue.on())
-    await api.lights.setLightState(lampThree, yellow.on())
-    await api.lights.setLightState(lampFour, green.on())
+    await api.lights.setLightState(lampOne, red)
+    await api.lights.setLightState(lampTwo, blue)
+    await api.lights.setLightState(lampThree, yellow)
+    await api.lights.setLightState(lampFour, green)
     await sleep(1000)
 
     const off = new LightState().off()
@@ -63,18 +63,19 @@ async function changeColors(newState) {
         return
     }
 
+    const blink = new LightState().alertShort()
     for (let i = 0; i < newState[0].state.sequence.length; i++) {
         if (newState[0].state.sequence[i] === 0) {
-            await api.lights.setLightState(lampOne, red)
+            await api.lights.setLightState(lampOne, blink)
             console.log("Setting Lamp 1 to red")
         } else if (newState[0].state.sequence[i] === 1) {
-            await api.lights.setLightState(lampTwo, blue)
+            await api.lights.setLightState(lampTwo, blink)
             console.log("Setting Lamp 2 to blue")
         } else if (newState[0].state.sequence[i] === 2) {
-            await api.lights.setLightState(lampThree, yellow)
+            await api.lights.setLightState(lampThree, blink)
             console.log("Setting Lamp 3 to yellow")
         } else if (newState[0].state.sequence[i] === 3) {
-            await api.lights.setLightState(lampFour, green)
+            await api.lights.setLightState(lampFour, blink)
             console.log("Setting Lamp 4 to green")
         }
         await sleep(500)
