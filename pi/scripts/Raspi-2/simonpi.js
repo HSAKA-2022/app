@@ -11,8 +11,9 @@ const apiPromise = v3.api
  */
 export default async function () {
     logger.info("Starting User Script 1")
+    test
     await callActionOnRiddle1()
-    registerCallback("riddle1", changeColors)
+    registerCallback("simon", changeColors)
     logger.info("Finished User Script 1")
 }
 
@@ -21,7 +22,7 @@ export default async function () {
  */
 async function callActionOnRiddle1() {
     const payload = {}
-    await triggerAction("riddle1", "action1", payload)
+    await triggerAction("simon", "action1", payload)
 }
 
 /**
@@ -40,17 +41,4 @@ async function changeColors(newState) {
     await api.lights.setLightState(lampOne, new LightState().off())
     await sleep(100)
     await api.lights.setLightState(lampOne, green)
-}
-/**
- * Dummy Callback function
- * @param {Object} newState JSON object representing the new State
- */
-function stateChangeHandlerRiddle2(newState) {
-    logger.verbose("Handling State change for Riddle 2")
-    logger.debug("Received new State2: " + JSON.stringify(newState))
-}
-
-function registerCallbackRiddle2() {
-    logger.info("Registring Callback for riddle2")
-    registerCallback("riddle2", stateChangeHandlerRiddle2)
 }
