@@ -61,10 +61,7 @@ export default riddle({
      * Can be used to implement timers and other periodic functions
      */
     tick: async (players) => {
-        if (players.length === 0) return
-
         players[0].state.guess = Math.ceil(Math.random() * 100)
-
         return players
     },
     /**
