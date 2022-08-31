@@ -26,5 +26,3 @@ async function main() {
         await sleep(1000)
     }
 }
-
-main()
