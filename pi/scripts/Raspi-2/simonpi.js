@@ -2,6 +2,7 @@ import { registerCallback } from "../../src/statePollerService"
 import { triggerAction } from "../../src/actionDispatch"
 import { logger } from "../../src/log"
 import { v3 } from "node-hue-api"
+const LightState = v3.lightStates.LightState
 
 const apiPromise = v3.api
     .createLocal("192.168.5.116")
@@ -9,25 +10,30 @@ const apiPromise = v3.api
 /**
  * Entrypoint into the Script
  */
-const green = new LightState().rgb(103, 190, 97).alertShort()
-const red = new LightState().rgb(255, 56, 89).alertShort()
-const blue = new LightState().rgb(69, 162, 229).alertShort()
-const yellow = new LightState().rgb(254, 192, 9).alertShort()
+const green = new LightState().rgb(103, 190, 97).on()
+const red = new LightState().rgb(255, 56, 89).on()
+const blue = new LightState().rgb(69, 162, 229).on()
+const yellow = new LightState().rgb(254, 192, 9).on()
 
 const lampOne = 12
 const lampTwo = 5
 const lampThree = 8
 const lampFour = 9
 
+async function sleep(number) {
+    return new Promise((resolve) => setTimeout(resolve, number))
+}
+
 export default async function () {
     logger.info("Starting Simon Says")
     await callActionOnRiddle1()
     await registerCallback("simon", changeColors)
     logger.info("Simon Says setting leds")
-    await api.lights.setLightState(lampOne, red.on())
-    await api.lights.setLightState(lampTwo, blue.on())
-    await api.lights.setLightState(lampThree, yellow.on())
-    await api.lights.setLightState(lampFour, green.on())
+    const api = await apiPromise
+    await api.lights.setLightState(lampOne, red)
+    await api.lights.setLightState(lampTwo, blue)
+    await api.lights.setLightState(lampThree, yellow)
+    await api.lights.setLightState(lampFour, green)
     await sleep(1000)
 
     const off = new LightState().off()
@@ -52,22 +58,36 @@ async function callActionOnRiddle1() {
  */
 async function changeColors(newState) {
     const api = await apiPromise
+    // only show lights, if the game advanced
+    if (newState[0].state.canSubmit) {
+        return
+    }
 
-    for (let i = 0; i < newState.all[0].state.sequence.length; i++) {
-        if (newState.all[0].state.sequence[i] === 0) {
-            await api.lights.setLightState(lampOne, red)
+    const on = new LightState().on()
+    const off = new LightState().off()
+    for (let i = 0; i < newState[0].state.sequence.length; i++) {
+        if (newState[0].state.sequence[i] === 0) {
+            await api.lights.setLightState(lampOne, on)
+            await sleep(200)
+            await api.lights.setLightState(lampOne, off)
             console.log("Setting Lamp 1 to red")
-        } else if (newState.all[0].state.sequence[i] === 1) {
-            await api.lights.setLightState(lampTwo, blue)
+        } else if (newState[0].state.sequence[i] === 1) {
+            await api.lights.setLightState(lampTwo, on)
+            await sleep(200)
+            await api.lights.setLightState(lampTwo, off)
             console.log("Setting Lamp 2 to blue")
-        } else if (newState.all[0].state.sequence[i] === 2) {
-            await api.lights.setLightState(lampThree, yellow)
+        } else if (newState[0].state.sequence[i] === 2) {
+            await api.lights.setLightState(lampThree, on)
+            await sleep(200)
+            await api.lights.setLightState(lampThree, off)
             console.log("Setting Lamp 3 to yellow")
-        } else if (newState.all[0].state.sequence[i] === 3) {
-            await api.lights.setLightState(lampFour, green)
+        } else if (newState[0].state.sequence[i] === 3) {
+            await api.lights.setLightState(lampFour, on)
+            await sleep(200)
+            await api.lights.setLightState(lampFour, off)
             console.log("Setting Lamp 4 to green")
         }
-        await sleep(500)
+        await sleep(1000)
     }
     await triggerAction("simon", "deactiveLock")
 }

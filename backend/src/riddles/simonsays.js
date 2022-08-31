@@ -28,18 +28,29 @@ export default riddle({
         if (state.active == undefined) {
             return {
                 sequenceLength: 0,
+                canSubmit: false,
                 inGame: false,
             }
         }
         return {
             sequenceLength: state.active.state.sequence.length,
             inGame: state.active.state.inGame,
+            canSubmit: state.active.state.canSubmit,
         }
     },
     phoneActions: {
         submit: async (states, input) => {
-            states.active.state.inGame =
-                input.playerSequence == states.active.state.sequence
+            let isCorrect = true
+            for (let i = 0; i < states.active.state.sequence.length; i++) {
+                if (input.length < i) {
+                    isCorrect = false
+                    break
+                }
+                isCorrect =
+                    isCorrect && states.active.state.sequence[i] === input[i]
+            }
+            states.active.state.inGame = isCorrect
+
             console.dir(input.playerSequence)
             console.dir(states.active.state.sequence)
             if (states.active.state.inGame) {
@@ -50,6 +61,7 @@ export default riddle({
     },
     piActions: {
         deactiveLock: async (state) => {
+            console.dir(state)
             if (state.length > 0) state[0].state.canSubmit = true
             return state
         },
