@@ -25,6 +25,12 @@ export default riddle({
         }
     },
     getter: (state) => {
+        if (state.active == undefined) {
+            return {
+                sequenceLength: 0,
+                inGame: false,
+            }
+        }
         return {
             sequenceLength: state.active.state.sequence.length,
             inGame: state.active.state.inGame,
