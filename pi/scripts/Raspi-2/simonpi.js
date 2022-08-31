@@ -2,6 +2,7 @@ import { registerCallback } from "../../src/statePollerService"
 import { triggerAction } from "../../src/actionDispatch"
 import { logger } from "../../src/log"
 import { v3 } from "node-hue-api"
+const LightState = v3.lightStates.LightState
 
 const apiPromise = v3.api
     .createLocal("192.168.5.116")
