@@ -1,10 +1,11 @@
+import { TypeFormatFlags } from "typescript"
 import { riddle } from "../riddle"
 
-const riddleId = "schnitzelJagd"
+const riddleId = "schnitzeljagd"
 const places = [
     {
         name: "Baenke an der Werkstatt",
-        hint: "hier sitzen wir",
+        hint: "Hier sitzen wir",
         secret:"a3dalaziza"
     }, 
     {
@@ -65,10 +66,15 @@ export default riddle({
         if (players.active === undefined) {
             return {}
         }
+        const goal = players.active.state.goal
+        const foundPlaces = players.active.state.foundPlaces
 
         return {
-            goal: players.active.state.goal,
-            isActive: true
+            goal: goal,
+            isActive: true,
+            hint: places[goal].hint,
+            number: foundPlaces.length,
+            total: places.length
         }
     },
     /**
@@ -86,11 +92,14 @@ export default riddle({
                 const isGoal = players.active.state.goal == i
                 
                 if (isSameSecret && isGoal) {
+                    console.dir(players.active.state)
                     players.active.state.goal = Math.floor(Math.random() *  places.length)
                     players.active.state.foundPlaces.push(i)
                
-                    while (foundPlaces.includes(players.active.state.goal)) {
-                        players.active.state.goal = Math.floor(Math.random() *  places.length)
+                    if (places.length != foundPlaces.length) {
+                        while (players.active.state.foundPlaces.includes(players.active.state.goal)) {
+                            players.active.state.goal = Math.floor(Math.random() * places.length)
+                        }
                     }     
                 }
             }
