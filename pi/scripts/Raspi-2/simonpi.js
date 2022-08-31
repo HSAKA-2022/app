@@ -12,8 +12,8 @@ const apiPromise = v3.api
  */
 const green = new LightState().rgb(103, 190, 97).on()
 const red = new LightState().rgb(255, 56, 89).on()
-const blue = new LightState().rgb(69, 162, 229).on(t)
-const yellow = new LightState().rgb(254, 192, 9).on(t)
+const blue = new LightState().rgb(69, 162, 229).on()
+const yellow = new LightState().rgb(254, 192, 9).on()
 
 const lampOne = 12
 const lampTwo = 5
@@ -63,22 +63,31 @@ async function changeColors(newState) {
         return
     }
 
-    const blink = new LightState().alertShort()
+    const on = new LightState().on()
+    const off = new LightState().off()
     for (let i = 0; i < newState[0].state.sequence.length; i++) {
         if (newState[0].state.sequence[i] === 0) {
-            await api.lights.setLightState(lampOne, blink)
+            await api.lights.setLightState(lampOne, on)
+            await sleep(200)
+            await api.lights.setLightState(lampOne, off)
             console.log("Setting Lamp 1 to red")
         } else if (newState[0].state.sequence[i] === 1) {
-            await api.lights.setLightState(lampTwo, blink)
+            await api.lights.setLightState(lampTwo, on)
+            await sleep(200)
+            await api.lights.setLightState(lampTwo, off)
             console.log("Setting Lamp 2 to blue")
         } else if (newState[0].state.sequence[i] === 2) {
-            await api.lights.setLightState(lampThree, blink)
+            await api.lights.setLightState(lampThree, on)
+            await sleep(200)
+            await api.lights.setLightState(lampThree, off)
             console.log("Setting Lamp 3 to yellow")
         } else if (newState[0].state.sequence[i] === 3) {
-            await api.lights.setLightState(lampFour, blink)
+            await api.lights.setLightState(lampFour, on)
+            await sleep(200)
+            await api.lights.setLightState(lampFour, off)
             console.log("Setting Lamp 4 to green")
         }
-        await sleep(500)
+        await sleep(1000)
     }
     await triggerAction("simon", "deactiveLock")
 }
