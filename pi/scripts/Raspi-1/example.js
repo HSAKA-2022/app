@@ -2,19 +2,31 @@ import { registerCallback } from "../../src/statePollerService"
 import { triggerAction } from "../../src/actionDispatch"
 //import { GPIO } from "onoff"
 import { logger } from "../../src/log"
+import { getSystemErrorMap } from "util"
+import { rejects } from "assert"
 
 const process = require("process")
 const ws281x = require("rpi-ws281x-native")
 const riddleId = "colormatch"
 
-const ledChannel = ws281x(2, {
-    stripType: "sk6812-rgbw",
+const ledChannel = ws281x(4, {
+    stripType: "sk6812-grbw",
 })
 
 /**
  * Entrypoint into the Script
  */
 export default async function () {
+    turnLEDToColor("0xFF0000", 0)
+    turnLEDToColor("0x00FF00", 1)
+    turnLEDToColor("0x0000FF", 2)
+    turnLEDToColor("0xFFFFFF", 3)
+    new Promise((resolve) => {
+        setTimeout(() => {
+            resolve()
+        }),
+            5000
+    })
     registerCallback(riddleId, handleStateChange)
 }
 
@@ -23,7 +35,7 @@ export default async function () {
  * @param {Object} newState JSON object representing the new State
  */
 function handleStateChange(newState) {
-    logger.info(newState)
+    if (Array.isArray(newState) && newState.length === 0) return
     turnLEDToStateValue(newState, "goal", 0)
     turnLEDToStateValue(newState, "current", 1)
 }
@@ -35,17 +47,23 @@ function turnLEDToColor(hexCode, ledIndex) {
 
 function turnLEDToStateValue(newState, valueName, ledIndex) {
     const hexCode = getHexCode(newState, valueName)
-    logger.info(hexCode)
+    logger.info(
+        `Setting LED: ${ledIndex}, with valueName: ${valueName}, to hexCode: ${hexCode}`
+    )
     turnLEDToColor(hexCode, ledIndex)
 }
 
 function getHexCode(newState, valueName) {
-    let hexCode = "#"
+    let hexCode = "0x"
     for (let i = 0; i < 3; i++) {
         if (newState[i].state[valueName] == null) {
-            return "#000000"
+            hexCode += "00"
+        } else {
+            if (newState[i].state[valueName] <= 16) {
+                hexCode += "0"
+            }
+            hexCode += newState[i].state[valueName].toString(16)
         }
-        hexCode += newState[i].state[valueName].toString(16)
     }
     return hexCode
 }
