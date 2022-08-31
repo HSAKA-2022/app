@@ -36,7 +36,9 @@ function turnLEDToColor(hexCode, ledIndex) {
 
 function turnLEDToStateValue(newState, valueName, ledIndex) {
     const hexCode = getHexCode(newState, valueName)
-    logger.info(hexCode)
+    logger.info(
+        `Setting LED: ${ledIndex}, with valueName: ${valueName}, to hexCode: ${hexCode}`
+    )
     turnLEDToColor(hexCode, ledIndex)
 }
 
@@ -44,7 +46,7 @@ function getHexCode(newState, valueName) {
     let hexCode = "0x"
     for (let i = 0; i < 3; i++) {
         if (newState[i].state[valueName] == null) {
-            return "0x000000"
+            hexCode += "00"
         }
         hexCode += newState[i].state[valueName].toString(16)
     }
