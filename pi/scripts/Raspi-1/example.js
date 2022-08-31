@@ -1,5 +1,6 @@
 import { registerCallback } from "../../src/statePollerService"
 import { triggerAction } from "../../src/actionDispatch"
+//import { GPIO } from "onoff"
 import { logger } from "../../src/log"
 
 const process = require("process")
