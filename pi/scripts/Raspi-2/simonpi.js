@@ -20,6 +20,10 @@ const lampTwo = 5
 const lampThree = 8
 const lampFour = 9
 
+async function sleep(number) {
+    return new Promise((resolve) => setTimeout(resolve, number))
+}
+
 export default async function () {
     logger.info("Starting Simon Says")
     await callActionOnRiddle1()
