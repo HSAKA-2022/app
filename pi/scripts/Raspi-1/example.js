@@ -47,8 +47,9 @@ function getHexCode(newState, valueName) {
     for (let i = 0; i < 3; i++) {
         if (newState[i].state[valueName] == null) {
             hexCode += "00"
+        } else {
+            hexCode += newState[i].state[valueName].toString(16)
         }
-        hexCode += newState[i].state[valueName].toString(16)
     }
     return hexCode
 }
