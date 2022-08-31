@@ -61,6 +61,7 @@ export default riddle({
             console.dir(states.active.state.sequence)
             if (states.active.state.inGame) {
                 states.active.state.sequence.push(randomInt())
+                states.active.state.canSubmit = false
             }
             return states
         },
