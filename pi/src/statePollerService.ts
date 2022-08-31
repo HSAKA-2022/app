@@ -78,7 +78,8 @@ async function updateState(riddleId: string) {
         logger.verbose(
             `UpdateState for ${riddleId} :  ${response.status}-${response.statusText} : ${response.data}`
         )
-        if (deepEqual(dictOfCurrentState[riddleId], response.data)) {
+        logger.info
+        if (!deepEqual(dictOfCurrentState[riddleId], response.data)) {
             logger.info(`State changed for ${riddleId}`)
             dictOfCurrentState[riddleId] = response.data
             await updateCallbacks(riddleId)
