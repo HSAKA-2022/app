@@ -40,8 +40,17 @@ export default riddle({
     },
     phoneActions: {
         submit: async (states, input) => {
-            states.active.state.inGame =
-                input.playerSequence == states.active.state.sequence
+            let isCorrect = true
+            for (let i = 0; i < states.active.state.sequence.length; i++) {
+                if (input.length < i) {
+                    isCorrect = false
+                    break
+                }
+                isCorrect =
+                    isCorrect && states.active.state.sequence[i] === input[i]
+            }
+            states.active.state.inGame = isCorrect
+
             console.dir(input.playerSequence)
             console.dir(states.active.state.sequence)
             if (states.active.state.inGame) {
