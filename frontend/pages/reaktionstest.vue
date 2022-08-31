@@ -39,9 +39,9 @@
 
             <tbody>
                 <tr v-for="(line, index) in leaderboard">
-                    <th>{{ index }}.</th>
-                    <th>{{ line.playername }}</th>
-                    <th>{{ line.reactionspeed }}</th>
+                    <td>{{ index }}.</td>
+                    <td>{{ line.playername }}</td>
+                    <td>{{ line.reactionspeed }}</td>
                 </tr>
             </tbody>
         </table>
