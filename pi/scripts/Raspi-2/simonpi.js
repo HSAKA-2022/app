@@ -52,5 +52,4 @@ async function changeColors(newState) {
         }
         await sleep(500)
     }
-    await triggerAction("simon", "deactiveLock")
 }
