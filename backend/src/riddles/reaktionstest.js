@@ -1,7 +1,7 @@
 import { riddle } from "../riddle"
 
 const riddleId = "reaktionstest"
-const schwelle = 200
+const schwelle = 300
 
 export default riddle({
     riddleId,
@@ -25,8 +25,17 @@ export default riddle({
     phoneActions: {
         react: async (state, input) => {
             state.active.state.reactionspeed = input.reactionspeed
-
+        
+            return state
+        },
+        getName: async (state, input)=> {
+            state.active.state.playername = input.playername
             return state
         },
     },
+    leaderboardIncludesActive: true,
+    getLeaderboard: (players) => {
+        const sortedPlayers = players.sort((a, b) => a.state.reactionspeed-b.state.reactionspeed)
+        return sortedPlayers.map(x => x.state)
+    }
 })
