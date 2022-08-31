@@ -87,6 +87,7 @@
         <i class="fas fa-times"></i>
       </span>
     </button>
+    <p class="is-size-7 is-italic m-3">made by Sophia & Björn</p>
   </layout>
 </template>
 
