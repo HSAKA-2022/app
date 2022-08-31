@@ -15,34 +15,35 @@
                 <div class="columns">
                     <div class="column">
                         <button :disabled="!state.canSubmit" class="red lampButton content"
-                            @click="makeArray(0)"></button>
+                                @click="makeArray(0)"></button>
                     </div>
                     <div class="column">
                         <button :disabled="!state.canSubmit" class="blue lampButton content"
-                            @click="makeArray(1)"></button>
+                                @click="makeArray(1)"></button>
                     </div>
                 </div>
                 <div class="columns">
                     <div class="column">
                         <button :disabled="!state.canSubmit" class="yellow lampButton content"
-                            @click="makeArray(2)"></button>
+                                @click="makeArray(2)"></button>
                     </div>
                     <div class="column">
                         <button :disabled="!state.canSubmit" class="green lampButton content"
-                            @click="makeArray(3)"></button>
+                                @click="makeArray(3)"></button>
                     </div>
                 </div>
 
-                <button :disabled="!state.canSubmit" class="button is-danger" @click="deleteTry">Löschen</button>
+<!--                <button :disabled="!state.canSubmit" class="button is-danger" @click="deleteTry">Löschen</button>-->
 
-                <button :disabled="!state.canSubmit" class="button is-success" @click="submit">Abschicken</button>
+<!--                <button :disabled="!state.canSubmit" class="button is-success" @click="submit">Abschicken</button>-->
                 <div>
                     <p>Deine Eingaben {{ userMoves }}</p>
-                    <div class="inputList" v-for="item in input"></div>
-                    <div class="smallBox red" v-if="item === 0"></div>
-                    <div class="smallBox blue" v-if="item === 1"></div>
-                    <div class="smallBox yellow" v-if="item === 2"></div>
-                    <div class="smallBox green" v-if="item === 3"></div>
+                    <div class="inputList" v-for="item in input">
+                        <div class="smallBox red" v-if="item === 0"></div>
+                        <div class="smallBox blue" v-if="item === 1"></div>
+                        <div class="smallBox yellow" v-if="item === 2"></div>
+                        <div class="smallBox green" v-if="item === 3"></div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -111,7 +112,6 @@ const riddleId = "simon"
 export default {
     async mounted() {
         this.state = await startRiddle(riddleId)
-        console.log(this.state)
         setInterval(async () => {
             try {
                 this.state = await getRiddleState(riddleId)
@@ -133,14 +133,18 @@ export default {
     methods: {
         async makeArray(whichButton) {
             this.input.push(whichButton)
+            if (this.input.length >= this.state.sequenceLength) {
+                await this.submit()
+            }
 
         },
 
         async submit() {
             this.state = await doRiddleAction(riddleId, "submit", {
                 playerSequence: this.input,
-                canSubmit: false,
+                canSubmit: false
             })
+            this.input = []
         },
 
         async deleteTry() {

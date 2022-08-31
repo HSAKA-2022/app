@@ -13,7 +13,7 @@ export default riddle({
             return {
                 sequence: [randomInt(), randomInt(), randomInt()],
                 inGame: true,
-                canSubmit: false,
+                canSubmit: true,
             }
         }
     },
@@ -25,6 +25,7 @@ export default riddle({
         }
     },
     getter: (state) => {
+        console.dir(state, { depth: null })
         if (state.active == undefined) {
             return {
                 sequenceLength: 0,
@@ -42,12 +43,13 @@ export default riddle({
         submit: async (states, input) => {
             let isCorrect = true
             for (let i = 0; i < states.active.state.sequence.length; i++) {
-                if (input.length < i) {
+                if (input.playerSequence.length < i) {
                     isCorrect = false
                     break
                 }
                 isCorrect =
-                    isCorrect && states.active.state.sequence[i] === input[i]
+                    isCorrect &&
+                    states.active.state.sequence[i] === input.playerSequence[i]
             }
             states.active.state.inGame = isCorrect
 
