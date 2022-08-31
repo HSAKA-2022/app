@@ -6,7 +6,6 @@
       01110100 01101001 01101111 01101110
     </h6>
     <br />
-    <p v-if="Object.keys(state.infoIDs).length === 0" class="is-size-3 has-text-danger has-text-weight-bold">Fange Informatiker - scanne ihren Code</p>
     <button
       v-if="code != undefined"
       @click="doCatch"
@@ -15,6 +14,11 @@
       Catch!
     </button>
     <br />
+    <p 
+      v-if="Object.keys(state.infoIDs).length === 0 && Object.keys(state.informatiker).length > 0" 
+      class="is-size-3 has-text-danger has-text-weight-bold">
+      Fange Informatiker - scanne ihren Code
+    </p>
     <p
       class="has-text-success is-size-2 has-text-weight-bold"
       v-if="
