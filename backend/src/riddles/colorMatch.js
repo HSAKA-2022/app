@@ -1,4 +1,5 @@
 import { riddle } from "../riddle"
+import { rgb2lab, deltaE } from "rgb-lab"
 
 const riddleId = "colormatch"
 
@@ -33,17 +34,21 @@ export default riddle({
                 return false
             }
         }
-
+        const deltaE = deltaE(
+            rgb2lab([
+                players[0].state.current,
+                players[1].state.current,
+                players[2].state.current,
+            ]),
+            rgb2lab([
+                players[0].state.goal,
+                players[1].state.goal,
+                players[2].state.goal,
+            ])
+        )
         // compare color component of each player
-        for (let i = 0; i < players.length; i++) {
-            if (
-                Math.abs(players[i].state.goal - players[i].state.current) > 25
-            ) {
-                return false
-            }
-        }
-
-        return true
+        console.log(deltaE)
+        return deltaE < 0.4
     },
 
     getter: (players) => {
