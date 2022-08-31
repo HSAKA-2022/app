@@ -8,7 +8,7 @@ const ws281x = require("rpi-ws281x-native")
 const riddleId = "colormatch"
 
 const ledChannel = ws281x(2, {
-    stripType: "sk6812-rgbw",
+    stripType: "sk6812-grbw",
 })
 
 /**
@@ -19,6 +19,7 @@ export default async function () {
     turnLEDToColor("0xFF0000", 0)
     turnLEDToColor("0x00FF00", 1)
     turnLEDToColor("0x0000FF", 2)
+    turnLEDToColor("0xFFFFFF", 3)
 }
 
 /**
