@@ -26,11 +26,10 @@ export async function getRiddleState<State>(
 
 /**
  * Fetches all riddle state for the riddle from the db
- * @param riddleId
  */
 export async function getAllHistoricStates<State>(
     riddleId: string,
-    includeActive
+    includeActive?: boolean
 ): Promise<Array<StateWrapper<State>>> {
     return db
         .collection<StateWrapper<State>>(riddleId)
