@@ -80,6 +80,7 @@ async function updateState(riddleId: string) {
         )
         if (!deepEqual(dictOfCurrentState[riddleId], response.data)) {
             logger.info(`State changed for ${riddleId}`)
+            logger.debug(`New State: ${JSON.stringify(response.data)}`)
             dictOfCurrentState[riddleId] = response.data
             await updateCallbacks(riddleId)
         }

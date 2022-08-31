@@ -7,7 +7,7 @@ const process = require("process")
 const ws281x = require("rpi-ws281x-native")
 const riddleId = "colormatch"
 
-const ledChannel = ws281x(3, {
+const ledChannel = ws281x(2, {
     stripType: "sk6812-rgbw",
 })
 
@@ -16,7 +16,6 @@ const ledChannel = ws281x(3, {
  */
 export default async function () {
     registerCallback(riddleId, handleStateChange)
-    turnLEDToColor("0xFFFFFF", 2)
 }
 
 /**
@@ -24,7 +23,7 @@ export default async function () {
  * @param {Object} newState JSON object representing the new State
  */
 function handleStateChange(newState) {
-    logger.info(newState)
+    if (Array.isArray(newState) && newState.length === 0) return
     turnLEDToStateValue(newState, "goal", 0)
     turnLEDToStateValue(newState, "current", 1)
 }
