@@ -16,8 +16,6 @@
                     <div class="column">
                         <button :disabled="!state.canSubmit" class="red lampButton content"
                                 @click="makeArray(0)"></button>
-                    </div>
-                    <div class="column">
                         <button :disabled="!state.canSubmit" class="blue lampButton content"
                                 @click="makeArray(1)"></button>
                     </div>
@@ -26,8 +24,6 @@
                     <div class="column">
                         <button :disabled="!state.canSubmit" class="yellow lampButton content"
                                 @click="makeArray(2)"></button>
-                    </div>
-                    <div class="column">
                         <button :disabled="!state.canSubmit" class="green lampButton content"
                                 @click="makeArray(3)"></button>
                     </div>
@@ -78,7 +74,8 @@ header {
 
 .lampButton {
     min-height: 100px;
-    min-width: 200px;
+    width: 100%;
+    max-width: 50%;
 }
 
 .red {
