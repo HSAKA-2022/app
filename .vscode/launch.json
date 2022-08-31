@@ -16,7 +16,10 @@
             "cwd": "${workspaceFolder}/frontend",
             "runtimeExecutable": "npm",
             "skipFiles": ["<node_internals>/**"],
-            "type": "node"
+            "type": "node",
+            "env": {
+                "SERVER_URL": "http://127.0.0.1:5000"
+            }
         },
         {
             "name": "Install Backend",

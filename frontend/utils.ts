@@ -1,7 +1,5 @@
 import { v4 as uuid } from "uuid"
 
-//export const SERVER_URL = "https://backend.burg.games"
-export const SERVER_URL = "http://127.0.0.1:5000"
 
 function getOrCreateUserId() {
     const existing = localStorage.getItem("userId")
@@ -19,7 +17,8 @@ export function headers() {
 }
 
 export async function startRiddle<T>(riddleId: string): Promise<T> {
-    const result = await fetch(`${SERVER_URL}/${riddleId}/start`, {
+    const c = useRuntimeConfig()
+    const result = await fetch(`${c.serverUrl}/${riddleId}/start`, {
         headers: headers(),
         method: "POST",
     })
@@ -28,7 +27,8 @@ export async function startRiddle<T>(riddleId: string): Promise<T> {
 }
 
 export async function getRiddleState<T>(riddleId: string): Promise<T> {
-    const result = await fetch(`${SERVER_URL}/${riddleId}`, {
+    const c = useRuntimeConfig()
+    const result = await fetch(`${c.serverUrl}/${riddleId}`, {
         headers: headers(),
     })
 
@@ -40,7 +40,8 @@ export async function doRiddleAction<T, V>(
     action: string,
     values: V
 ): Promise<T> {
-    const result = await fetch(`${SERVER_URL}/${riddleId}/${action}`, {
+    const c = useRuntimeConfig()
+    const result = await fetch(`${c.serverUrl}/${riddleId}/${action}`, {
         method: "POST",
         headers: headers(),
         body: JSON.stringify(values),
@@ -57,7 +58,8 @@ export function getUrlParams(): URLSearchParams {
 export async function getLeaderboard<LEADERBOARD>(
     riddleId: string
 ): Promise<LEADERBOARD> {
-    const result = await fetch(`${SERVER_URL}/${riddleId}/leaderboard`, {
+    const c = useRuntimeConfig()
+    const result = await fetch(`${c.serverUrl}/${riddleId}/leaderboard`, {
         headers: headers(),
     })
 

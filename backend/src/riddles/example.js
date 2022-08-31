@@ -64,6 +64,7 @@ export default riddle({
         if (players.length === 0) return
 
         players[0].state.guess = Math.ceil(Math.random() * 100)
+
         return players
     },
     /**
