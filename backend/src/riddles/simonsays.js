@@ -13,7 +13,7 @@ export default riddle({
             return {
                 sequence: [randomInt(), randomInt(), randomInt()],
                 inGame: true,
-                canSubmit: true,
+                canSubmit: false,
             }
         }
     },
@@ -42,6 +42,10 @@ export default riddle({
     phoneActions: {
         submit: async (states, input) => {
             let isCorrect = true
+            console.dir({
+                goal: states.active.state.sequence,
+                input: input.playerSequence,
+            })
             for (let i = 0; i < states.active.state.sequence.length; i++) {
                 if (input.playerSequence.length < i) {
                     isCorrect = false
