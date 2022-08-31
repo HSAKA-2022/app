@@ -5,6 +5,7 @@ const riddleId = "colormatch"
 const colors = ["red", "green", "blue"]
 
 function getRandomColorValue() {
+    return 4
     return Math.ceil(Math.random() * 256) - 1
 }
 
