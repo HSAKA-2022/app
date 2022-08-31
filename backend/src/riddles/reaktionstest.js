@@ -5,16 +5,13 @@ const schwelle = 300
 
 export default riddle({
     riddleId,
+    mode: "simultaneousSinglePlayer",
     start: (existing) => {
-        if (existing.length === 0) {
-            return {}
-        } else {
-            return
-        }
+        return {}
     },
     solved: (states) => {
-        if (states.length === 0)
-            return
+        if (states.length === 0) return
+
         return states[0].state.reactionspeed <= schwelle
     },
     getter: (state) => {
@@ -25,17 +22,19 @@ export default riddle({
     phoneActions: {
         react: async (state, input) => {
             state.active.state.reactionspeed = input.reactionspeed
-        
+
             return state
         },
-        getName: async (state, input)=> {
+        getName: async (state, input) => {
             state.active.state.playername = input.playername
             return state
         },
     },
     leaderboardIncludesActive: true,
     getLeaderboard: (players) => {
-        const sortedPlayers = players.sort((a, b) => a.state.reactionspeed-b.state.reactionspeed)
-        return sortedPlayers.map(x => x.state)
-    }
+        const sortedPlayers = players.sort(
+            (a, b) => a.state.reactionspeed - b.state.reactionspeed
+        )
+        return sortedPlayers.map((x) => x.state)
+    },
 })
