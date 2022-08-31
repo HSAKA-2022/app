@@ -25,6 +25,7 @@ export default async function () {
     await callActionOnRiddle1()
     await registerCallback("simon", changeColors)
     logger.info("Simon Says setting leds")
+    const api = await apiPromise
     await api.lights.setLightState(lampOne, red.on())
     await api.lights.setLightState(lampTwo, blue.on())
     await api.lights.setLightState(lampThree, yellow.on())

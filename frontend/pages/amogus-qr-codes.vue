@@ -8,7 +8,7 @@
   <img
     id="amogus"
     style="display: none"
-    src="https://cdn.iconscout.com/icon/free/png-512/among-us-3187363-2669561.png"
+    src="http://alumni-hsaka.net/wp-content/uploads/2022/04/RZ_Logo_Leon_Alumni-2017_WHITE.jpg"
   />
 </template>
 
@@ -52,13 +52,13 @@ export default {
       this.secrets.forEach((secret, index) => {
         console.dir(secret)
         const canvas = document.getElementById(secret)
-        QrCode.toCanvas(canvas, FRONTEND_URL + "?secret=" + secret, {
+        QrCode.toCanvas(canvas, "https://alumni-hsaka.net", {
           width: 130,
           height: 130,
         })
         canvas
           .getContext("2d")
-          .drawImage(document.getElementById("amogus"), 40, 90, 50, 50)
+          .drawImage(document.getElementById("amogus"), 50, 100, 40, 40)
       })
     }, 1000)
   },
