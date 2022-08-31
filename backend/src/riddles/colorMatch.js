@@ -70,14 +70,14 @@ export default riddle({
             if (players.all.length >= 3) {
                 state.deltaE = deltaE(
                     rgb2lab([
-                        players[0].state.current,
-                        players[1].state.current,
-                        players[2].state.current,
+                        players.all[0].state.current,
+                        players.all[1].state.current,
+                        players.all[2].state.current,
                     ]),
                     rgb2lab([
-                        players[0].state.goal,
-                        players[1].state.goal,
-                        players[2].state.goal,
+                        players.all[0].state.goal,
+                        players.all[1].state.goal,
+                        players.all[2].state.goal,
                     ])
                 )
             }
