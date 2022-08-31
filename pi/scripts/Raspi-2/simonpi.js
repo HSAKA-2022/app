@@ -21,7 +21,6 @@ export default async function () {
  */
 async function callActionOnRiddle1() {
     const payload = {}
-    await triggerAction("simon", "action1", payload)
 }
 
 /**
@@ -52,4 +51,5 @@ async function changeColors(newState) {
         }
         await sleep(500)
     }
+    await triggerAction("simon", "deactiveLock")
 }
