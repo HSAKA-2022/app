@@ -78,9 +78,9 @@ async function updateState(riddleId: string) {
         logger.verbose(
             `UpdateState for ${riddleId} :  ${response.status}-${response.statusText} : ${response.data}`
         )
-        // @ts-ignore
         if (
             !deepEqual(
+                // @ts-ignore
                 dictOfCurrentState[riddleId]?.map((it) => it.state),
                 response.data.map((it) => it.state)
             )
