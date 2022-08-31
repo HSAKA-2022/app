@@ -28,12 +28,14 @@ export default riddle({
         if (state.active == undefined) {
             return {
                 sequenceLength: 0,
+                canSubmit: false,
                 inGame: false,
             }
         }
         return {
             sequenceLength: state.active.state.sequence.length,
             inGame: state.active.state.inGame,
+            canSubmit: state.active.state.canSubmit,
         }
     },
     phoneActions: {
