@@ -15,7 +15,10 @@ const ledChannel = ws281x(2, {
  * Entrypoint into the Script
  */
 export default async function () {
-    registerCallback(riddleId, handleStateChange)
+    //registerCallback(riddleId, handleStateChange)
+    turnLEDToColor("0xFF0000", 0)
+    turnLEDToColor("0x00FF00", 1)
+    turnLEDToColor("0x0000FF", 2)
 }
 
 /**
