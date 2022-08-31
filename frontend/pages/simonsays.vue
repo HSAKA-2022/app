@@ -9,68 +9,24 @@
         <div class="box">
             <div class="columns">
                 <div class="column">
-                    <button class="red lampButton content" @click="makeArray(0)"></button>
+                    <button :disabled="!state.canSubmit" class="red lampButton content" @click="makeArray(0)"></button>
                 </div>
                 <div class="column">
-                    <button class="blue lampButton content" @click="makeArray(1)"></button>
+                    <button :disabled="!state.canSubmit" class="blue lampButton content" @click="makeArray(1)"></button>
                 </div>
             </div>
             <div class="columns">
                 <div class="column">
-                    <button class="yellow lampButton content" @click="makeArray(2)"></button>
+                    <button :disabled="!state.canSubmit" class="yellow lampButton content" @click="makeArray(2)"></button>
                 </div>
                 <div class="column">
-                    <button class="green lampButton content" @click="makeArray(3)"></button>
+                    <button :disabled="!state.canSubmit" class="green lampButton content" @click="makeArray(3)"></button>
                 </div>
             </div>
 
-            <button class="button is-danger" @click="deleteTry">Löschen</button>
+            <button :disabled="!state.canSubmit" class="button is-danger" @click="deleteTry">Löschen</button>
 
-            <button class="button is-success" @click="submit">Abschicken</button>
-        </div>
-
-        <p>Deine Eingaben {{  userMoves  }}</p>
-
-        <div>
-            
-        </div>
-        <div class="inputList" v-for="item in input">
-            <div class="smallBox red" v-if="item === 0"></div>
-            <div class="smallBox blue" v-if="item === 1"></div>
-            <div class="smallBox yellow" v-if="item === 2"></div>
-            <div class="smallBox green" v-if="item === 3"></div>
-        </div>
-
-    </layout>
-
-    <layout v-if="!state.solved && !state.canSubmit">
-        <header>
-            <h1>Simon Says</h1>
-            <p>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Quisquam, nostrum, rem exercitationem ratione
-                vitae magnam autem laboriosam non repellat voluptatibus illum explicabo nihil dolorem! In commodi
-                maiores quia officia explicabo.</p>
-        </header>
-        <div class="box">
-            <div class="columns">
-                <div class="column">
-                    <button disabled class="red lampButton content" @click="makeArray(0)"></button>
-                </div>
-                <div class="column">
-                    <button disabled class="blue lampButton content" @click="makeArray(1)"></button>
-                </div>
-            </div>
-            <div class="columns">
-                <div class="column">
-                    <button disabled class="yellow lampButton content" @click="makeArray(2)"></button>
-                </div>
-                <div class="column">
-                    <button disabled class="green lampButton content" @click="makeArray(3)"></button>
-                </div>
-            </div>
-
-            <button disabled class="button is-danger" @click="deleteTry">Löschen</button>
-
-            <button disabled class="button is-success" @click="submit">Abschicken</button>
+            <button :disabled="!state.canSubmit" class="button is-success" @click="submit">Abschicken</button>
         </div>
 
         <p>Deine Eingaben {{  userMoves  }}</p>
