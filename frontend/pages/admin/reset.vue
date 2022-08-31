@@ -36,7 +36,7 @@ export default {
         return
       }
       const c = useRuntimeConfig()
-      const result = await fetch(`${c.serverUrl}/${riddleId}/admin/reset`, {
+      const result = await fetch(`${c.serverUrl}/${this.riddleId}/admin-reset`, {
         method: "POST",
         headers: headers(),
       })
