@@ -23,7 +23,12 @@ export async function triggerAction(
         )}`
     )
     try {
-        const response = await axios.post(connectionString, payload)
+        const response = await axios.post(connectionString, payload, {
+            headers: {
+                Authorization:
+                    "User " + "pi-854F8C71-D050-4F98-8FD5-72AD9C5E6870",
+            },
+        })
         logger.http(
             `Post for ${riddleId}/${actionId}:  ${response.status}-${response.statusText} : ${response.data}`
         )
