@@ -27,7 +27,7 @@ const dictOfCallbacks: { [name: string]: callbackfunctions[] } = {}
 export async function runPollingService() {
     setInterval(async function () {
         const listOfRiddleIDs = Object.keys(dictOfCallbacks)
-        logger.info(`Executing State Update for ${listOfRiddleIDs}`)
+        logger.verbose(`Executing State Update for ${listOfRiddleIDs}`)
         for (const id of listOfRiddleIDs) {
             await updateState(id)
         }
@@ -66,24 +66,23 @@ export function removeCallback(riddleId: string, callback: callbackfunctions) {
  * @param {string} riddleId
  * */
 async function updateState(riddleId: string) {
-    logger.info(`Updating State of ${riddleId}`)
+    logger.verbose(`Updating State of ${riddleId}`)
+    const url = `${config.statePollService.baseURL}/${riddleId}/raw-state`
+    logger.info(`Polling ${url}`)
     try {
-        const response = await axios.get(
-            `${config.actionDispatch.baseURL}/${riddleId}/raw-state`,
-            {
-                headers: {
-                    Authorization:
-                        "User " + "pi-854F8C71-D050-4F98-8FD5-72AD9C5E6870",
-                },
-            }
-        )
-        logger.http(
+        const response = await axios.get(url, {
+            headers: {
+                Authorization:
+                    "User " + "pi-854F8C71-D050-4F98-8FD5-72AD9C5E6870",
+            },
+        })
+        logger.verbose(
             `UpdateState for ${riddleId} :  ${response.status}-${response.statusText} : ${response.data}`
         )
         if (deepEqual(dictOfCurrentState[riddleId], response.data)) {
-            logger.verbose(`State changed for ${riddleId}`)
+            logger.info(`State changed for ${riddleId}`)
             dictOfCurrentState[riddleId] = response.data
-            updateCallbacks(riddleId)
+            await updateCallbacks(riddleId)
         }
     } catch (error) {
         if (error.response != undefined)
@@ -98,9 +97,9 @@ async function updateState(riddleId: string) {
  * Calls all the calback functions stored for the given riddleId, with the changed state
  * @param {string} riddleId
  * */
-function updateCallbacks(riddleId: string) {
+async function updateCallbacks(riddleId: string) {
     logger.verbose(`Updating callbacks for ${riddleId}`)
     for (const callback of dictOfCallbacks[riddleId]) {
-        callback(dictOfCurrentState[riddleId])
+        await callback(dictOfCurrentState[riddleId])
     }
 }
