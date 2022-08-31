@@ -1,5 +1,7 @@
 import { v4 as uuid } from "uuid"
 
+export const SERVER_URL = "http://localhost:5000"
+
 function getOrCreateUserId() {
     const existing = localStorage.getItem("userId")
     if (existing) return existing

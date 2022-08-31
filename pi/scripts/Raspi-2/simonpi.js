@@ -9,10 +9,33 @@ const apiPromise = v3.api
 /**
  * Entrypoint into the Script
  */
+const green = new LightState().rgb(103, 190, 97).alertShort()
+const red = new LightState().rgb(255, 56, 89).alertShort()
+const blue = new LightState().rgb(69, 162, 229).alertShort()
+const yellow = new LightState().rgb(254, 192, 9).alertShort()
+
+const lampOne = 12
+const lampTwo = 5
+const lampThree = 8
+const lampFour = 9
+
 export default async function () {
     logger.info("Starting Simon Says")
     await callActionOnRiddle1()
-    registerCallback("simon", changeColors)
+    await registerCallback("simon", changeColors)
+    logger.info("Simon Says setting leds")
+    await api.lights.setLightState(lampOne, red.on())
+    await api.lights.setLightState(lampTwo, blue.on())
+    await api.lights.setLightState(lampThree, yellow.on())
+    await api.lights.setLightState(lampFour, green.on())
+    await sleep(1000)
+
+    const off = new LightState().off()
+    await api.lights.setLightState(lampOne, off)
+    await api.lights.setLightState(lampTwo, off)
+    await api.lights.setLightState(lampThree, off)
+    await api.lights.setLightState(lampFour, off)
+
     logger.info("Finished Setuo for Simon Says")
 }
 
@@ -21,7 +44,6 @@ export default async function () {
  */
 async function callActionOnRiddle1() {
     const payload = {}
-    await triggerAction("simon", "action1", payload)
 }
 
 /**
@@ -29,11 +51,6 @@ async function callActionOnRiddle1() {
  * @param {Object} newState JSON object representing the new State
  */
 async function changeColors(newState) {
-    const lampOne = 12
-    const lampTwo = 5
-    const lampThree = 8
-    const lampFour = 9
-    const green = new LightState().rgb(103, 190, 97).alertShort()
     const api = await apiPromise
 
     for (let i = 0; i < newState.all[0].state.sequence.length; i++) {
@@ -52,4 +69,5 @@ async function changeColors(newState) {
         }
         await sleep(500)
     }
+    await triggerAction("simon", "deactiveLock")
 }
