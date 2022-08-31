@@ -17,19 +17,34 @@
 
         <h1 v-if="state.reactionspeed != undefined">Du hast zuletzt {{ this.recentreactionspeed === 0 ? "..." : this.recentreactionspeed }} ms gebraucht.</h1>
         <h1 v-if="state.reactionspeed === undefined">Du hast den Reaktionstest noch nicht absolviert.</h1>
-
     </layout>
 
     <layout v-if="earlyClickNotification" class="buttons are-large">
-
         <h1 v-if="earlyClickNotification" class="is-size-1 has-text-danger-dark">Du hast zu früh geklickt! Klicke erst, wenn der Button grün wird!</h1>
         <button class="chadButton button is-primary mt-2 is-size-1" @click="retry">Nochmal versuchen</button>
-
     </layout>
 
     <layout v-if="state.solved" class="buttons are-large">
         <h1 class="is-size-1 has-text-success">Du hast {{ state.reactionspeed }}ms gebraucht!</h1>
         <button class="chadButton button is-primary mt-2 is-size-1" @click="showLeaderboard">Leaderboard</button>
+
+        <table class="table" v-if="leaderboard != undefined">
+            <thead>
+                <tr>
+                    <th>Position</th>
+                    <th>Name</th>
+                    <th>Reaction Time</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                <tr v-for="(line, index) in leaderboard">
+                    <th>{{ index }}.</th>
+                    <th>{{ line.playername }}</th>
+                    <th>{{ line.reactionspeed }}</th>
+                </tr>
+            </tbody>
+        </table>
     </layout>
 </template>
 
