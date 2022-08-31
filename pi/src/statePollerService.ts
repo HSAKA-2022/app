@@ -67,16 +67,14 @@ export function removeCallback(riddleId: string, callback: callbackfunctions) {
  * */
 async function updateState(riddleId: string) {
     logger.verbose(`Updating State of ${riddleId}`)
+    const url = `${config.statePollService.baseURL}/${riddleId}/raw-state`
     try {
-        const response = await axios.get(
-            `${config.actionDispatch.baseURL}/${riddleId}/raw-state`,
-            {
-                headers: {
-                    Authorization:
-                        "User " + "pi-854F8C71-D050-4F98-8FD5-72AD9C5E6870",
-                },
-            }
-        )
+        const response = await axios.get(url, {
+            headers: {
+                Authorization:
+                    "User " + "pi-854F8C71-D050-4F98-8FD5-72AD9C5E6870",
+            },
+        })
         logger.verbose(
             `UpdateState for ${riddleId} :  ${response.status}-${response.statusText} : ${response.data}`
         )
