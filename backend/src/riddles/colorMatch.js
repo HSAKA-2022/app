@@ -5,6 +5,7 @@ const riddleId = "colormatch"
 const colors = ["red", "green", "blue"]
 
 function getRandomColorValue() {
+    return 4
     return Math.ceil(Math.random() * 256) - 1
 }
 
@@ -36,7 +37,7 @@ export default riddle({
         // compare color component of each player
         for (let i = 0; i < players.length; i++) {
             if (
-                Math.abs(players[i].state.goal - players[i].state.current) > 10
+                Math.abs(players[i].state.goal - players[i].state.current) > 25
             ) {
                 return false
             }

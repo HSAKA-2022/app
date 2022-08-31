@@ -57,6 +57,9 @@ async function callActionOnRiddle1() {
  * @param {Object} newState JSON object representing the new State
  */
 async function changeColors(newState) {
+    if (newState.length === 0) {
+        return
+    }
     const api = await apiPromise
     // only show lights, if the game advanced
     if (newState[0].state.canSubmit) {

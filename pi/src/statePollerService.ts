@@ -86,7 +86,7 @@ async function updateState(riddleId: string) {
             )
         ) {
             logger.info(`State changed for ${riddleId}`)
-            console.dir(response.data)
+            logger.debug(`New State: ${JSON.stringify(response.data)}`)
             dictOfCurrentState[riddleId] = response.data
             await updateCallbacks(riddleId)
         }
