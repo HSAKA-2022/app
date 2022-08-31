@@ -58,18 +58,22 @@ async function callActionOnRiddle1() {
  */
 async function changeColors(newState) {
     const api = await apiPromise
+    // only show lights, if the game advanced
+    if (newState[0].state.canSubmit) {
+        return
+    }
 
-    for (let i = 0; i < newState.all[0].state.sequence.length; i++) {
-        if (newState.all[0].state.sequence[i] === 0) {
+    for (let i = 0; i < newState[0].state.sequence.length; i++) {
+        if (newState[0].state.sequence[i] === 0) {
             await api.lights.setLightState(lampOne, red)
             console.log("Setting Lamp 1 to red")
-        } else if (newState.all[0].state.sequence[i] === 1) {
+        } else if (newState[0].state.sequence[i] === 1) {
             await api.lights.setLightState(lampTwo, blue)
             console.log("Setting Lamp 2 to blue")
-        } else if (newState.all[0].state.sequence[i] === 2) {
+        } else if (newState[0].state.sequence[i] === 2) {
             await api.lights.setLightState(lampThree, yellow)
             console.log("Setting Lamp 3 to yellow")
-        } else if (newState.all[0].state.sequence[i] === 3) {
+        } else if (newState[0].state.sequence[i] === 3) {
             await api.lights.setLightState(lampFour, green)
             console.log("Setting Lamp 4 to green")
         }
