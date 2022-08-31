@@ -13,7 +13,7 @@ export default riddle({
             return {
                 sequence: [randomInt(), randomInt(), randomInt()],
                 inGame: true,
-                canSubmit: false,
+                canSubmit: true,
             }
         }
     },
