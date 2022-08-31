@@ -67,6 +67,20 @@ export default riddle({
                 current: players.active.state.current,
                 color: players.active.state.color,
             }
+            if (players.all.length >= 3) {
+                state.deltaE = deltaE(
+                    rgb2lab([
+                        players[0].state.current,
+                        players[1].state.current,
+                        players[2].state.current,
+                    ]),
+                    rgb2lab([
+                        players[0].state.goal,
+                        players[1].state.goal,
+                        players[2].state.goal,
+                    ])
+                )
+            }
             console.dir(
                 players.active.state.color + ": " + players.active.state.goal
             )
