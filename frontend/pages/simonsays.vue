@@ -112,6 +112,9 @@ export default {
     async mounted() {
         this.state = await startRiddle(riddleId)
         console.log(this.state)
+        setInterval(() => {
+            this.state = getRiddleState(riddleId)
+        }, 1000)
     },
 
     data() {
