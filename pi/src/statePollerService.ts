@@ -68,7 +68,6 @@ export function removeCallback(riddleId: string, callback: callbackfunctions) {
 async function updateState(riddleId: string) {
     logger.verbose(`Updating State of ${riddleId}`)
     const url = `${config.statePollService.baseURL}/${riddleId}/raw-state`
-    logger.info(`Polling ${url}`)
     try {
         const response = await axios.get(url, {
             headers: {
