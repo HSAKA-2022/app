@@ -24,7 +24,7 @@
             Die Informatiker sind alle sehr sus
         </h3>
         <h3 v-if="random === 3">
-            3
+            Schnitzel jagd man vor dem Essen
         </h3>
         <h3 v-if="random === 4">
             4
