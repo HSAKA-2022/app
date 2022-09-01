@@ -1,5 +1,5 @@
 import { riddle } from "../riddle"
-import { rgb2lab, deltaE } from "rgb-lab"
+import { color } from "colorjs.io"
 
 const riddleId = "colormatch"
 
@@ -33,6 +33,19 @@ export default riddle({
                 return false
             }
         }
+        const goal = new Color(
+            "sRGB",
+            players[0].state.goal,
+            players[1].state.goal,
+            players[2].state.goal
+        )
+        const current = new Color("sRGB", [
+            players[0].state.current,
+            players[1].state.current,
+            players[2].state.current,
+        ])
+        console.log("IMPORTANT + goal: ", goal.deltaE(current))
+        return goal.deltaE(current) < 10
         const matchExpr =
             Math.sqrt(
                 Math.pow(players[0].state.current - players[0].state.goal, 2) +
