@@ -1,13 +1,13 @@
 <template>
     <layout class="content landing-page">
-        <h1>Wilkommen bei den den HSAKA burg.games!</h1>
+        <h1>Wilkommen bei den HSAKA burg.games!</h1>
 
         <p>
-            Wir haben in der Kurszeit ein paar Rätsel entwickelt, die du hier ausprobieren kannst.
+            Wir haben in der Kurszeit ein paar Minispiele entwickelt, die du hier ausprobieren kannst.
         </p>
 
         <p>
-            Über die Burg verteilt findet ihr QR-Codes, die euch zu den einzelnen Rätseln führen.
+            Über die Burg verteilt findest du QR-Codes, die zu den einzelnen Spielen führen.
         </p>
 
         <p class="mt-6">
