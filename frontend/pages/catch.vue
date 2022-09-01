@@ -8,7 +8,7 @@
     </h6>
     <br />
     <button
-      v-if="code != undefined"
+      v-if="code != undefined && state.ID != state.infoIDs"
       @click="doCatch"
       class="button is-success button is-small front-size is-size-5 is-fullwidth button is-rounded"
     >
@@ -52,11 +52,6 @@
       <div class="modal-background"></div>
       <div class="modal-content is-clipped">
         <div class="columns">
-          <div class="column">
-            <p class="image is-4by4">
-              <img :src="state.informatiker[activInfo].bild" alt="." />
-            </p>
-          </div>
           <div class="column has-text-grey-lighter m-4">
             <h3>{{ state.informatiker[activInfo].name }}</h3>
             <ul>
