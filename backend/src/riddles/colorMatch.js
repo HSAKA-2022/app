@@ -35,10 +35,15 @@ export default riddle({
         }
         const matchExpr =
             Math.sqrt(
-                (players[0].state.current - players[0].state.goal) ^
-                    (2 + (players[1].state.current - players[1].state.goal)) ^
-                    (2 + (players[2].state.current - players[2].state.goal)) ^
-                    2
+                Math.pow(players[0].state.current - players[0].state.goal, 2) +
+                    Math.pow(
+                        players[1].state.current - players[1].state.goal,
+                        2
+                    ) +
+                    Math.pow(
+                        players[2].state.current - players[2].state.goal,
+                        2
+                    )
             ) < 55
 
         // compare color component of each player
