@@ -61,14 +61,19 @@ export default riddle({
                 // 1 - ingame
                 // 2 - there is/was a game
             }
+        } else if (players.active.length < 3) {
+            state = {
+                gameState: players.all.length >= 3 ? 1 : 0,
+                current: players.active.state.current,
+                color: players.active.state.color,
+                deltaE: undefined,
+            }
         } else {
             state = {
                 gameState: players.all.length >= 3 ? 1 : 0,
                 current: players.active.state.current,
                 color: players.active.state.color,
-            }
-            if (players.all.length >= 3) {
-                state.deltaE = deltaE(
+                deltaE: deltaE(
                     rgb2lab([
                         players.all[0].state.current,
                         players.all[1].state.current,
@@ -79,9 +84,7 @@ export default riddle({
                         players.all[1].state.goal,
                         players.all[2].state.goal,
                     ])
-                )
-            } else {
-                state.deltaE = null
+                ),
             }
             console.dir(
                 players.active.state.color + ": " + players.active.state.goal
