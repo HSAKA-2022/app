@@ -61,7 +61,7 @@ export default riddle({
                 // 1 - ingame
                 // 2 - there is/was a game
             }
-        } else if (players.active.length < 3) {
+        } else if (players.all.length < 3) {
             state = {
                 gameState: players.all.length >= 3 ? 1 : 0,
                 current: players.active.state.current,
