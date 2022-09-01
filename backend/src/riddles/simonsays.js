@@ -15,6 +15,10 @@ export default riddle({
                 inGame: true,
                 canSubmit: true,
             }
+        } else {
+            return {
+                inGame: false,
+            }
         }
     },
     solved: (states) => {
