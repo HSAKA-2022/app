@@ -48,7 +48,8 @@ function getHexCode(newState, valueName) {
         if (newState[i].state[valueName] == null) {
             hexCode += "00"
         } else {
-            newRGBState = Math.ceil(newState[i].state[valueName] * 256) - 1
+            const newRGBState =
+                Math.ceil(newState[i].state[valueName] * 256) - 1
             if (newRGBState <= 16) {
                 hexCode += "0"
             }
