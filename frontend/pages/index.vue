@@ -1,49 +1,42 @@
 <template>
-  <layout class="content landing-page">
-    <h1>{{ title }}</h1>
+    <layout class="content landing-page">
+        <h1>Wilkommen bei den den HSAKA burg.games!</h1>
 
-    <p>
-      Dies ist die Startseite des HSAKA-Frontends. Wenn du diese Seite siehst,
-      hast du das Frontend erfolgreich gestartet!
-    </p>
+        <p>
+            Wir haben in der Kurszeit ein paar Rätsel entwickelt, die du hier ausprobieren kannst.
+        </p>
 
-    <p>
-      Im
-      <span>pages</span>-Ordner findest du die Seiten für einzelne Rätsel. Wenn
-      du im Browser den Namen der Datei (ohne die <span>.vue</span>-Endung)
-      eingibst, gelangst du auf die Seite für dein Rätsel.
-    </p>
+        <p>
+            Über die Burg verteilt findet ihr QR-Codes, die euch zu den einzelnen Rätseln führen.
+        </p>
 
-    <p>
-      Du kannst die folgenden Referenzen benutzen, um am Projekt zu arbeiten:
-    </p>
+        <p class="mt-6">
+            Hier noch ein Tip, um loszulegen:
+        </p>
 
-    <ul>
-      <li>
-        <a href="https://devhints.io/vue" target="_blank">Vue Cheatsheet</a> -
-        Schnelle Übersicht über Vue-Funktionen
-      </li>
-
-      <li>
-        <a href="https://vuejs.org/guide/introduction.html" target="_blank"
-          >Vue</a
-        >
-        - Vollständige Vue-Referenz
-      </li>
-
-      <li>
-        <a href="https://bulma.io/documentation" target="_blank">Bulma</a> -
-        CSS-Klassen und Styling
-      </li>
-    </ul>
-  </layout>
+        <h3 v-if="random === 0">
+            Gucke doch mal im Marstall nach
+        </h3>
+        <h3 v-if="random === 1">
+            Vielleicht findest Burghof ja etwas
+        </h3>
+        <h3 v-if="random === 2">
+            Die Informatiker sind alle sehr sus
+        </h3>
+        <h3 v-if="random === 3">
+            3
+        </h3>
+        <h3 v-if="random === 4">
+            4
+        </h3>
+    </layout>
 </template>
 
 <style scoped>
 .landing-page {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
 }
 </style>
 
@@ -51,10 +44,10 @@
 import { defineComponent } from "vue"
 
 export default defineComponent({
-  data() {
-    return {
-      title: "HSAKA Frontend",
+    data() {
+        return {
+            random: Math.floor(Math.random() * 5)
+        }
     }
-  },
 })
 </script>
