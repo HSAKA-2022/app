@@ -39,7 +39,7 @@ export default riddle({
                     (2 + (players[1].state.current - players[1].state.goal)) ^
                     (2 + (players[2].state.current - players[2].state.goal)) ^
                     2
-            ) < 60
+            ) < 55
 
         // compare color component of each player
         return matchExpr
