@@ -10,10 +10,10 @@ const apiPromise = v3.api
 /**
  * Entrypoint into the Script
  */
-const green = new LightState().rgb(103, 190, 97).on()
-const red = new LightState().rgb(255, 56, 89).on()
-const blue = new LightState().rgb(69, 162, 229).on()
-const yellow = new LightState().rgb(254, 192, 9).on()
+const green = new LightState().rgb(103, 190, 97).on().brightness(255)
+const red = new LightState().rgb(255, 56, 89).on().brightness(255)
+const blue = new LightState().rgb(69, 162, 229).on().brightness(255)
+const yellow = new LightState().rgb(254, 192, 9).on().brightness(255)
 
 const lampOne = 12
 const lampTwo = 5
@@ -73,7 +73,7 @@ async function changeColors(newState) {
         await sleep(1000)
     }
 
-    const on = new LightState().on().bri(255)
+    const on = new LightState().on().brightness(255)
     const off = new LightState().off()
     for (let i = 0; i < newState[0].state.sequence.length; i++) {
         if (newState[0].state.sequence[i] === 0) {
