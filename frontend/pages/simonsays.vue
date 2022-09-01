@@ -9,29 +9,17 @@
                 <div class="columns">
                     <div class="column">
                         <button :disabled="!state.canSubmit" class="red lampButton content"
-<<<<<<< HEAD
                                 @click="makeArray(0)"></button>
-=======
-                            @click="makeArray(0)"></button>
-                    </div>
-                    <div class="column">
->>>>>>> simon
                         <button :disabled="!state.canSubmit" class="blue lampButton content"
-                            @click="makeArray(1)"></button>
+                                @click="makeArray(1)"></button>
                     </div>
                 </div>
                 <div class="columns">
                     <div class="column">
                         <button :disabled="!state.canSubmit" class="yellow lampButton content"
-<<<<<<< HEAD
                                 @click="makeArray(2)"></button>
-=======
-                            @click="makeArray(2)"></button>
-                    </div>
-                    <div class="column">
->>>>>>> simon
                         <button :disabled="!state.canSubmit" class="green lampButton content"
-                            @click="makeArray(3)"></button>
+                                @click="makeArray(3)"></button>
                     </div>
                 </div>
 
@@ -159,7 +147,7 @@ export default {
             \nMerke dir die Lichterfolge, die abgespielt wird und gib sie danach korrekt \
             wieder ein, indem du auf den Kasten der jeweiligen Farbe klickst. \nBevor du \
             deine Eingabe abschickst, kannst du diese durch die 'Löschen' Taste rückgängig \
-            machen. \nNach jedem erfolgreichen Versuch wird die Sequenz um ein Licht ergänzt.",
+            machen. \nNach jedem erfolgreichen Versuch wird die Sequenz um ein Licht ergänzt."
         }
 
     },
