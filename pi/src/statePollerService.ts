@@ -68,7 +68,6 @@ export function removeCallback(riddleId: string, callback: callbackfunctions) {
 async function updateState(riddleId: string) {
     logger.verbose(`Updating State of ${riddleId}`)
     const url = `${config.statePollService.baseURL}/${riddleId}/raw-state`
-    logger.info(`Polling ${url}`)
     try {
         const response = await axios.get(url, {
             headers: {
@@ -79,8 +78,15 @@ async function updateState(riddleId: string) {
         logger.verbose(
             `UpdateState for ${riddleId} :  ${response.status}-${response.statusText} : ${response.data}`
         )
-        if (deepEqual(dictOfCurrentState[riddleId], response.data)) {
+        if (
+            !deepEqual(
+                // @ts-ignore
+                dictOfCurrentState[riddleId]?.map((it) => it.state),
+                response.data.map((it) => it.state)
+            )
+        ) {
             logger.info(`State changed for ${riddleId}`)
+            logger.debug(`New State: ${JSON.stringify(response.data)}`)
             dictOfCurrentState[riddleId] = response.data
             await updateCallbacks(riddleId)
         }

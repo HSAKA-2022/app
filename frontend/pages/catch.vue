@@ -1,19 +1,35 @@
 <template>
+  <img
+    src="https://scontent-ham3-1.xx.fbcdn.net/v/t39.30808-6/251962284_1803500679858446_1425780834639349214_n.jpg?_nc_cat=103&ccb=1-7&_nc_sid=09cbfe&_nc_ohc=e2nuMsH3-9QAX_g61sx&_nc_ht=scontent-ham3-1.xx&oh=00_AT9IZOgN0cbmFxDtfDFiCh0gsRe7lyeG_5I1ANJQKgZM0w&oe=6313AA75"
+    alt="AlumniLogo"
+    width="100"
+    height=""
+    class="m-3"
+  />
   <layout>
-    <h1 class="has-text-centered">Gotta Catch'em All</h1>
+    <h1 class="has-text-centered is-size-2">Gotta Catch'em All</h1>
     <h6 class="is-size-7 has-text-centered">
       01001001 01101110 01100110 01101111 00100000 01000101 01100100 01101001
       01110100 01101001 01101111 01101110
     </h6>
     <br />
     <button
-      v-if="code != undefined"
+      v-if="code != undefined && state.ID != state.infoIDs"
       @click="doCatch"
       class="button is-success button is-small front-size is-size-5 is-fullwidth button is-rounded"
     >
       Catch!
     </button>
     <br />
+    <p
+      v-if="
+        Object.keys(state.infoIDs).length === 0 &&
+        Object.keys(state.informatiker).length > 0
+      "
+      class="is-size-4 has-text-link has-text-weight-bold"
+    >
+      Fange Informatiker - scanne Ihren QR-Code im Namesschild!
+    </p>
     <p
       class="has-text-success is-size-2 has-text-weight-bold"
       v-if="
@@ -27,7 +43,7 @@
     <br />
     <p class="is-size-7">
       (Tipp: du kannst dir Informationen anzeigen lassen, indem du auf die Namen
-      klickst.)
+      in der Tabelle klickst.)
     </p>
 
     <table class="table is-bordered is-fullwidth has-text-centered">
@@ -46,11 +62,6 @@
       <div class="modal-background"></div>
       <div class="modal-content is-clipped">
         <div class="columns">
-          <div class="column">
-            <p class="image is-4by4">
-              <img :src="state.informatiker[activInfo].bild" alt="." />
-            </p>
-          </div>
           <div class="column has-text-grey-lighter m-4">
             <h3>{{ state.informatiker[activInfo].name }}</h3>
             <ul>
@@ -81,6 +92,7 @@
         <i class="fas fa-times"></i>
       </span>
     </button>
+    <p class="is-size-7 is-italic m-3">made by Sophia & Björn</p>
   </layout>
 </template>
 
