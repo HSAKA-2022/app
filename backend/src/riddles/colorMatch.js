@@ -34,6 +34,13 @@ export default riddle({
                 return false
             }
         }
+        const matchExpr =
+            Math.sqrt(
+                (players[0].state.current - players[0].state.goal) ^
+                    (2 + (players[1].state.current - players[1].state.goal)) ^
+                    (2 + (players[2].state.current - players[2].state.goal)) ^
+                    2
+            ) < 100
         const deltaE2 = deltaE(
             rgb2lab([
                 players[0].state.current,
@@ -47,7 +54,7 @@ export default riddle({
             ])
         )
         // compare color component of each player
-        return deltaE2 < 10
+        return matchExpr
     },
 
     getter: (players) => {
