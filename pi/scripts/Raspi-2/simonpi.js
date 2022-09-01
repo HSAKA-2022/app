@@ -66,7 +66,7 @@ async function changeColors(newState) {
         return
     }
 
-    const on = new LightState().on()
+    const on = new LightState().on().bri(50)
     const off = new LightState().off()
     for (let i = 0; i < newState[0].state.sequence.length; i++) {
         if (newState[0].state.sequence[i] === 0) {
@@ -90,7 +90,7 @@ async function changeColors(newState) {
             await api.lights.setLightState(lampFour, off)
             console.log("Setting Lamp 4 to green")
         }
-        await sleep(1000)
+        await sleep(800)
     }
     await triggerAction("simon", "deactiveLock")
 }
