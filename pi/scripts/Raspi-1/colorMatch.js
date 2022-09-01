@@ -8,7 +8,7 @@ const ws281x = require("rpi-ws281x-native")
 const riddleId = "colormatch"
 
 const ledChannel = ws281x(2, {
-    brightness: 120,
+    brightness: 65,
     stripType: "sk6812-grbw",
 })
 
