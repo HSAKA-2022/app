@@ -1,35 +1,57 @@
 <template>
 
-  <div>
+  <div class="p-5">
     <h1>Color Match</h1>
     <!-- waiting queue -->
-    <div v-if="state.gameState === 0">Warte auf weitere Spieler...</div>
-    <div v-else-if="state.gameState === 2">Es läuft bereits ein Spiel. Bitte habe einen Moment Geduld...</div>
+    <div v-if="state.gameState === 0">
+      Warte auf weitere Spieler...
+    </div>
+
+    <!-- white or after game -->
+    <div v-else-if="state.gameState === 2">
+      Es läuft bereits ein Spiel. Bitte habe einen Moment Geduld...
+    </div>
+
+    <!-- in game -->
     <div v-else-if="state.gameState === 1">
+      <!-- win page -->
+      <div v-if="state.solved">
+        <h2>Durch Koordination und Zusammenarbeit habt ihr das Spiel <b>gewonnen</b><br> Herzlichen Glückwunsch!</h2>
+      </div>
+
+
       <div v-if="!state.solved">
         <p>
           Willkommen beim Spiel Color Match. Euer Ziel ist es, beide Lampen in den gleichen Farbe leuchten zu lassen.
         </p>
         <p>Du hast die Farbe <b>{{ colorDict[state.color] }}</b> erhalten.</p>
 
-        <!-- slider -->
-        <vue-slider style="position: relative; top: 24px" tooltip='none' :min="0" :max="255" v-model="currentTry" height="4" :dotSize=30></vue-slider>
-        <!-- progress bar -->
-        <div>
-          <progress
-              style="position: relative"
-              :class="{'is-danger': state.color === 'red', 'is-success': state.color === 'green', 'is-info': state.color === 'blue'}"
-              class="progress"
-              :value="currentTry"
-              max="255"
-          >
-            15%
-          </progress>
-        </div>
       </div>
-      <!-- win page -->
-      <div v-if="state.solved">
-        <p>Durch Koordination und Zusammenarbeit habt ihr das Spiel gewonnen -> herzlichen Glückwunsch!</p>
+
+      <div class="mt-6">
+        <!-- slider -->
+        <vue-slider
+            class="slider"
+            v-model="currentTry"
+            :class="{':disabled': !state.solved}"
+            height="4"
+            :min="0"
+            :max="255"
+            :dotSize=30
+            :contained="true"
+            :marks="sliderMarks"
+        ></vue-slider>
+
+        <!-- progress bar -->
+        <progress
+            style="position: relative"
+            :class="{'is-danger': state.color === 'red', 'is-success': state.color === 'green', 'is-info': state.color === 'blue'}"
+            class="progress"
+            :value="currentTry"
+            max="255"
+        >
+          15%
+        </progress>
       </div>
     </div>
   </div>
@@ -59,6 +81,7 @@ export default {
         blue: 'blau',
       },
       currentTry: 0, // null ?
+      sliderMarks: [0, 31, 63, 95, 127, 159, 191, 223, 255]
     }
   },
 
@@ -107,5 +130,8 @@ export default {
 </script>
 
 <style scoped>
-
+.slider {
+  position: relative;
+  top: 24px;
+}
 </style>
