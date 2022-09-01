@@ -15,7 +15,7 @@ export default riddle({
         if (players.length < 3) {
             return {
                 color: colorArray[players.length],
-                goal: getRandomColorValue(),
+                goal: Math.random(),
                 current: null,
             }
         }
@@ -40,12 +40,12 @@ export default riddle({
             players[2].state.goal
         )
         const current = new Color.Color("sRGB", [
-            players[0].state.current,
-            players[1].state.current,
-            players[2].state.current,
+            players[0].state.current / 256,
+            players[1].state.current / 256,
+            players[2].state.current / 256,
         ])
         console.log("IMPORTANT + goal: ", goal.deltaE(current))
-        return goal.deltaE(current) < 10
+        return goal.deltaE(current, "2000") < 30
         const matchExpr =
             Math.sqrt(
                 Math.pow(players[0].state.current - players[0].state.goal, 2) +

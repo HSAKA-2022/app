@@ -8,7 +8,7 @@ const ws281x = require("rpi-ws281x-native")
 const riddleId = "colormatch"
 
 const ledChannel = ws281x(2, {
-    brightness: 65,
+    brightness: 40,
     stripType: "sk6812-grbw",
 })
 
@@ -48,10 +48,11 @@ function getHexCode(newState, valueName) {
         if (newState[i].state[valueName] == null) {
             hexCode += "00"
         } else {
-            if (newState[i].state[valueName] <= 16) {
+            newRGBState = Math.ceil(newState[i].state[valueName] * 256) - 1
+            if (newRGBState <= 16) {
                 hexCode += "0"
             }
-            hexCode += newState[i].state[valueName].toString(16)
+            hexCode += newRGBState.toString(16)
         }
     }
     return hexCode
