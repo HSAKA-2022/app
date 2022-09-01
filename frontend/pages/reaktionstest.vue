@@ -3,15 +3,15 @@
         <h1 class="is-size-1 has-text-success">Reaktionstest</h1>
 
         <p>Willkommen, der Reaktionstest funktioniert, indem man auf den Button klickt, sobald dieser Grün wird. Das
-            Ziel ist innerhalb von 300ms zu reagieren. Viel Spaß ;)</p>
+            Ziel ist innerhalb von 250ms zu reagieren. Viel Spaß ;)</p>
         <p v-if="!isPlayerNameSubmitted" class="has-text-weight-bold">Gib deinen Namen ein: </p>
 
-        <button v-if="!showPictureBool && buttonhide" class="chadButton button is-primary mt-2 mx-1 is-size-1"
+        <button v-if="!showPictureBool && buttonhide" class="chadButton button is-primary mt-2 mx-1 is-size-2"
                 @click="earlyclick" style="background-color: #f44336;">
             {{ this.recentreactionspeed === 0 ? "..." : this.recentreactionspeed }} ms
         </button>
 
-        <button v-if="showPictureBool" class="chadButton button is-primary mt-2 mx-1 is-size-1" @click="react"
+        <button v-if="showPictureBool" class="chadButton button is-primary mt-2 mx-1 is-size-2" @click="react"
                 style="background-color: #4CAF50;">{{ this.recentreactionspeed === 0 ? "..." : this.recentreactionspeed
             }} ms
         </button>
@@ -23,7 +23,7 @@
         </button>
 
         <button v-if="!buttonhide" :disabled="!isPlayerNameSubmitted"
-                class="chadButton button is-primary mt-2 mx-1 is-size-1" @click="wait">START
+                class="chadButton button is-primary mt-2 mx-1 is-size-2" @click="wait">START
         </button>
 
         <h1 v-if="state.reactionspeed != undefined">Du hast zuletzt
@@ -32,14 +32,15 @@
     </layout>
 
     <layout v-if="earlyClickNotification" class="buttons are-large">
-        <h1 v-if="earlyClickNotification" class="is-size-1 has-text-danger-dark">Du hast zu früh geklickt! Klicke erst,
+        <h1 v-if="earlyClickNotification" class="is-size-2 has-text-danger-dark">Du hast zu früh geklickt! Klicke erst,
             wenn der Button grün wird!</h1>
         <button class="chadButton button is-primary mt-2 is-size-1" @click="retry">Nochmal versuchen</button>
+
     </layout>
 
     <layout v-if="state.solved" class="buttons are-large">
-        <h1 class="is-size-1 has-text-success">Du hast {{ state.reactionspeed }}ms gebraucht!</h1>
-        <button class="chadButton button is-primary mt-2 is-size-1" @click="showLeaderboard">Leaderboard</button>
+        <h1 class="is-size-2 has-text-success">Du hast {{ state.reactionspeed }}ms gebraucht!</h1>
+        <button class="chadButton button is-primary mt-2 is-size-2" @click="showLeaderboard">Leaderboard</button>
 
         <table class="table" v-if="leaderboard != undefined">
             <thead>
@@ -52,7 +53,7 @@
 
             <tbody>
             <tr v-for="(line, index) in leaderboard">
-                <td>{{ index }}.</td>
+                <td>{{ index + 1}}.</td>
                 <td>{{ line.playername }}</td>
                 <td>{{ line.reactionspeed }}</td>
             </tr>
@@ -62,15 +63,14 @@
 </template>
 
 <style>
-.chadButton {
-    width: 90%;
-    height: 500px;
-}
+    .chadButton {
+        width: 90%;
+        height: 500px;
+    }
 
 </style>
 
 <script>
-import consolaGlobalInstance from "consola"
 import { startRiddle, doRiddleAction, getRiddleState, getLeaderboard } from "../utils"
 
 const riddleId = "reaktionstest"
@@ -133,7 +133,7 @@ export default {
             this.secondDate = new Date()
             this.showPictureBool = false
 
-            this.recentreactionspeed = this.secondDate - this.firstDate
+            this.recentreactionspeed = this.secondDate - this.firstDate 
             this.reactionspeed = this.reactionspeed === 0 ? 9999999999999 : this.reactionspeed
             if (this.recentreactionspeed <= this.reactionspeed) {
                 this.reactionspeed = this.recentreactionspeed
@@ -150,7 +150,6 @@ export default {
         },
         async showLeaderboard() {
             this.leaderboard = await getLeaderboard(riddleId)
-            console.log(this.leaderboard)
         }
     }
 
