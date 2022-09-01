@@ -2,14 +2,13 @@ import { registerCallback } from "../../src/statePollerService"
 import { triggerAction } from "../../src/actionDispatch"
 //import { GPIO } from "onoff"
 import { logger } from "../../src/log"
-import { getSystemErrorMap } from "util"
-import { rejects } from "assert"
 
 const process = require("process")
 const ws281x = require("rpi-ws281x-native")
 const riddleId = "colormatch"
 
 const ledChannel = ws281x(2, {
+    brightness: 120,
     stripType: "sk6812-grbw",
 })
 

@@ -47,8 +47,7 @@ export default riddle({
             ])
         )
         // compare color component of each player
-        console.log(deltaE2)
-        return deltaE2 < 4
+        return deltaE2 < 10
     },
 
     getter: (players) => {
