@@ -29,6 +29,11 @@ export default async function () {
     await callActionOnRiddle1()
     await registerCallback("simon", changeColors)
     logger.info("Simon Says setting leds")
+    await resetLamps()
+
+    logger.info("Finished Setuo for Simon Says")
+}
+async function resetLamps() {
     const api = await apiPromise
     await api.lights.setLightState(lampOne, red)
     await api.lights.setLightState(lampTwo, blue)
@@ -41,8 +46,6 @@ export default async function () {
     await api.lights.setLightState(lampTwo, off)
     await api.lights.setLightState(lampThree, off)
     await api.lights.setLightState(lampFour, off)
-
-    logger.info("Finished Setuo for Simon Says")
 }
 
 /**
@@ -64,6 +67,10 @@ async function changeColors(newState) {
     // only show lights, if the game advanced
     if (newState[0].state.canSubmit) {
         return
+    }
+    if (newState[0].state.sequence.length === 3) {
+        await resetLamps()
+        await sleep(1000)
     }
 
     const on = new LightState().on().bri(50)
