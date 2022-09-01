@@ -1,9 +1,9 @@
 import { riddle } from "../riddle"
-import { Color } from "colorjs.io"
+import Color from "colorjs.io/src/color"
 
 const riddleId = "colormatch"
 
-const colors = ["red", "green", "blue"]
+const colorArray = ["red", "green", "blue"]
 
 function getRandomColorValue() {
     return Math.ceil(Math.random() * 256) - 1
@@ -14,7 +14,7 @@ export default riddle({
     start: (players) => {
         if (players.length < 3) {
             return {
-                color: colors[players.length],
+                color: colorArray[players.length],
                 goal: getRandomColorValue(),
                 current: null,
             }
