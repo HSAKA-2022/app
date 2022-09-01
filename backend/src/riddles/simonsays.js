@@ -13,7 +13,7 @@ export default riddle({
             return {
                 sequence: [randomInt(), randomInt(), randomInt()],
                 inGame: true,
-                canSubmit: true,
+                canSubmit: false,
             }
         }
     },
@@ -72,5 +72,16 @@ export default riddle({
             if (state.length > 0) state[0].state.canSubmit = true
             return state
         },
+    },
+    tick: (state) => {
+        if (state.length == 0) {
+            return
+        }
+        const cutOff = new Date()
+        cutOff.setSeconds(cutOff.getSeconds() - 45)
+        if (state[0].lastUpdated < cutOff) {
+            state[0].isActive = false
+        }
+        return state
     },
 })

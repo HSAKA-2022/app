@@ -26,7 +26,7 @@ export const config: conf = {
     statePollService: {
         baseURL: "https://backend.burg.games",
         //Delay in MS
-        pollDelay: 1000,
+        pollDelay: 250,
     },
     actionDispatch: {
         baseURL: "https://backend.burg.games",

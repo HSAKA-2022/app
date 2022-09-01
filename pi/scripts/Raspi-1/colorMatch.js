@@ -2,14 +2,13 @@ import { registerCallback } from "../../src/statePollerService"
 import { triggerAction } from "../../src/actionDispatch"
 //import { GPIO } from "onoff"
 import { logger } from "../../src/log"
-import { getSystemErrorMap } from "util"
-import { rejects } from "assert"
 
 const process = require("process")
 const ws281x = require("rpi-ws281x-native")
 const riddleId = "colormatch"
 
-const ledChannel = ws281x(4, {
+const ledChannel = ws281x(2, {
+    brightness: 65,
     stripType: "sk6812-grbw",
 })
 
@@ -17,16 +16,6 @@ const ledChannel = ws281x(4, {
  * Entrypoint into the Script
  */
 export default async function () {
-    turnLEDToColor("0xFF0000", 0)
-    turnLEDToColor("0x00FF00", 1)
-    turnLEDToColor("0x0000FF", 2)
-    turnLEDToColor("0xFFFFFF", 3)
-    new Promise((resolve) => {
-        setTimeout(() => {
-            resolve()
-        }),
-            5000
-    })
     registerCallback(riddleId, handleStateChange)
 }
 

@@ -1,12 +1,11 @@
 import { riddle } from "../riddle"
-import { rgb2lab, deltaE } from "rgb-lab"
+import { color } from "colorjs.io"
 
 const riddleId = "colormatch"
 
 const colors = ["red", "green", "blue"]
 
 function getRandomColorValue() {
-    return 4
     return Math.ceil(Math.random() * 256) - 1
 }
 
@@ -34,21 +33,34 @@ export default riddle({
                 return false
             }
         }
-        const deltaE = deltaE(
-            rgb2lab([
-                players[0].state.current,
-                players[1].state.current,
-                players[2].state.current,
-            ]),
-            rgb2lab([
-                players[0].state.goal,
-                players[1].state.goal,
-                players[2].state.goal,
-            ])
+        const goal = new color(
+            "sRGB",
+            players[0].state.goal,
+            players[1].state.goal,
+            players[2].state.goal
         )
+        const current = new color("sRGB", [
+            players[0].state.current,
+            players[1].state.current,
+            players[2].state.current,
+        ])
+        console.log("IMPORTANT + goal: ", goal.deltaE(current))
+        return goal.deltaE(current) < 10
+        const matchExpr =
+            Math.sqrt(
+                Math.pow(players[0].state.current - players[0].state.goal, 2) +
+                    Math.pow(
+                        players[1].state.current - players[1].state.goal,
+                        2
+                    ) +
+                    Math.pow(
+                        players[2].state.current - players[2].state.goal,
+                        2
+                    )
+            ) < 80
+
         // compare color component of each player
-        console.log(deltaE)
-        return deltaE < 0.4
+        return matchExpr
     },
 
     getter: (players) => {
@@ -61,15 +73,12 @@ export default riddle({
                 // 1 - ingame
                 // 2 - there is/was a game
             }
-        } else {
+        } else if (players.all.length >= 3) {
             state = {
                 gameState: players.all.length >= 3 ? 1 : 0,
                 current: players.active.state.current,
                 color: players.active.state.color,
             }
-            console.dir(
-                players.active.state.color + ": " + players.active.state.goal
-            )
         }
         return state
     },
