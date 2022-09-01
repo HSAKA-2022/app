@@ -92,12 +92,22 @@ export default riddle({
                 const isGoal = players.active.state.goal == i
 
                 if (isSameSecret && isGoal) {
-                    players.active.state.goal = Math.floor(Math.random() * places.length)
+                    players.active.state.goal = Math.floor(
+                        Math.random() * places.length
+                    )
                     players.active.state.foundPlaces.push(i)
 
-                    if (places.length != foundPlaces.length) {
-                        while (players.active.state.foundPlaces.includes(players.active.state.goal)) {
-                            players.active.state.goal = Math.floor(Math.random() * places.length)
+                    if (
+                        places.length != players.active.state.foundPlaces.length
+                    ) {
+                        while (
+                            players.active.state.foundPlaces.includes(
+                                players.active.state.goal
+                            )
+                        ) {
+                            players.active.state.goal = Math.floor(
+                                Math.random() * places.length
+                            )
                         }
                     }
                 }
