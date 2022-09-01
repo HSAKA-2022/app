@@ -1,6 +1,6 @@
 <template>
     <layout v-if="!state.solved">
-        <div class="body">
+        <div class="body container.is-fullhd">
             <header>
                 <h1>Simon Says</h1>
                 <p>Einige Lampen vor dir werden nacheinander aufleuchten.
