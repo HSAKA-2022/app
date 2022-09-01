@@ -39,6 +39,7 @@ async function runUserScripts() {
                 const module = await import(filePath)
                 await module.default()
             } catch (error) {
+                console.error(error)
                 logger.error("Error executing File: " + error)
             }
         }

@@ -13,7 +13,7 @@ export default riddle({
             return {
                 sequence: [randomInt(), randomInt(), randomInt()],
                 inGame: true,
-                canSubmit: false,
+                canSubmit: true,
             }
         }
     },
@@ -25,33 +25,52 @@ export default riddle({
         }
     },
     getter: (state) => {
+        console.dir(state, { depth: null })
         if (state.active == undefined) {
             return {
                 sequenceLength: 0,
+                canSubmit: false,
                 inGame: false,
             }
         }
         return {
             sequenceLength: state.active.state.sequence.length,
             inGame: state.active.state.inGame,
+            canSubmit: state.active.state.canSubmit,
         }
     },
     phoneActions: {
         submit: async (states, input) => {
-            states.active.state.inGame =
-                input.playerSequence == states.active.state.sequence
+            let isCorrect = true
+            console.dir({
+                goal: states.active.state.sequence,
+                input: input.playerSequence,
+            })
+            for (let i = 0; i < states.active.state.sequence.length; i++) {
+                if (input.playerSequence.length < i) {
+                    isCorrect = false
+                    break
+                }
+                isCorrect =
+                    isCorrect &&
+                    states.active.state.sequence[i] === input.playerSequence[i]
+            }
+            states.active.state.inGame = isCorrect
+
             console.dir(input.playerSequence)
             console.dir(states.active.state.sequence)
             if (states.active.state.inGame) {
                 states.active.state.sequence.push(randomInt())
+                states.active.state.canSubmit = false
             }
             return states
         },
     },
     piActions: {
-        deactiveLock: async () => {
-            canSubmit = true
-            return canSubmit
+        deactiveLock: async (state) => {
+            console.dir(state)
+            if (state.length > 0) state[0].state.canSubmit = true
+            return state
         },
     },
 })
