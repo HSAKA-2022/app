@@ -122,25 +122,34 @@ export function riddle<DB_STATE, API_STATE, LEADERBOARD_STATE = unknown>({
 
     const mode = configMode ?? "default"
 
-    function getApiState(state: RiddleState<DB_STATE>): API_STATE {
+    function getApiState(
+        state: RiddleState<DB_STATE>,
+        user: string
+    ): API_STATE {
         return {
             ...getter(state),
             solved: getSolved(
-                [...state.others, state.active].filter((it) => it != undefined)
+                [...state.others, state.active].filter((it) => it != undefined),
+                user
             ),
         }
     }
 
-    function getSolved(state: Array<StateWrapper<DB_STATE>>): boolean {
+    function getSolved(
+        state: Array<StateWrapper<DB_STATE>>,
+        user: string
+    ): boolean {
         if (state.length === 0) {
             return false
         }
-        if (mode === "simultaneousSinglePlayer") {
+        if (mode === "default") {
             return solved(state)
-        } else {
-            return solved(state)
+        } else if (mode === "simultaneousSinglePlayer") {
+            const sameUserExisting = state.find((it) => it.user === user)
+            return solved([sameUserExisting])
         }
     }
+
     router.get(`/`, async (ctx) => {
         const state = await getRiddleState<DB_STATE>(riddleId)
 
@@ -148,7 +157,7 @@ export function riddle<DB_STATE, API_STATE, LEADERBOARD_STATE = unknown>({
         const others = state.filter((s) => s !== active)
 
         if (mode === "default") {
-            const isSolved = getSolved(state)
+            const isSolved = getSolved(state, ctx.user)
 
             if (isSolved) {
                 logger.info(`${ctx.user} solved the riddle`)
@@ -161,7 +170,7 @@ export function riddle<DB_STATE, API_STATE, LEADERBOARD_STATE = unknown>({
         } else if (mode === "simultaneousSinglePlayer") {
             const sameUserExisting = state.find((it) => it.user === ctx.user)
             if (sameUserExisting != undefined) {
-                if (getSolved([sameUserExisting])) {
+                if (getSolved([sameUserExisting], ctx.user)) {
                     await finishRiddleOnDb(riddleId, sameUserExisting._id)
                 }
             }
@@ -169,7 +178,7 @@ export function riddle<DB_STATE, API_STATE, LEADERBOARD_STATE = unknown>({
 
         await updateLastSeen(riddleId, ctx.user)
 
-        ctx.body = getApiState({ active, others, all: state })
+        ctx.body = getApiState({ active, others, all: state }, ctx.user)
     })
 
     if (phoneActions != undefined) {
@@ -211,11 +220,14 @@ export function riddle<DB_STATE, API_STATE, LEADERBOARD_STATE = unknown>({
                 const stateAfter = await getRiddleState<DB_STATE>(riddleId)
                 const newActive = stateAfter.find((s) => s.user == ctx.user)
                 const newOthers = stateAfter.filter((s) => s.user != ctx.user)
-                ctx.body = getApiState({
-                    active: newActive,
-                    others: newOthers,
-                    all: stateAfter,
-                })
+                ctx.body = getApiState(
+                    {
+                        active: newActive,
+                        others: newOthers,
+                        all: stateAfter,
+                    },
+                    ctx.user
+                )
                 logger.debug("[action] done")
             })
         }
@@ -262,7 +274,7 @@ export function riddle<DB_STATE, API_STATE, LEADERBOARD_STATE = unknown>({
         const checkExisting = await getRiddleState<DB_STATE>(riddleId)
 
         if (mode === "default") {
-            const isSolved = getSolved(checkExisting)
+            const isSolved = getSolved(checkExisting, ctx.user)
             if (isSolved) {
                 await Promise.all(
                     checkExisting.map((it) =>
@@ -275,7 +287,7 @@ export function riddle<DB_STATE, API_STATE, LEADERBOARD_STATE = unknown>({
                 (it) => it.user === ctx.user
             )
             if (sameUserExisting != undefined) {
-                if (getSolved([sameUserExisting])) {
+                if (getSolved([sameUserExisting], ctx.user)) {
                     await finishRiddleOnDb(riddleId, sameUserExisting._id)
                 }
             }
@@ -286,7 +298,7 @@ export function riddle<DB_STATE, API_STATE, LEADERBOARD_STATE = unknown>({
         if (existing.some((it) => it.user === ctx.user)) {
             const active = existing.find((s) => s.user == ctx.user)
             const others = existing.filter((s) => s.user != ctx.user)
-            ctx.body = getApiState({ active, others, all: existing })
+            ctx.body = getApiState({ active, others, all: existing }, ctx.user)
             return
         }
 
@@ -307,11 +319,14 @@ export function riddle<DB_STATE, API_STATE, LEADERBOARD_STATE = unknown>({
             state,
         }
         await startRiddleOnDb(riddleId, wrapped)
-        ctx.body = getApiState({
-            active: wrapped,
-            others: existing,
-            all: [wrapped, ...existing],
-        })
+        ctx.body = getApiState(
+            {
+                active: wrapped,
+                others: existing,
+                all: [wrapped, ...existing],
+            },
+            ctx.user
+        )
     })
 
     // Call tick every tickRateInMs
