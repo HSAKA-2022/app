@@ -17,7 +17,6 @@ export default riddle({
                 color: colors[players.length],
                 goal: getRandomColorValue(),
                 current: null,
-                deltaE: null,
             }
         }
     },
@@ -40,19 +39,8 @@ export default riddle({
                     (2 + (players[1].state.current - players[1].state.goal)) ^
                     (2 + (players[2].state.current - players[2].state.goal)) ^
                     2
-            ) < 100
-        const deltaE2 = deltaE(
-            rgb2lab([
-                players[0].state.current,
-                players[1].state.current,
-                players[2].state.current,
-            ]),
-            rgb2lab([
-                players[0].state.goal,
-                players[1].state.goal,
-                players[2].state.goal,
-            ])
-        )
+            ) < 60
+
         // compare color component of each player
         return matchExpr
     },
@@ -67,34 +55,12 @@ export default riddle({
                 // 1 - ingame
                 // 2 - there is/was a game
             }
-        } else if (players.all.length < 3) {
+        } else if (players.all.length >= 3) {
             state = {
                 gameState: players.all.length >= 3 ? 1 : 0,
                 current: players.active.state.current,
                 color: players.active.state.color,
-                deltaE: undefined,
             }
-        } else {
-            state = {
-                gameState: players.all.length >= 3 ? 1 : 0,
-                current: players.active.state.current,
-                color: players.active.state.color,
-                deltaE: deltaE(
-                    rgb2lab([
-                        players.all[0].state.current,
-                        players.all[1].state.current,
-                        players.all[2].state.current,
-                    ]),
-                    rgb2lab([
-                        players.all[0].state.goal,
-                        players.all[1].state.goal,
-                        players.all[2].state.goal,
-                    ])
-                ),
-            }
-            console.dir(
-                players.active.state.color + ": " + players.active.state.goal
-            )
         }
         return state
     },
