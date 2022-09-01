@@ -6,7 +6,6 @@ const riddleId = "colormatch"
 const colors = ["red", "green", "blue"]
 
 function getRandomColorValue() {
-    return 4
     return Math.ceil(Math.random() * 256) - 1
 }
 
@@ -80,6 +79,8 @@ export default riddle({
                         players.all[2].state.goal,
                     ])
                 )
+            } else {
+                state.deltaE = null
             }
             console.dir(
                 players.active.state.color + ": " + players.active.state.goal
