@@ -1,7 +1,7 @@
 import { riddle } from "../riddle"
 
 const riddleId = "reaktionstest"
-const schwelle = 250
+const schwelle = 350
 
 export default riddle({
     riddleId,

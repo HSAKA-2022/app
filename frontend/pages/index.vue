@@ -18,7 +18,7 @@
             Gucke doch mal im Marstall nach
         </h3>
         <h3 v-if="random === 1">
-            Vielleicht findest Burghof ja etwas
+            Vielleicht findest du im Burghof ja etwas
         </h3>
         <h3 v-if="random === 2">
             Die Informatiker sind alle sehr sus
@@ -27,7 +27,7 @@
             Schnitzel jagd man vor dem Essen
         </h3>
         <h3 v-if="random === 4">
-            4
+            Getränke steigern die Reaktion
         </h3>
     </layout>
 </template>

@@ -3,7 +3,7 @@
         <h1 class="is-size-1 has-text-success">Reaktionstest</h1>
 
         <p>Willkommen, der Reaktionstest funktioniert, indem man auf den Button klickt, sobald dieser Grün wird. Das
-            Ziel ist innerhalb von 250ms zu reagieren. Viel Spaß ;)</p>
+            Ziel ist innerhalb von 350ms zu reagieren. Viel Spaß ;)</p>
         <p v-if="!isPlayerNameSubmitted" class="has-text-weight-bold">Gib deinen Namen ein: </p>
 
         <button v-if="!showPictureBool && buttonhide" class="chadButton button is-primary mt-2 mx-1 is-size-2"
