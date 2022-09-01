@@ -25,10 +25,10 @@ export default async function () {
  */
 function handleStateChange(newState) {
     if (Array.isArray(newState) && newState.length === 0) return
-    turnLEDToStateValue(newState, "goal", 0)
     for (let i = 0; i < newState.length; i++) {
         Math.ceil(newState[i].state.goal * 256) - 1
     }
+    turnLEDToStateValue(newState, "goal", 0)
     turnLEDToStateValue(newState, "current", 1)
 }
 
