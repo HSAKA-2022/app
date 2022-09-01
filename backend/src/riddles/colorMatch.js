@@ -33,6 +33,11 @@ export default riddle({
                 return false
             }
         }
+        players.sort(
+            (a, b) =>
+                colorArray.indexOf(b.state.current) -
+                colorArray.indexOf(a.state.color)
+        )
         const goal = new Color("sRGB", [
             players[0].state.goal,
             players[1].state.goal,
