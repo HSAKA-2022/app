@@ -1,5 +1,5 @@
 import { riddle } from "../riddle"
-import Color from "colorjs.io/src/color"
+import Color from "colorjs.io"
 
 const riddleId = "colormatch"
 
