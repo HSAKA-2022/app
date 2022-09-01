@@ -43,7 +43,10 @@ export default riddle({
             players[1].state.current / 256,
             players[2].state.current / 256,
         ])
-        console.log("IMPORTANT + goal: ", goal.deltaE(current))
+        console.log(
+            "IMPORTANT " + players.active + " goal: ",
+            goal.deltaE(current)
+        )
         return goal.deltaE(current, "2000") < 15
     },
 
