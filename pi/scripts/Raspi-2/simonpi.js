@@ -73,7 +73,7 @@ async function changeColors(newState) {
         await sleep(1000)
     }
 
-    const on = new LightState().on().bri(50)
+    const on = new LightState().on().bri(255)
     const off = new LightState().off()
     for (let i = 0; i < newState[0].state.sequence.length; i++) {
         if (newState[0].state.sequence[i] === 0) {
