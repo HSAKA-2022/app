@@ -8,12 +8,13 @@
     </h6>
     <br />
     <button
-      v-if="code != undefined && state.ID != state.infoIDs"
+      v-if="code != undefined && !state.infoIDs[code]"  
       @click="doCatch"
       class="button is-success button is-small front-size is-size-5 is-fullwidth button is-rounded"
     >
       Catch!
     </button>
+    <p v-if="code === undefined || state.infoIDs[code]"> Du hast {{info.name}} gefangen.</p>
     <br />
     <p 
       v-if="Object.keys(state.infoIDs).length === 0 && Object.keys(state.informatiker).length > 0" 
