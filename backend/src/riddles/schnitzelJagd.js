@@ -58,6 +58,7 @@ export default riddle({
      */
     solved: (players) => {
         if (players.length === 0) return false
+        if (players[0] == undefined) return false
         return players[0].state.foundPlaces.length === places.length
     },
     /**
