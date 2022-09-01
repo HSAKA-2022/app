@@ -33,13 +33,13 @@ export default riddle({
                 return false
             }
         }
-        const goal = new Color(
+        const goal = new Color.default(
             "sRGB",
             players[0].state.goal,
             players[1].state.goal,
             players[2].state.goal
         )
-        const current = new Color("sRGB", [
+        const current = new Color.default("sRGB", [
             players[0].state.current,
             players[1].state.current,
             players[2].state.current,
