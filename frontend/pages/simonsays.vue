@@ -1,39 +1,45 @@
 <template>
-    <layout v-if="!state.solved">
-        <div class="body">
+    <layout v-if="!state.solved && state.inGame">
+        <div class="body container.is-fullhd">
             <header>
                 <h1>Simon Says</h1>
-                <p>Einige Lampen vor dir werden nacheinander aufleuchten.
-                    <br>Merke dir die Lichterfolge, die abgespielt wird und gib sie danach
-                    korrekt wieder ein, indem du auf den Kasten der jeweiligen Farbe klickst.
-                    <br>Bevor du deine Eingabe abschickst, kannst du diese durch die "Löschen" Taste rückgängig machen.
-                    <br>Klicke auf "Abschicken" um deine Antwort überprüfen zu lassen.
-                    <br>Nach jedem erfolgreichen Versuch wird die Sequenz um ein Licht ergänzt.
-                </p>
+                <p>{{ playerInstructions }}</p>
             </header>
             <div class="box">
                 <div class="columns">
                     <div class="column">
                         <button :disabled="!state.canSubmit" class="red lampButton content"
+<<<<<<< HEAD
                                 @click="makeArray(0)"></button>
+=======
+                            @click="makeArray(0)"></button>
+                    </div>
+                    <div class="column">
+>>>>>>> simon
                         <button :disabled="!state.canSubmit" class="blue lampButton content"
-                                @click="makeArray(1)"></button>
+                            @click="makeArray(1)"></button>
                     </div>
                 </div>
                 <div class="columns">
                     <div class="column">
                         <button :disabled="!state.canSubmit" class="yellow lampButton content"
+<<<<<<< HEAD
                                 @click="makeArray(2)"></button>
+=======
+                            @click="makeArray(2)"></button>
+                    </div>
+                    <div class="column">
+>>>>>>> simon
                         <button :disabled="!state.canSubmit" class="green lampButton content"
-                                @click="makeArray(3)"></button>
+                            @click="makeArray(3)"></button>
                     </div>
                 </div>
 
-<!--                <button :disabled="!state.canSubmit" class="button is-danger" @click="deleteTry">Löschen</button>-->
+                <button :disabled="!state.canSubmit" class="button is-danger" @click="deleteTry">Löschen</button>
 
-<!--                <button :disabled="!state.canSubmit" class="button is-success" @click="submit">Abschicken</button>-->
+                <!--                <button :disabled="!state.canSubmit" class="button is-success" @click="submit">Abschicken</button>-->
                 <div>
-                    <p>Deine Eingaben {{ userMoves }}</p>
+                    <p v-if="state.canSubmit">Deine Eingaben {{ userMoves }}</p>
                     <div class="inputList" v-for="item in input">
                         <div class="smallBox red" v-if="item === 0"></div>
                         <div class="smallBox blue" v-if="item === 1"></div>
@@ -45,22 +51,44 @@
         </div>
     </layout>
 
+    <layout v-if="!state.solved && !state.inGame">
+        <header>
+            <h1>Simon Says</h1>
+            <p>{{ playerInstructions }}</p>
+        </header>
+        <p>Du hast leider falsch geraten!</p>
+        <p>Deine Punktzahl liegt bei: {{ state.sequenceLength }}</p>
+    </layout>
+
     <layout v-if="state.solved">
-        <h1 class="is-size-1 has-text-danger">Du hast falsch geraten!</h1>
+        <header>
+            <h1>Simon Says</h1>
+            <p>{{ playerInstructions }}</p>
+        </header>
+        <article class="message is-danger mb-0">
+            <div class="message-header">
+                <p>Fehler</p>
+            </div>
+            <div class="message-body">
+                <p>Ein anderer Benutzer ist gerade mit dem Spiel verbunden</p>
+                <p>Bitte versuche es später nochmal</p>
+            </div>
+        </article>
     </layout>
 </template>
 
 <style>
-/* .body {
-    width: 100%;
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    gap: 100px;
-} */
-
 header {
     order: 0;
+}
+
+button:disabled {
+    background-color: lightgrey;
+}
+
+.lampButton {
+    border: none;
+    border-radius: 5px;
 }
 
 .inputList {
@@ -99,6 +127,10 @@ header {
     width: 10px;
     margin-right: 5px;
 }
+
+.column {
+    align-items: center;
+}
 </style>
 
 <script>
@@ -122,7 +154,12 @@ export default {
         return {
             state: {},
             input: [],
-            userMoves: ""
+            userMoves: "",
+            playerInstructions: "Einige Lampen vor dir werden nacheinander aufleuchten. \
+            \nMerke dir die Lichterfolge, die abgespielt wird und gib sie danach korrekt \
+            wieder ein, indem du auf den Kasten der jeweiligen Farbe klickst. \nBevor du \
+            deine Eingabe abschickst, kannst du diese durch die 'Löschen' Taste rückgängig \
+            machen. \nNach jedem erfolgreichen Versuch wird die Sequenz um ein Licht ergänzt.",
         }
 
     },
