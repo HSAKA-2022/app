@@ -14,7 +14,7 @@
     >
       Catch!
     </button>
-    <p v-if="code === undefined || state.infoIDs[code]" class="m-2  is-size-4"> Du hast die Person gefangen.</p>
+    <p v-if="code === undefined || state.infoIDs[code] && Object.keys(state.infoIDs).length < 17" class="m-2  is-size-4"> Du hast die Person gefangen. Scanne alle weiteren :)</p>
     <br />
     <p 
       v-if="Object.keys(state.infoIDs).length === 0 && Object.keys(state.informatiker).length > 0" 
