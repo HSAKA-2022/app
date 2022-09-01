@@ -44,22 +44,7 @@ export default riddle({
             players[2].state.current / 256,
         ])
         console.log("IMPORTANT + goal: ", goal.deltaE(current))
-        return goal.deltaE(current, "2000") < 30
-        const matchExpr =
-            Math.sqrt(
-                Math.pow(players[0].state.current - players[0].state.goal, 2) +
-                    Math.pow(
-                        players[1].state.current - players[1].state.goal,
-                        2
-                    ) +
-                    Math.pow(
-                        players[2].state.current - players[2].state.goal,
-                        2
-                    )
-            ) < 80
-
-        // compare color component of each player
-        return matchExpr
+        return goal.deltaE(current, "2000") < 15
     },
 
     getter: (players) => {

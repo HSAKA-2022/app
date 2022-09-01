@@ -26,6 +26,9 @@ export default async function () {
 function handleStateChange(newState) {
     if (Array.isArray(newState) && newState.length === 0) return
     turnLEDToStateValue(newState, "goal", 0)
+    for (let i = 0; i < newState.length; i++) {
+        Math.ceil(newState[i].state.goal * 256) - 1
+    }
     turnLEDToStateValue(newState, "current", 1)
 }
 
@@ -48,12 +51,10 @@ function getHexCode(newState, valueName) {
         if (newState[i].state[valueName] == null) {
             hexCode += "00"
         } else {
-            const newRGBState =
-                Math.ceil(newState[i].state[valueName] * 256) - 1
-            if (newRGBState <= 16) {
+            if (newState[i].state[valueName] <= 16) {
                 hexCode += "0"
             }
-            hexCode += newRGBState.toString(16)
+            hexCode += newState[i].state[valueName].toString(16)
         }
     }
     return hexCode
