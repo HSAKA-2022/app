@@ -13,7 +13,7 @@
                 <p>Willkommen bei unserer Schnitzeljagd! 
                     Mithilfe der Hinweise 
                     kannst du sieben verschiedene QR-Codes auf dem Burggelände finden und scannen. 
-                    Viel Spaß!
+                    Viel Sspaß!
                 </p>
 
                 <button class="button is-primary mt-2" @click="startGame">

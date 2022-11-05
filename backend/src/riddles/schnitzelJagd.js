@@ -5,7 +5,7 @@ const riddleId = "schnitzeljagd"
 const places = [
     {
         name: "Baenke an der Werkstatt",
-        hint: "Hier sitzen wir",
+        hint: "Wie eine Motte zur Flamme",
         secret: "a3dalaziza",
     },
     {
@@ -25,12 +25,12 @@ const places = [
     },
     {
         name: "Webraum",
-        hint: "Back to black",
+        hint: "You gooo back to her and I go back to blackkkk...",
         secret: "basha3a",
     },
     {
         name: "Halle",
-        hint: "Hier wird mit Schnee geworfen",
+        hint: "Let the Schneeballschlacht begin",
         secret: "hatalfhatal",
     },
     {
